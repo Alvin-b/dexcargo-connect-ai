@@ -13,6 +13,11 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
+import { Route as DashboardRatesRouteImport } from './routes/dashboard.rates'
+import { Route as DashboardPackagesRouteImport } from './routes/dashboard.packages'
+import { Route as DashboardMarketingRouteImport } from './routes/dashboard.marketing'
+import { Route as DashboardConversationsRouteImport } from './routes/dashboard.conversations'
+import { Route as DashboardClientsRouteImport } from './routes/dashboard.clients'
 import { Route as ApiPublicEvolutionWebhookRouteImport } from './routes/api/public/evolution-webhook'
 import { Route as ApiPublicDarajaCallbackRouteImport } from './routes/api/public/daraja-callback'
 
@@ -36,6 +41,31 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardRatesRoute = DashboardRatesRouteImport.update({
+  id: '/rates',
+  path: '/rates',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardPackagesRoute = DashboardPackagesRouteImport.update({
+  id: '/packages',
+  path: '/packages',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardMarketingRoute = DashboardMarketingRouteImport.update({
+  id: '/marketing',
+  path: '/marketing',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardConversationsRoute = DashboardConversationsRouteImport.update({
+  id: '/conversations',
+  path: '/conversations',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardClientsRoute = DashboardClientsRouteImport.update({
+  id: '/clients',
+  path: '/clients',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const ApiPublicEvolutionWebhookRoute =
   ApiPublicEvolutionWebhookRouteImport.update({
     id: '/api/public/evolution-webhook',
@@ -52,6 +82,11 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/dashboard/clients': typeof DashboardClientsRoute
+  '/dashboard/conversations': typeof DashboardConversationsRoute
+  '/dashboard/marketing': typeof DashboardMarketingRoute
+  '/dashboard/packages': typeof DashboardPackagesRoute
+  '/dashboard/rates': typeof DashboardRatesRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRoute
@@ -59,6 +94,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/dashboard/clients': typeof DashboardClientsRoute
+  '/dashboard/conversations': typeof DashboardConversationsRoute
+  '/dashboard/marketing': typeof DashboardMarketingRoute
+  '/dashboard/packages': typeof DashboardPackagesRoute
+  '/dashboard/rates': typeof DashboardRatesRoute
   '/dashboard': typeof DashboardIndexRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRoute
@@ -68,6 +108,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/dashboard/clients': typeof DashboardClientsRoute
+  '/dashboard/conversations': typeof DashboardConversationsRoute
+  '/dashboard/marketing': typeof DashboardMarketingRoute
+  '/dashboard/packages': typeof DashboardPackagesRoute
+  '/dashboard/rates': typeof DashboardRatesRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRoute
@@ -78,6 +123,11 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard'
+    | '/dashboard/clients'
+    | '/dashboard/conversations'
+    | '/dashboard/marketing'
+    | '/dashboard/packages'
+    | '/dashboard/rates'
     | '/dashboard/'
     | '/api/public/daraja-callback'
     | '/api/public/evolution-webhook'
@@ -85,6 +135,11 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/dashboard/clients'
+    | '/dashboard/conversations'
+    | '/dashboard/marketing'
+    | '/dashboard/packages'
+    | '/dashboard/rates'
     | '/dashboard'
     | '/api/public/daraja-callback'
     | '/api/public/evolution-webhook'
@@ -93,6 +148,11 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard'
+    | '/dashboard/clients'
+    | '/dashboard/conversations'
+    | '/dashboard/marketing'
+    | '/dashboard/packages'
+    | '/dashboard/rates'
     | '/dashboard/'
     | '/api/public/daraja-callback'
     | '/api/public/evolution-webhook'
@@ -136,6 +196,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/rates': {
+      id: '/dashboard/rates'
+      path: '/rates'
+      fullPath: '/dashboard/rates'
+      preLoaderRoute: typeof DashboardRatesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/packages': {
+      id: '/dashboard/packages'
+      path: '/packages'
+      fullPath: '/dashboard/packages'
+      preLoaderRoute: typeof DashboardPackagesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/marketing': {
+      id: '/dashboard/marketing'
+      path: '/marketing'
+      fullPath: '/dashboard/marketing'
+      preLoaderRoute: typeof DashboardMarketingRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/conversations': {
+      id: '/dashboard/conversations'
+      path: '/conversations'
+      fullPath: '/dashboard/conversations'
+      preLoaderRoute: typeof DashboardConversationsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/clients': {
+      id: '/dashboard/clients'
+      path: '/clients'
+      fullPath: '/dashboard/clients'
+      preLoaderRoute: typeof DashboardClientsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/api/public/evolution-webhook': {
       id: '/api/public/evolution-webhook'
       path: '/api/public/evolution-webhook'
@@ -154,10 +249,20 @@ declare module '@tanstack/react-router' {
 }
 
 interface DashboardRouteChildren {
+  DashboardClientsRoute: typeof DashboardClientsRoute
+  DashboardConversationsRoute: typeof DashboardConversationsRoute
+  DashboardMarketingRoute: typeof DashboardMarketingRoute
+  DashboardPackagesRoute: typeof DashboardPackagesRoute
+  DashboardRatesRoute: typeof DashboardRatesRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardClientsRoute: DashboardClientsRoute,
+  DashboardConversationsRoute: DashboardConversationsRoute,
+  DashboardMarketingRoute: DashboardMarketingRoute,
+  DashboardPackagesRoute: DashboardPackagesRoute,
+  DashboardRatesRoute: DashboardRatesRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
 
