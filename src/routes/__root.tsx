@@ -1,4 +1,6 @@
-import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { Outlet, Link, createRootRouteWithContext, HeadContent, Scripts } from "@tanstack/react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "@/components/ui/sonner";
 
 import appCss from "../styles.css?url";
 
@@ -24,19 +26,18 @@ function NotFoundComponent() {
   );
 }
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Dexcargo — China to Worldwide Logistics" },
+      { name: "description", content: "Dexcargo ships your cargo from China to your door. Track, pay and chat with us on WhatsApp." },
+      { name: "author", content: "Dexcargo" },
+      { property: "og:title", content: "Dexcargo — China to Worldwide Logistics" },
+      { property: "og:description", content: "Air, sea and express shipping from China. Real-time tracking, M-Pesa payments, WhatsApp support." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
@@ -65,5 +66,11 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  return <Outlet />;
+  const { queryClient } = Route.useRouteContext();
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Outlet />
+      <Toaster richColors position="top-right" />
+    </QueryClientProvider>
+  );
 }
