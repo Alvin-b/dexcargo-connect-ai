@@ -442,6 +442,50 @@ export type Database = {
         }
         Relationships: []
       }
+      social_publish_results: {
+        Row: {
+          attempted_at: string
+          error: string | null
+          external_id: string | null
+          id: string
+          permalink: string | null
+          platform: Database["public"]["Enums"]["social_platform"]
+          post_id: string
+          raw_response: Json | null
+          status: string
+        }
+        Insert: {
+          attempted_at?: string
+          error?: string | null
+          external_id?: string | null
+          id?: string
+          permalink?: string | null
+          platform: Database["public"]["Enums"]["social_platform"]
+          post_id: string
+          raw_response?: Json | null
+          status?: string
+        }
+        Update: {
+          attempted_at?: string
+          error?: string | null
+          external_id?: string | null
+          id?: string
+          permalink?: string | null
+          platform?: Database["public"]["Enums"]["social_platform"]
+          post_id?: string
+          raw_response?: Json | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "social_publish_results_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
