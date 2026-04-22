@@ -112,3 +112,109 @@ export const adminInitiatePayment = createServerFn({ method: "POST" })
     });
     return { ok: true, checkoutRequestId: r.CheckoutRequestID };
   });
+
+// Public shipping quote (used by /quote and the AI agent)
+export const quoteShipping = createServerFn({ method: "POST" })
+  .inputValidator((d: { destinationCountry: string; mode: "air"|"sea"|"express"; category?: string; weightKg?: number; cbm?: number }) => d)
+  .handler(async ({ data }) => {
+    const { computeQuote } = await import("./quote");
+    return computeQuote({
+      destinationCountry: data.destinationCountry,
+      mode: data.mode,
+      category: data.category,
+      weightKg: data.weightKg,
+      cbm: data.cbm,
+    });
+  });
+
+// Generate an on-brand marketing image with Lovable AI (Nano Banana)
+export const generateMarketingImage = createServerFn({ method: "POST" })
+  .inputValidator((d: { postId?: string; prompt: string }) => d)
+  .handler(async ({ data }) => {
+    const apiKey = process.env.LOVABLE_API_KEY;
+    if (!apiKey) throw new Error("LOVABLE_API_KEY missing");
+    const fullPrompt = `Eye-catching, professional social media graphic for Dexcargo (cargo shipping from China to Africa). Modern, vibrant, clean composition. ${data.prompt}. No text on the image.`;
+    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash-image",
+        messages: [{ role: "user", content: fullPrompt }],
+        modalities: ["image", "text"],
+      }),
+    });
+    if (!res.ok) {
+      if (res.status === 429) throw new Error("Rate limited, try again shortly.");
+      if (res.status === 402) throw new Error("AI credits exhausted. Add credits in Workspace settings.");
+      throw new Error(`AI image error: ${res.status}`);
+    }
+    const j = await res.json();
+    const dataUrl: string | undefined = j.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+    if (!dataUrl) throw new Error("No image returned by AI");
+    // Decode base64 data URL and upload to package-photos bucket (reused for marketing too)
+    const m = /^data:(image\/[a-z]+);base64,(.+)$/.exec(dataUrl);
+    if (!m) throw new Error("Bad image format");
+    const mime = m[1];
+    const ext = mime.split("/")[1] || "png";
+    const bytes = Uint8Array.from(atob(m[2]), (c) => c.charCodeAt(0));
+    const sb = supabaseAdmin;
+    const path = `marketing/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+    const { error: upErr } = await sb.storage.from("package-photos").upload(path, bytes, { contentType: mime, upsert: false });
+    if (upErr) throw new Error(upErr.message);
+    const { data: pub } = sb.storage.from("package-photos").getPublicUrl(path);
+    const url = pub.publicUrl;
+    if (data.postId) {
+      await sb.from("marketing_posts").update({ image_url: url }).eq("id", data.postId);
+    }
+    return { url };
+  });
+
+// Schedule a draft post for future publishing
+export const scheduleMarketingPost = createServerFn({ method: "POST" })
+  .inputValidator((d: { postId: string; scheduledFor: string }) => d)
+  .handler(async ({ data }) => {
+    const sb = supabaseAdmin;
+    const when = new Date(data.scheduledFor);
+    if (Number.isNaN(when.getTime())) throw new Error("Invalid date");
+    await sb.from("marketing_posts").update({
+      status: "scheduled",
+      scheduled_for: when.toISOString(),
+    }).eq("id", data.postId);
+    return { ok: true };
+  });
+
+// Manually publish a marketing post now
+export const publishMarketingPost = createServerFn({ method: "POST" })
+  .inputValidator((d: { postId: string }) => d)
+  .handler(async ({ data }) => {
+    const { publishPost } = await import("./social");
+    return publishPost(data.postId);
+  });
+
+// Delete a marketing post
+export const deleteMarketingPost = createServerFn({ method: "POST" })
+  .inputValidator((d: { postId: string }) => d)
+  .handler(async ({ data }) => {
+    const sb = supabaseAdmin;
+    await sb.from("marketing_posts").delete().eq("id", data.postId);
+    return { ok: true };
+  });
+
+// Pay for a package via M-Pesa from the client portal
+export const clientInitiatePayment = createServerFn({ method: "POST" })
+  .inputValidator((d: { packageId: string; phone: string; amount: number }) => d)
+  .handler(async ({ data }) => {
+    const { initiateStkPush } = await import("./daraja");
+    const sb = supabaseAdmin;
+    const { data: pkg } = await sb.from("packages").select("tracking_number, client_id").eq("id", data.packageId).maybeSingle();
+    if (!pkg) throw new Error("Package not found");
+    const r = await initiateStkPush({
+      phone: data.phone,
+      amount: data.amount,
+      accountReference: pkg.tracking_number,
+      description: `Dexcargo ${pkg.tracking_number}`,
+      packageId: data.packageId,
+      clientId: pkg.client_id,
+    });
+    return { ok: true, checkoutRequestId: r.CheckoutRequestID };
+  });

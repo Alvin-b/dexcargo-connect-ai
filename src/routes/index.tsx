@@ -30,6 +30,7 @@ function Landing() {
         <p className="text-xl text-muted-foreground mt-4 max-w-2xl mx-auto">Air, sea and express freight powered by an AI agent that handles your entire shipment over WhatsApp.</p>
         <div className="mt-8 flex gap-3 justify-center">
           <Link to="/auth"><Button size="lg">Track a package</Button></Link>
+          <Link to="/quote"><Button size="lg" variant="secondary">Get instant quote</Button></Link>
           <Button size="lg" variant="outline" asChild><a href="https://wa.me/" target="_blank" rel="noreferrer"><MessageCircle className="h-4 w-4 mr-2" />Chat on WhatsApp</a></Button>
         </div>
       </section>

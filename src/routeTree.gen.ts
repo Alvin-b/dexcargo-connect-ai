@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as QuoteRouteImport } from './routes/quote'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
@@ -18,9 +19,15 @@ import { Route as DashboardPackagesRouteImport } from './routes/dashboard.packag
 import { Route as DashboardMarketingRouteImport } from './routes/dashboard.marketing'
 import { Route as DashboardConversationsRouteImport } from './routes/dashboard.conversations'
 import { Route as DashboardClientsRouteImport } from './routes/dashboard.clients'
+import { Route as ApiPublicPublishScheduledRouteImport } from './routes/api/public/publish-scheduled'
 import { Route as ApiPublicEvolutionWebhookRouteImport } from './routes/api/public/evolution-webhook'
 import { Route as ApiPublicDarajaCallbackRouteImport } from './routes/api/public/daraja-callback'
 
+const QuoteRoute = QuoteRouteImport.update({
+  id: '/quote',
+  path: '/quote',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -66,6 +73,12 @@ const DashboardClientsRoute = DashboardClientsRouteImport.update({
   path: '/clients',
   getParentRoute: () => DashboardRoute,
 } as any)
+const ApiPublicPublishScheduledRoute =
+  ApiPublicPublishScheduledRouteImport.update({
+    id: '/api/public/publish-scheduled',
+    path: '/api/public/publish-scheduled',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicEvolutionWebhookRoute =
   ApiPublicEvolutionWebhookRouteImport.update({
     id: '/api/public/evolution-webhook',
@@ -82,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/quote': typeof QuoteRoute
   '/dashboard/clients': typeof DashboardClientsRoute
   '/dashboard/conversations': typeof DashboardConversationsRoute
   '/dashboard/marketing': typeof DashboardMarketingRoute
@@ -90,10 +104,12 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof DashboardIndexRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRoute
+  '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/quote': typeof QuoteRoute
   '/dashboard/clients': typeof DashboardClientsRoute
   '/dashboard/conversations': typeof DashboardConversationsRoute
   '/dashboard/marketing': typeof DashboardMarketingRoute
@@ -102,12 +118,14 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardIndexRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRoute
+  '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/quote': typeof QuoteRoute
   '/dashboard/clients': typeof DashboardClientsRoute
   '/dashboard/conversations': typeof DashboardConversationsRoute
   '/dashboard/marketing': typeof DashboardMarketingRoute
@@ -116,6 +134,7 @@ export interface FileRoutesById {
   '/dashboard/': typeof DashboardIndexRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRoute
+  '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -123,6 +142,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard'
+    | '/quote'
     | '/dashboard/clients'
     | '/dashboard/conversations'
     | '/dashboard/marketing'
@@ -131,10 +151,12 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/api/public/daraja-callback'
     | '/api/public/evolution-webhook'
+    | '/api/public/publish-scheduled'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
+    | '/quote'
     | '/dashboard/clients'
     | '/dashboard/conversations'
     | '/dashboard/marketing'
@@ -143,11 +165,13 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/api/public/daraja-callback'
     | '/api/public/evolution-webhook'
+    | '/api/public/publish-scheduled'
   id:
     | '__root__'
     | '/'
     | '/auth'
     | '/dashboard'
+    | '/quote'
     | '/dashboard/clients'
     | '/dashboard/conversations'
     | '/dashboard/marketing'
@@ -156,18 +180,28 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/api/public/daraja-callback'
     | '/api/public/evolution-webhook'
+    | '/api/public/publish-scheduled'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   DashboardRoute: typeof DashboardRouteWithChildren
+  QuoteRoute: typeof QuoteRoute
   ApiPublicDarajaCallbackRoute: typeof ApiPublicDarajaCallbackRoute
   ApiPublicEvolutionWebhookRoute: typeof ApiPublicEvolutionWebhookRoute
+  ApiPublicPublishScheduledRoute: typeof ApiPublicPublishScheduledRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/quote': {
+      id: '/quote'
+      path: '/quote'
+      fullPath: '/quote'
+      preLoaderRoute: typeof QuoteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -231,6 +265,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardClientsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/api/public/publish-scheduled': {
+      id: '/api/public/publish-scheduled'
+      path: '/api/public/publish-scheduled'
+      fullPath: '/api/public/publish-scheduled'
+      preLoaderRoute: typeof ApiPublicPublishScheduledRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/evolution-webhook': {
       id: '/api/public/evolution-webhook'
       path: '/api/public/evolution-webhook'
@@ -274,8 +315,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   DashboardRoute: DashboardRouteWithChildren,
+  QuoteRoute: QuoteRoute,
   ApiPublicDarajaCallbackRoute: ApiPublicDarajaCallbackRoute,
   ApiPublicEvolutionWebhookRoute: ApiPublicEvolutionWebhookRoute,
+  ApiPublicPublishScheduledRoute: ApiPublicPublishScheduledRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
