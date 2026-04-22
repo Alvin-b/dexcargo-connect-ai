@@ -35,9 +35,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Dexcargo ships your cargo from China to your door. Track, pay and chat with us on WhatsApp." },
       { name: "author", content: "Dexcargo" },
       { property: "og:title", content: "Dexcargo — China to Worldwide Logistics" },
-      { property: "og:description", content: "Air, sea and express shipping from China. Real-time tracking, M-Pesa payments, WhatsApp support." },
+      { property: "og:description", content: "Dexcargo ships your cargo from China to your door. Track, pay and chat with us on WhatsApp." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "Dexcargo — China to Worldwide Logistics" },
+      { name: "twitter:description", content: "Dexcargo ships your cargo from China to your door. Track, pay and chat with us on WhatsApp." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/236bb068-179b-4076-8811-3b4921acc599/id-preview-b62738b5--19ed5a12-5bcb-4b10-8603-8ae6e42860ec.lovable.app-1776862806911.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/236bb068-179b-4076-8811-3b4921acc599/id-preview-b62738b5--19ed5a12-5bcb-4b10-8603-8ae6e42860ec.lovable.app-1776862806911.png" },
     ],
     links: [
       {
