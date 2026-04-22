@@ -408,8 +408,11 @@ export type Database = {
           min_charge: number | null
           mode: Database["public"]["Enums"]["shipping_mode"]
           notes: string | null
+          origin_country: string | null
           price_per_cbm: number | null
           price_per_kg: number | null
+          transit_days_max: number | null
+          transit_days_min: number | null
           updated_at: string
         }
         Insert: {
@@ -422,8 +425,11 @@ export type Database = {
           min_charge?: number | null
           mode: Database["public"]["Enums"]["shipping_mode"]
           notes?: string | null
+          origin_country?: string | null
           price_per_cbm?: number | null
           price_per_kg?: number | null
+          transit_days_max?: number | null
+          transit_days_min?: number | null
           updated_at?: string
         }
         Update: {
@@ -436,8 +442,11 @@ export type Database = {
           min_charge?: number | null
           mode?: Database["public"]["Enums"]["shipping_mode"]
           notes?: string | null
+          origin_country?: string | null
           price_per_cbm?: number | null
           price_per_kg?: number | null
+          transit_days_max?: number | null
+          transit_days_min?: number | null
           updated_at?: string
         }
         Relationships: []
