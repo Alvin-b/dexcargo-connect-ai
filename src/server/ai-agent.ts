@@ -96,6 +96,24 @@ const TOOLS = [
   {
     type: "function",
     function: {
+      name: "quote_shipping",
+      description: "Calculate exact shipping cost for a client based on destination, mode, and either weight (air/express) or CBM (sea). Always use this when client asks 'how much' to ship something.",
+      parameters: {
+        type: "object",
+        properties: {
+          destination_country: { type: "string" },
+          mode: { type: "string", enum: ["air", "sea", "express"] },
+          category: { type: "string", description: "Optional category like electronics, clothing, general" },
+          weight_kg: { type: "number" },
+          cbm: { type: "number" },
+        },
+        required: ["destination_country", "mode"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
       name: "send_warehouse_photo",
       description: "Send the China warehouse photo for a package to the client. Use after the client asks to see their package.",
       parameters: {
@@ -209,6 +227,16 @@ async function executeTool(name: string, args: any, ctx: ToolCtx): Promise<any> 
       if (args.mode) q = q.eq("mode", args.mode);
       const { data } = await q;
       return { rates: data };
+    }
+    case "quote_shipping": {
+      const { computeQuote } = await import("./quote");
+      return await computeQuote({
+        destinationCountry: args.destination_country,
+        mode: args.mode,
+        category: args.category,
+        weightKg: args.weight_kg,
+        cbm: args.cbm,
+      });
     }
     case "send_warehouse_photo": {
       const { data: pkg } = await sb.from("packages").select("warehouse_photo_url, description").eq("tracking_number", args.tracking_number).maybeSingle();
