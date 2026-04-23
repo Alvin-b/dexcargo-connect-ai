@@ -19,12 +19,16 @@ Tone: friendly, concise, professional. You can mix English and Swahili if the cl
 
 Your responsibilities:
 - Greet new clients, collect their full name, city if you don't know them.
-- Help clients track packages by tracking number, name, or WhatsApp number.
+- Help clients track packages by tracking number, sender name, or sender phone number.
 - Quote shipping costs using the quote_shipping tool (always state mode, transit time, and total).
 - Inform clients about current status of their packages and share the China warehouse photo when available.
 - Initiate M-Pesa STK push payment when a client agrees to pay for a shipment.
 - Share the office address or phone when clients ask how to reach the company.
 - Remember details about the client across the conversation.
+
+Note about package records:
+- Every package has a tracking number and a warehouse photo. Sender name and sender phone are optional but commonly recorded.
+- If a client gives you only a phone number or a name (no tracking number), use search_packages to find their packages.
 
 Rules:
 - Use the provided tools to look up real data. Never invent tracking numbers, prices, or statuses.
@@ -78,6 +82,20 @@ const TOOLS = [
         type: "object",
         properties: { tracking_number: { type: "string" } },
         required: ["tracking_number"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "search_packages",
+      description: "Search packages by sender phone number or sender name when the client doesn't have a tracking number. Returns up to 10 matching packages with tracking numbers and current status.",
+      parameters: {
+        type: "object",
+        properties: {
+          sender_phone: { type: "string", description: "Phone number of the person who shipped the package" },
+          sender_name: { type: "string", description: "Name of the person who shipped the package (partial match)" },
+        },
       },
     },
   },
@@ -216,6 +234,8 @@ async function executeTool(name: string, args: any, ctx: ToolCtx): Promise<any> 
         tracking_number: pkg.tracking_number,
         description: pkg.description,
         status: pkg.status,
+        sender_name: pkg.sender_name ?? (pkg as any).clients?.full_name ?? null,
+        sender_phone: pkg.sender_phone ?? (pkg as any).clients?.whatsapp_number ?? null,
         weight_kg: pkg.weight_kg,
         cbm: pkg.cbm,
         mode: pkg.mode,
@@ -227,6 +247,19 @@ async function executeTool(name: string, args: any, ctx: ToolCtx): Promise<any> 
         has_warehouse_photo: !!pkg.warehouse_photo_url,
         events,
       };
+    }
+    case "search_packages": {
+      let q = sb.from("packages").select("tracking_number, description, status, mode, sender_name, sender_phone, estimated_arrival").order("created_at", { ascending: false }).limit(10);
+      if (args.sender_phone) {
+        const phone = String(args.sender_phone).replace(/\D/g, "");
+        q = q.eq("sender_phone", phone);
+      } else if (args.sender_name) {
+        q = q.ilike("sender_name", `%${args.sender_name}%`);
+      } else {
+        return { found: false, error: "Provide sender_phone or sender_name" };
+      }
+      const { data } = await q;
+      return { found: (data?.length ?? 0) > 0, packages: data ?? [] };
     }
     case "list_client_packages": {
       const wa = String(args.whatsapp_number).replace(/\D/g, "");
