@@ -10,11 +10,10 @@ export const Route = createFileRoute("/api/public/evolution-webhook")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        // Verify shared secret
+        // Verify shared secret via x-webhook-secret header (preferred).
         const expected = process.env.EVOLUTION_WEBHOOK_SECRET;
         if (expected) {
-          const url = new URL(request.url);
-          const provided = url.searchParams.get("secret") || request.headers.get("x-webhook-secret");
+          const provided = request.headers.get("x-webhook-secret");
           if (provided !== expected) {
             return new Response("Unauthorized", { status: 401 });
           }
