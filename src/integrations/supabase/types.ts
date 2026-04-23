@@ -261,7 +261,7 @@ export type Database = {
         Row: {
           category: string | null
           cbm: number | null
-          client_id: string
+          client_id: string | null
           created_at: string
           currency: string | null
           declared_value: number | null
@@ -289,7 +289,7 @@ export type Database = {
         Insert: {
           category?: string | null
           cbm?: number | null
-          client_id: string
+          client_id?: string | null
           created_at?: string
           currency?: string | null
           declared_value?: number | null
@@ -317,7 +317,7 @@ export type Database = {
         Update: {
           category?: string | null
           cbm?: number | null
-          client_id?: string
+          client_id?: string | null
           created_at?: string
           currency?: string | null
           declared_value?: number | null
