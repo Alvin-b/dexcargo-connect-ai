@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Package, Users, MessageSquare, DollarSign, Megaphone, LayoutDashboard, LogOut } from "lucide-react";
+import { Package, Users, MessageSquare, DollarSign, Megaphone, LayoutDashboard, LogOut, KeyRound } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard")({
   component: DashboardLayout,
@@ -28,6 +28,7 @@ function DashboardLayout() {
         { to: "/dashboard/conversations", label: "WhatsApp", icon: MessageSquare },
         { to: "/dashboard/rates", label: "Rates", icon: DollarSign },
         { to: "/dashboard/marketing", label: "Marketing", icon: Megaphone },
+        { to: "/dashboard/api-keys", label: "API Keys", icon: KeyRound },
       ]
     : [
         { to: "/dashboard", label: "My Packages", icon: Package },

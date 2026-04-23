@@ -19,6 +19,7 @@ import { Route as DashboardPackagesRouteImport } from './routes/dashboard.packag
 import { Route as DashboardMarketingRouteImport } from './routes/dashboard.marketing'
 import { Route as DashboardConversationsRouteImport } from './routes/dashboard.conversations'
 import { Route as DashboardClientsRouteImport } from './routes/dashboard.clients'
+import { Route as DashboardApiKeysRouteImport } from './routes/dashboard.api-keys'
 import { Route as ApiPublicPublishScheduledRouteImport } from './routes/api/public/publish-scheduled'
 import { Route as ApiPublicEvolutionWebhookRouteImport } from './routes/api/public/evolution-webhook'
 import { Route as ApiPublicDarajaCallbackRouteImport } from './routes/api/public/daraja-callback'
@@ -89,6 +90,11 @@ const DashboardConversationsRoute = DashboardConversationsRouteImport.update({
 const DashboardClientsRoute = DashboardClientsRouteImport.update({
   id: '/clients',
   path: '/clients',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardApiKeysRoute = DashboardApiKeysRouteImport.update({
+  id: '/api-keys',
+  path: '/api-keys',
   getParentRoute: () => DashboardRoute,
 } as any)
 const ApiPublicPublishScheduledRoute =
@@ -207,6 +213,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/quote': typeof QuoteRoute
+  '/dashboard/api-keys': typeof DashboardApiKeysRoute
   '/dashboard/clients': typeof DashboardClientsRoute
   '/dashboard/conversations': typeof DashboardConversationsRoute
   '/dashboard/marketing': typeof DashboardMarketingRoute
@@ -239,6 +246,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/quote': typeof QuoteRoute
+  '/dashboard/api-keys': typeof DashboardApiKeysRoute
   '/dashboard/clients': typeof DashboardClientsRoute
   '/dashboard/conversations': typeof DashboardConversationsRoute
   '/dashboard/marketing': typeof DashboardMarketingRoute
@@ -273,6 +281,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/quote': typeof QuoteRoute
+  '/dashboard/api-keys': typeof DashboardApiKeysRoute
   '/dashboard/clients': typeof DashboardClientsRoute
   '/dashboard/conversations': typeof DashboardConversationsRoute
   '/dashboard/marketing': typeof DashboardMarketingRoute
@@ -308,6 +317,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/quote'
+    | '/dashboard/api-keys'
     | '/dashboard/clients'
     | '/dashboard/conversations'
     | '/dashboard/marketing'
@@ -340,6 +350,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/quote'
+    | '/dashboard/api-keys'
     | '/dashboard/clients'
     | '/dashboard/conversations'
     | '/dashboard/marketing'
@@ -373,6 +384,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/quote'
+    | '/dashboard/api-keys'
     | '/dashboard/clients'
     | '/dashboard/conversations'
     | '/dashboard/marketing'
@@ -492,6 +504,13 @@ declare module '@tanstack/react-router' {
       path: '/clients'
       fullPath: '/dashboard/clients'
       preLoaderRoute: typeof DashboardClientsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/api-keys': {
+      id: '/dashboard/api-keys'
+      path: '/api-keys'
+      fullPath: '/dashboard/api-keys'
+      preLoaderRoute: typeof DashboardApiKeysRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/api/public/publish-scheduled': {
@@ -645,6 +664,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface DashboardRouteChildren {
+  DashboardApiKeysRoute: typeof DashboardApiKeysRoute
   DashboardClientsRoute: typeof DashboardClientsRoute
   DashboardConversationsRoute: typeof DashboardConversationsRoute
   DashboardMarketingRoute: typeof DashboardMarketingRoute
@@ -654,6 +674,7 @@ interface DashboardRouteChildren {
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardApiKeysRoute: DashboardApiKeysRoute,
   DashboardClientsRoute: DashboardClientsRoute,
   DashboardConversationsRoute: DashboardConversationsRoute,
   DashboardMarketingRoute: DashboardMarketingRoute,
