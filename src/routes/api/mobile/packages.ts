@@ -13,13 +13,15 @@ export const Route = createFileRoute("/api/mobile/packages")({
           const url = new URL(request.url);
           const status = url.searchParams.get("status");
           const clientId = url.searchParams.get("client_id");
+          const senderPhone = url.searchParams.get("sender_phone");
           const q = url.searchParams.get("q");
           const limit = Math.min(Number(url.searchParams.get("limit") ?? 50), 200);
           const offset = Math.max(Number(url.searchParams.get("offset") ?? 0), 0);
           let query = supabaseAdmin.from("packages").select("*, clients(full_name, whatsapp_number)", { count: "exact" }).order("created_at", { ascending: false }).range(offset, offset + limit - 1);
           if (status) query = query.eq("status", status as any);
           if (clientId) query = query.eq("client_id", clientId);
-          if (q) query = query.or(`tracking_number.ilike.%${q}%,description.ilike.%${q}%`);
+          if (senderPhone) query = query.eq("sender_phone", senderPhone.replace(/\D/g, ""));
+          if (q) query = query.or(`tracking_number.ilike.%${q}%,description.ilike.%${q}%,sender_name.ilike.%${q}%,sender_phone.ilike.%${q}%`);
           const { data, count, error } = await query;
           if (error) throw error;
           return apiJson({ data, count, limit, offset });
