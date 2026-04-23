@@ -39,23 +39,43 @@ function PackagesPage() {
     },
   });
 
-  const [form, setForm] = useState({ tracking_number: "", client_id: "", description: "", weight_kg: "", destination_country: "", destination_city: "", mode: "air", shipping_cost: "" });
+  const [form, setForm] = useState({ tracking_number: "", client_id: "", sender_name: "", sender_phone: "", description: "", weight_kg: "", destination_country: "", destination_city: "", mode: "air", shipping_cost: "", warehouse_photo_url: "" });
+  const [intakeUploading, setIntakeUploading] = useState(false);
   async function createPkg() {
+    if (!form.tracking_number) return toast.error("Tracking number is required");
+    if (!form.warehouse_photo_url) return toast.error("Warehouse photo is required");
+    if (!form.client_id && !form.sender_name && !form.sender_phone) {
+      return toast.error("Provide at least a client, sender name, or sender phone");
+    }
     const { error } = await supabase.from("packages").insert({
       tracking_number: form.tracking_number,
-      client_id: form.client_id,
+      client_id: form.client_id || null,
+      sender_name: form.sender_name || null,
+      sender_phone: form.sender_phone ? form.sender_phone.replace(/\D/g, "") : null,
       description: form.description || null,
       weight_kg: form.weight_kg ? Number(form.weight_kg) : null,
       destination_country: form.destination_country || null,
       destination_city: form.destination_city || null,
       mode: form.mode as any,
       shipping_cost: form.shipping_cost ? Number(form.shipping_cost) : null,
+      warehouse_photo_url: form.warehouse_photo_url,
       status: "pending",
     });
     if (error) return toast.error(error.message);
     toast.success("Package created");
     setOpen(false);
     qc.invalidateQueries({ queryKey: ["packages"] });
+  }
+
+  async function uploadIntakePhoto(file: File) {
+    setIntakeUploading(true);
+    const path = `intake/${Date.now()}-${file.name}`;
+    const { error } = await supabase.storage.from("package-photos").upload(path, file, { upsert: true });
+    setIntakeUploading(false);
+    if (error) return toast.error(error.message);
+    const { data } = supabase.storage.from("package-photos").getPublicUrl(path);
+    setForm((f) => ({ ...f, warehouse_photo_url: data.publicUrl }));
+    toast.success("Photo uploaded");
   }
 
   return (
@@ -67,8 +87,16 @@ function PackagesPage() {
           <DialogContent>
             <DialogHeader><DialogTitle>Create package</DialogTitle></DialogHeader>
             <div className="space-y-3">
-              <div><Label>Tracking number</Label><Input value={form.tracking_number} onChange={(e) => setForm({...form, tracking_number: e.target.value})} /></div>
-              <div><Label>Client</Label>
+              <div><Label>Tracking number *</Label><Input value={form.tracking_number} onChange={(e) => setForm({...form, tracking_number: e.target.value})} /></div>
+              <div><Label>Warehouse photo *</Label>
+                <Input type="file" accept="image/*" onChange={(e) => e.target.files && uploadIntakePhoto(e.target.files[0])} disabled={intakeUploading} />
+                {form.warehouse_photo_url && <img src={form.warehouse_photo_url} className="h-24 mt-2 rounded object-cover" alt="warehouse" />}
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div><Label>Sender name</Label><Input value={form.sender_name} onChange={(e) => setForm({...form, sender_name: e.target.value})} /></div>
+                <div><Label>Sender phone</Label><Input value={form.sender_phone} onChange={(e) => setForm({...form, sender_phone: e.target.value})} placeholder="2547..." /></div>
+              </div>
+              <div><Label>Existing client (optional)</Label>
                 <Select value={form.client_id} onValueChange={(v) => setForm({...form, client_id: v})}>
                   <SelectTrigger><SelectValue placeholder="Select client" /></SelectTrigger>
                   <SelectContent>{clients?.map((c) => <SelectItem key={c.id} value={c.id}>{c.full_name} — {c.whatsapp_number}</SelectItem>)}</SelectContent>
