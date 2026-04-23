@@ -108,7 +108,7 @@ export const adminInitiatePayment = createServerFn({ method: "POST" })
       accountReference: pkg.tracking_number,
       description: `Dexcargo ${pkg.tracking_number}`,
       packageId: data.packageId,
-      clientId: pkg.client_id,
+      clientId: pkg.client_id ?? undefined,
     });
     return { ok: true, checkoutRequestId: r.CheckoutRequestID };
   });
@@ -214,7 +214,7 @@ export const clientInitiatePayment = createServerFn({ method: "POST" })
       accountReference: pkg.tracking_number,
       description: `Dexcargo ${pkg.tracking_number}`,
       packageId: data.packageId,
-      clientId: pkg.client_id,
+      clientId: pkg.client_id ?? undefined,
     });
     return { ok: true, checkoutRequestId: r.CheckoutRequestID };
   });

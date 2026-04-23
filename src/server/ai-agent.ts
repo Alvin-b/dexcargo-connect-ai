@@ -177,7 +177,7 @@ async function executeTool(name: string, args: any, ctx: ToolCtx): Promise<any> 
       if (args.whatsapp_number) q = q.eq("whatsapp_number", String(args.whatsapp_number).replace(/\D/g, ""));
       else if (args.tracking_number) {
         const { data: pkg } = await sb.from("packages").select("client_id").eq("tracking_number", args.tracking_number).maybeSingle();
-        if (!pkg) return { found: false };
+        if (!pkg?.client_id) return { found: false };
         q = q.eq("id", pkg.client_id);
       } else if (args.name) q = q.ilike("full_name", `%${args.name}%`);
       const { data } = await q;
@@ -269,7 +269,7 @@ async function executeTool(name: string, args: any, ctx: ToolCtx): Promise<any> 
           accountReference: args.tracking_number,
           description: `Dexcargo ${args.tracking_number}`,
           packageId: pkg?.id,
-          clientId: pkg?.client_id,
+          clientId: pkg?.client_id ?? undefined,
         });
         return { ok: true, message: "STK push sent. Please enter your M-Pesa PIN.", checkout_request_id: r.CheckoutRequestID };
       } catch (e: any) {
