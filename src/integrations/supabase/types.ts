@@ -261,7 +261,7 @@ export type Database = {
         Row: {
           category: string | null
           cbm: number | null
-          client_id: string
+          client_id: string | null
           created_at: string
           currency: string | null
           declared_value: number | null
@@ -276,6 +276,8 @@ export type Database = {
           mode: Database["public"]["Enums"]["shipping_mode"] | null
           origin: string | null
           received_at: string | null
+          sender_name: string | null
+          sender_phone: string | null
           shipping_cost: number | null
           status: Database["public"]["Enums"]["package_status"]
           tracking_number: string
@@ -287,7 +289,7 @@ export type Database = {
         Insert: {
           category?: string | null
           cbm?: number | null
-          client_id: string
+          client_id?: string | null
           created_at?: string
           currency?: string | null
           declared_value?: number | null
@@ -302,6 +304,8 @@ export type Database = {
           mode?: Database["public"]["Enums"]["shipping_mode"] | null
           origin?: string | null
           received_at?: string | null
+          sender_name?: string | null
+          sender_phone?: string | null
           shipping_cost?: number | null
           status?: Database["public"]["Enums"]["package_status"]
           tracking_number: string
@@ -313,7 +317,7 @@ export type Database = {
         Update: {
           category?: string | null
           cbm?: number | null
-          client_id?: string
+          client_id?: string | null
           created_at?: string
           currency?: string | null
           declared_value?: number | null
@@ -328,6 +332,8 @@ export type Database = {
           mode?: Database["public"]["Enums"]["shipping_mode"] | null
           origin?: string | null
           received_at?: string | null
+          sender_name?: string | null
+          sender_phone?: string | null
           shipping_cost?: number | null
           status?: Database["public"]["Enums"]["package_status"]
           tracking_number?: string
@@ -573,6 +579,8 @@ export type Database = {
           raw_key: string
         }[]
       }
+      show_limit: { Args: never; Returns: number }
+      show_trgm: { Args: { "": string }; Returns: string[] }
       verify_api_key: { Args: { _raw_key: string }; Returns: string }
     }
     Enums: {

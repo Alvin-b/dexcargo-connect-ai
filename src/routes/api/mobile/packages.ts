@@ -13,13 +13,15 @@ export const Route = createFileRoute("/api/mobile/packages")({
           const url = new URL(request.url);
           const status = url.searchParams.get("status");
           const clientId = url.searchParams.get("client_id");
+          const senderPhone = url.searchParams.get("sender_phone");
           const q = url.searchParams.get("q");
           const limit = Math.min(Number(url.searchParams.get("limit") ?? 50), 200);
           const offset = Math.max(Number(url.searchParams.get("offset") ?? 0), 0);
           let query = supabaseAdmin.from("packages").select("*, clients(full_name, whatsapp_number)", { count: "exact" }).order("created_at", { ascending: false }).range(offset, offset + limit - 1);
           if (status) query = query.eq("status", status as any);
           if (clientId) query = query.eq("client_id", clientId);
-          if (q) query = query.or(`tracking_number.ilike.%${q}%,description.ilike.%${q}%`);
+          if (senderPhone) query = query.eq("sender_phone", senderPhone.replace(/\D/g, ""));
+          if (q) query = query.or(`tracking_number.ilike.%${q}%,description.ilike.%${q}%,sender_name.ilike.%${q}%,sender_phone.ilike.%${q}%`);
           const { data, count, error } = await query;
           if (error) throw error;
           return apiJson({ data, count, limit, offset });
@@ -30,10 +32,16 @@ export const Route = createFileRoute("/api/mobile/packages")({
           const auth = await authenticate(request);
           if (!auth.ok) return auth.response;
           const body = await readJson<any>(request);
-          if (!body?.client_id || !body?.tracking_number) return badRequest("client_id and tracking_number required");
+          if (!body?.tracking_number) return badRequest("tracking_number required");
+          if (!body?.warehouse_photo_url) return badRequest("warehouse_photo_url required");
+          if (!body?.client_id && !body?.sender_name && !body?.sender_phone) {
+            return badRequest("provide at least one of: client_id, sender_name, sender_phone");
+          }
           const { data, error } = await supabaseAdmin.from("packages").insert({
-            client_id: body.client_id,
+            client_id: body.client_id ?? null,
             tracking_number: body.tracking_number,
+            sender_name: body.sender_name ?? null,
+            sender_phone: body.sender_phone ? String(body.sender_phone).replace(/\D/g, "") : null,
             description: body.description ?? null,
             category: body.category ?? null,
             mode: body.mode ?? "air",
