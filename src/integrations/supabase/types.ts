@@ -94,6 +94,42 @@ export type Database = {
           },
         ]
       }
+      employee_api_keys: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          key_hash: string
+          key_prefix: string
+          label: string
+          last_used_at: string | null
+          revoked_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          key_hash: string
+          key_prefix: string
+          label: string
+          last_used_at?: string | null
+          revoked_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          key_hash?: string
+          key_prefix?: string
+          label?: string
+          last_used_at?: string | null
+          revoked_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       marketing_posts: {
         Row: {
           content: string
@@ -529,6 +565,15 @@ export type Database = {
         Returns: boolean
       }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
+      issue_api_key: {
+        Args: { _label: string; _user_id: string }
+        Returns: {
+          id: string
+          key_prefix: string
+          raw_key: string
+        }[]
+      }
+      verify_api_key: { Args: { _raw_key: string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "staff" | "client"
