@@ -30,10 +30,16 @@ export const Route = createFileRoute("/api/mobile/packages")({
           const auth = await authenticate(request);
           if (!auth.ok) return auth.response;
           const body = await readJson<any>(request);
-          if (!body?.client_id || !body?.tracking_number) return badRequest("client_id and tracking_number required");
+          if (!body?.tracking_number) return badRequest("tracking_number required");
+          if (!body?.warehouse_photo_url) return badRequest("warehouse_photo_url required");
+          if (!body?.client_id && !body?.sender_name && !body?.sender_phone) {
+            return badRequest("provide at least one of: client_id, sender_name, sender_phone");
+          }
           const { data, error } = await supabaseAdmin.from("packages").insert({
-            client_id: body.client_id,
+            client_id: body.client_id ?? null,
             tracking_number: body.tracking_number,
+            sender_name: body.sender_name ?? null,
+            sender_phone: body.sender_phone ? String(body.sender_phone).replace(/\D/g, "") : null,
             description: body.description ?? null,
             category: body.category ?? null,
             mode: body.mode ?? "air",
