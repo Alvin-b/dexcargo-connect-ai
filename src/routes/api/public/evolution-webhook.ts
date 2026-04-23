@@ -10,10 +10,15 @@ export const Route = createFileRoute("/api/public/evolution-webhook")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        // Verify shared secret via x-webhook-secret header (preferred).
+        // Optional shared secret. Evolution doesn't send custom headers by default,
+        // so we also accept ?secret=... in the URL, or the Evolution apikey in the body.
         const expected = process.env.EVOLUTION_WEBHOOK_SECRET;
         if (expected) {
-          const provided = request.headers.get("x-webhook-secret");
+          const url = new URL(request.url);
+          const provided =
+            request.headers.get("x-webhook-secret") ||
+            request.headers.get("apikey") ||
+            url.searchParams.get("secret");
           if (provided !== expected) {
             return new Response("Unauthorized", { status: 401 });
           }
