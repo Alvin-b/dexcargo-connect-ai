@@ -33,14 +33,20 @@ import { Route as ApiMobileMarketingRouteImport } from './routes/api/mobile/mark
 import { Route as ApiMobileConversationsRouteImport } from './routes/api/mobile/conversations'
 import { Route as ApiMobileClientsRouteImport } from './routes/api/mobile/clients'
 import { Route as ApiPublicEvolutionWebhookSplatRouteImport } from './routes/api/public/evolution-webhook.$'
+import { Route as ApiMobileRatesLookupRouteImport } from './routes/api/mobile/rates.lookup'
 import { Route as ApiMobileRatesIdRouteImport } from './routes/api/mobile/rates.$id'
+import { Route as ApiMobilePaymentsCashRouteImport } from './routes/api/mobile/payments.cash'
 import { Route as ApiMobilePaymentsIdRouteImport } from './routes/api/mobile/payments.$id'
+import { Route as ApiMobilePackagesScanRouteImport } from './routes/api/mobile/packages.scan'
+import { Route as ApiMobilePackagesReadyForPickupRouteImport } from './routes/api/mobile/packages.ready-for-pickup'
+import { Route as ApiMobilePackagesLookupRouteImport } from './routes/api/mobile/packages.lookup'
 import { Route as ApiMobilePackagesIdRouteImport } from './routes/api/mobile/packages.$id'
 import { Route as ApiMobileMarketingIdRouteImport } from './routes/api/mobile/marketing.$id'
 import { Route as ApiMobileConversationsIdRouteImport } from './routes/api/mobile/conversations.$id'
 import { Route as ApiMobileClientsIdRouteImport } from './routes/api/mobile/clients.$id'
 import { Route as ApiMobileAuthMeRouteImport } from './routes/api/mobile/auth.me'
 import { Route as ApiMobilePackagesIdEventsRouteImport } from './routes/api/mobile/packages.$id.events'
+import { Route as ApiMobilePackagesIdDeliverRouteImport } from './routes/api/mobile/packages.$id.deliver'
 import { Route as ApiMobileConversationsIdMessagesRouteImport } from './routes/api/mobile/conversations.$id.messages'
 
 const QuoteRoute = QuoteRouteImport.update({
@@ -166,15 +172,41 @@ const ApiPublicEvolutionWebhookSplatRoute =
     path: '/$',
     getParentRoute: () => ApiPublicEvolutionWebhookRoute,
   } as any)
+const ApiMobileRatesLookupRoute = ApiMobileRatesLookupRouteImport.update({
+  id: '/lookup',
+  path: '/lookup',
+  getParentRoute: () => ApiMobileRatesRoute,
+} as any)
 const ApiMobileRatesIdRoute = ApiMobileRatesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => ApiMobileRatesRoute,
 } as any)
+const ApiMobilePaymentsCashRoute = ApiMobilePaymentsCashRouteImport.update({
+  id: '/cash',
+  path: '/cash',
+  getParentRoute: () => ApiMobilePaymentsRoute,
+} as any)
 const ApiMobilePaymentsIdRoute = ApiMobilePaymentsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => ApiMobilePaymentsRoute,
+} as any)
+const ApiMobilePackagesScanRoute = ApiMobilePackagesScanRouteImport.update({
+  id: '/scan',
+  path: '/scan',
+  getParentRoute: () => ApiMobilePackagesRoute,
+} as any)
+const ApiMobilePackagesReadyForPickupRoute =
+  ApiMobilePackagesReadyForPickupRouteImport.update({
+    id: '/ready-for-pickup',
+    path: '/ready-for-pickup',
+    getParentRoute: () => ApiMobilePackagesRoute,
+  } as any)
+const ApiMobilePackagesLookupRoute = ApiMobilePackagesLookupRouteImport.update({
+  id: '/lookup',
+  path: '/lookup',
+  getParentRoute: () => ApiMobilePackagesRoute,
 } as any)
 const ApiMobilePackagesIdRoute = ApiMobilePackagesIdRouteImport.update({
   id: '/$id',
@@ -206,6 +238,12 @@ const ApiMobilePackagesIdEventsRoute =
   ApiMobilePackagesIdEventsRouteImport.update({
     id: '/events',
     path: '/events',
+    getParentRoute: () => ApiMobilePackagesIdRoute,
+  } as any)
+const ApiMobilePackagesIdDeliverRoute =
+  ApiMobilePackagesIdDeliverRouteImport.update({
+    id: '/deliver',
+    path: '/deliver',
     getParentRoute: () => ApiMobilePackagesIdRoute,
   } as any)
 const ApiMobileConversationsIdMessagesRoute =
@@ -244,10 +282,16 @@ export interface FileRoutesByFullPath {
   '/api/mobile/conversations/$id': typeof ApiMobileConversationsIdRouteWithChildren
   '/api/mobile/marketing/$id': typeof ApiMobileMarketingIdRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
+  '/api/mobile/packages/lookup': typeof ApiMobilePackagesLookupRoute
+  '/api/mobile/packages/ready-for-pickup': typeof ApiMobilePackagesReadyForPickupRoute
+  '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
+  '/api/mobile/payments/cash': typeof ApiMobilePaymentsCashRoute
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
+  '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
+  '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
 }
 export interface FileRoutesByTo {
@@ -278,10 +322,16 @@ export interface FileRoutesByTo {
   '/api/mobile/conversations/$id': typeof ApiMobileConversationsIdRouteWithChildren
   '/api/mobile/marketing/$id': typeof ApiMobileMarketingIdRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
+  '/api/mobile/packages/lookup': typeof ApiMobilePackagesLookupRoute
+  '/api/mobile/packages/ready-for-pickup': typeof ApiMobilePackagesReadyForPickupRoute
+  '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
+  '/api/mobile/payments/cash': typeof ApiMobilePaymentsCashRoute
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
+  '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
+  '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
 }
 export interface FileRoutesById {
@@ -314,10 +364,16 @@ export interface FileRoutesById {
   '/api/mobile/conversations/$id': typeof ApiMobileConversationsIdRouteWithChildren
   '/api/mobile/marketing/$id': typeof ApiMobileMarketingIdRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
+  '/api/mobile/packages/lookup': typeof ApiMobilePackagesLookupRoute
+  '/api/mobile/packages/ready-for-pickup': typeof ApiMobilePackagesReadyForPickupRoute
+  '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
+  '/api/mobile/payments/cash': typeof ApiMobilePaymentsCashRoute
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
+  '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
+  '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
 }
 export interface FileRouteTypes {
@@ -351,10 +407,16 @@ export interface FileRouteTypes {
     | '/api/mobile/conversations/$id'
     | '/api/mobile/marketing/$id'
     | '/api/mobile/packages/$id'
+    | '/api/mobile/packages/lookup'
+    | '/api/mobile/packages/ready-for-pickup'
+    | '/api/mobile/packages/scan'
     | '/api/mobile/payments/$id'
+    | '/api/mobile/payments/cash'
     | '/api/mobile/rates/$id'
+    | '/api/mobile/rates/lookup'
     | '/api/public/evolution-webhook/$'
     | '/api/mobile/conversations/$id/messages'
+    | '/api/mobile/packages/$id/deliver'
     | '/api/mobile/packages/$id/events'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -385,10 +447,16 @@ export interface FileRouteTypes {
     | '/api/mobile/conversations/$id'
     | '/api/mobile/marketing/$id'
     | '/api/mobile/packages/$id'
+    | '/api/mobile/packages/lookup'
+    | '/api/mobile/packages/ready-for-pickup'
+    | '/api/mobile/packages/scan'
     | '/api/mobile/payments/$id'
+    | '/api/mobile/payments/cash'
     | '/api/mobile/rates/$id'
+    | '/api/mobile/rates/lookup'
     | '/api/public/evolution-webhook/$'
     | '/api/mobile/conversations/$id/messages'
+    | '/api/mobile/packages/$id/deliver'
     | '/api/mobile/packages/$id/events'
   id:
     | '__root__'
@@ -420,10 +488,16 @@ export interface FileRouteTypes {
     | '/api/mobile/conversations/$id'
     | '/api/mobile/marketing/$id'
     | '/api/mobile/packages/$id'
+    | '/api/mobile/packages/lookup'
+    | '/api/mobile/packages/ready-for-pickup'
+    | '/api/mobile/packages/scan'
     | '/api/mobile/payments/$id'
+    | '/api/mobile/payments/cash'
     | '/api/mobile/rates/$id'
+    | '/api/mobile/rates/lookup'
     | '/api/public/evolution-webhook/$'
     | '/api/mobile/conversations/$id/messages'
+    | '/api/mobile/packages/$id/deliver'
     | '/api/mobile/packages/$id/events'
   fileRoutesById: FileRoutesById
 }
@@ -617,6 +691,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicEvolutionWebhookSplatRouteImport
       parentRoute: typeof ApiPublicEvolutionWebhookRoute
     }
+    '/api/mobile/rates/lookup': {
+      id: '/api/mobile/rates/lookup'
+      path: '/lookup'
+      fullPath: '/api/mobile/rates/lookup'
+      preLoaderRoute: typeof ApiMobileRatesLookupRouteImport
+      parentRoute: typeof ApiMobileRatesRoute
+    }
     '/api/mobile/rates/$id': {
       id: '/api/mobile/rates/$id'
       path: '/$id'
@@ -624,12 +705,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileRatesIdRouteImport
       parentRoute: typeof ApiMobileRatesRoute
     }
+    '/api/mobile/payments/cash': {
+      id: '/api/mobile/payments/cash'
+      path: '/cash'
+      fullPath: '/api/mobile/payments/cash'
+      preLoaderRoute: typeof ApiMobilePaymentsCashRouteImport
+      parentRoute: typeof ApiMobilePaymentsRoute
+    }
     '/api/mobile/payments/$id': {
       id: '/api/mobile/payments/$id'
       path: '/$id'
       fullPath: '/api/mobile/payments/$id'
       preLoaderRoute: typeof ApiMobilePaymentsIdRouteImport
       parentRoute: typeof ApiMobilePaymentsRoute
+    }
+    '/api/mobile/packages/scan': {
+      id: '/api/mobile/packages/scan'
+      path: '/scan'
+      fullPath: '/api/mobile/packages/scan'
+      preLoaderRoute: typeof ApiMobilePackagesScanRouteImport
+      parentRoute: typeof ApiMobilePackagesRoute
+    }
+    '/api/mobile/packages/ready-for-pickup': {
+      id: '/api/mobile/packages/ready-for-pickup'
+      path: '/ready-for-pickup'
+      fullPath: '/api/mobile/packages/ready-for-pickup'
+      preLoaderRoute: typeof ApiMobilePackagesReadyForPickupRouteImport
+      parentRoute: typeof ApiMobilePackagesRoute
+    }
+    '/api/mobile/packages/lookup': {
+      id: '/api/mobile/packages/lookup'
+      path: '/lookup'
+      fullPath: '/api/mobile/packages/lookup'
+      preLoaderRoute: typeof ApiMobilePackagesLookupRouteImport
+      parentRoute: typeof ApiMobilePackagesRoute
     }
     '/api/mobile/packages/$id': {
       id: '/api/mobile/packages/$id'
@@ -671,6 +780,13 @@ declare module '@tanstack/react-router' {
       path: '/events'
       fullPath: '/api/mobile/packages/$id/events'
       preLoaderRoute: typeof ApiMobilePackagesIdEventsRouteImport
+      parentRoute: typeof ApiMobilePackagesIdRoute
+    }
+    '/api/mobile/packages/$id/deliver': {
+      id: '/api/mobile/packages/$id/deliver'
+      path: '/deliver'
+      fullPath: '/api/mobile/packages/$id/deliver'
+      preLoaderRoute: typeof ApiMobilePackagesIdDeliverRouteImport
       parentRoute: typeof ApiMobilePackagesIdRoute
     }
     '/api/mobile/conversations/$id/messages': {
@@ -759,10 +875,12 @@ const ApiMobileMarketingRouteWithChildren =
   ApiMobileMarketingRoute._addFileChildren(ApiMobileMarketingRouteChildren)
 
 interface ApiMobilePackagesIdRouteChildren {
+  ApiMobilePackagesIdDeliverRoute: typeof ApiMobilePackagesIdDeliverRoute
   ApiMobilePackagesIdEventsRoute: typeof ApiMobilePackagesIdEventsRoute
 }
 
 const ApiMobilePackagesIdRouteChildren: ApiMobilePackagesIdRouteChildren = {
+  ApiMobilePackagesIdDeliverRoute: ApiMobilePackagesIdDeliverRoute,
   ApiMobilePackagesIdEventsRoute: ApiMobilePackagesIdEventsRoute,
 }
 
@@ -771,10 +889,16 @@ const ApiMobilePackagesIdRouteWithChildren =
 
 interface ApiMobilePackagesRouteChildren {
   ApiMobilePackagesIdRoute: typeof ApiMobilePackagesIdRouteWithChildren
+  ApiMobilePackagesLookupRoute: typeof ApiMobilePackagesLookupRoute
+  ApiMobilePackagesReadyForPickupRoute: typeof ApiMobilePackagesReadyForPickupRoute
+  ApiMobilePackagesScanRoute: typeof ApiMobilePackagesScanRoute
 }
 
 const ApiMobilePackagesRouteChildren: ApiMobilePackagesRouteChildren = {
   ApiMobilePackagesIdRoute: ApiMobilePackagesIdRouteWithChildren,
+  ApiMobilePackagesLookupRoute: ApiMobilePackagesLookupRoute,
+  ApiMobilePackagesReadyForPickupRoute: ApiMobilePackagesReadyForPickupRoute,
+  ApiMobilePackagesScanRoute: ApiMobilePackagesScanRoute,
 }
 
 const ApiMobilePackagesRouteWithChildren =
@@ -782,10 +906,12 @@ const ApiMobilePackagesRouteWithChildren =
 
 interface ApiMobilePaymentsRouteChildren {
   ApiMobilePaymentsIdRoute: typeof ApiMobilePaymentsIdRoute
+  ApiMobilePaymentsCashRoute: typeof ApiMobilePaymentsCashRoute
 }
 
 const ApiMobilePaymentsRouteChildren: ApiMobilePaymentsRouteChildren = {
   ApiMobilePaymentsIdRoute: ApiMobilePaymentsIdRoute,
+  ApiMobilePaymentsCashRoute: ApiMobilePaymentsCashRoute,
 }
 
 const ApiMobilePaymentsRouteWithChildren =
@@ -793,10 +919,12 @@ const ApiMobilePaymentsRouteWithChildren =
 
 interface ApiMobileRatesRouteChildren {
   ApiMobileRatesIdRoute: typeof ApiMobileRatesIdRoute
+  ApiMobileRatesLookupRoute: typeof ApiMobileRatesLookupRoute
 }
 
 const ApiMobileRatesRouteChildren: ApiMobileRatesRouteChildren = {
   ApiMobileRatesIdRoute: ApiMobileRatesIdRoute,
+  ApiMobileRatesLookupRoute: ApiMobileRatesLookupRoute,
 }
 
 const ApiMobileRatesRouteWithChildren = ApiMobileRatesRoute._addFileChildren(
