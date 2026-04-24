@@ -94,6 +94,51 @@ export type Database = {
           },
         ]
       }
+      delivery_signatures: {
+        Row: {
+          amount_paid: number | null
+          created_at: string
+          currency: string | null
+          id: string
+          notes: string | null
+          package_id: string
+          payment_id: string | null
+          payment_method: string
+          recorded_by: string | null
+          signature_url: string
+          signer_name: string
+          signer_phone: string | null
+        }
+        Insert: {
+          amount_paid?: number | null
+          created_at?: string
+          currency?: string | null
+          id?: string
+          notes?: string | null
+          package_id: string
+          payment_id?: string | null
+          payment_method?: string
+          recorded_by?: string | null
+          signature_url: string
+          signer_name: string
+          signer_phone?: string | null
+        }
+        Update: {
+          amount_paid?: number | null
+          created_at?: string
+          currency?: string | null
+          id?: string
+          notes?: string | null
+          package_id?: string
+          payment_id?: string | null
+          payment_method?: string
+          recorded_by?: string | null
+          signature_url?: string
+          signer_name?: string
+          signer_phone?: string | null
+        }
+        Relationships: []
+      }
       employee_api_keys: {
         Row: {
           created_at: string
