@@ -99,6 +99,11 @@ export async function handleEvolutionWebhook(request: Request): Promise<Response
           });
         } catch (e: any) {
           console.error("agent error", e);
+          await sb.from("messages").insert({
+            conversation_id: conv.id,
+            role: "system",
+            content: `Agent error: ${e?.message ?? String(e)}`,
+          });
           reply = "Sorry, something went wrong. A human agent will get back to you.";
         }
 
@@ -108,7 +113,17 @@ export async function handleEvolutionWebhook(request: Request): Promise<Response
             role: "assistant",
             content: reply,
           });
-          try { await sendWhatsAppText(number, reply); } catch (e) { console.error("send fail", e); }
+          try {
+            await sendWhatsAppText(number, reply);
+          } catch (e: any) {
+            const sendError = e?.message ?? String(e);
+            console.error("send fail", e);
+            await sb.from("messages").insert({
+              conversation_id: conv.id,
+              role: "system",
+              content: `WhatsApp send failed: ${sendError}`,
+            });
+          }
         }
         return new Response("ok", { status: 200 });
 }
