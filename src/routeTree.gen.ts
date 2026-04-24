@@ -22,6 +22,7 @@ import { Route as DashboardClientsRouteImport } from './routes/dashboard.clients
 import { Route as DashboardApiKeysRouteImport } from './routes/dashboard.api-keys'
 import { Route as ApiPublicPublishScheduledRouteImport } from './routes/api/public/publish-scheduled'
 import { Route as ApiPublicEvolutionWebhookRouteImport } from './routes/api/public/evolution-webhook'
+import { Route as ApiPublicEvolutionTestSendRouteImport } from './routes/api/public/evolution-test-send'
 import { Route as ApiPublicDarajaCallbackRouteImport } from './routes/api/public/daraja-callback'
 import { Route as ApiMobileUploadsRouteImport } from './routes/api/mobile/uploads'
 import { Route as ApiMobileStatsRouteImport } from './routes/api/mobile/stats'
@@ -114,6 +115,12 @@ const ApiPublicEvolutionWebhookRoute =
   ApiPublicEvolutionWebhookRouteImport.update({
     id: '/api/public/evolution-webhook',
     path: '/api/public/evolution-webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicEvolutionTestSendRoute =
+  ApiPublicEvolutionTestSendRouteImport.update({
+    id: '/api/public/evolution-test-send',
+    path: '/api/public/evolution-test-send',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ApiPublicDarajaCallbackRoute = ApiPublicDarajaCallbackRouteImport.update({
@@ -275,6 +282,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/stats': typeof ApiMobileStatsRoute
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
+  '/api/public/evolution-test-send': typeof ApiPublicEvolutionTestSendRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
@@ -315,6 +323,7 @@ export interface FileRoutesByTo {
   '/api/mobile/stats': typeof ApiMobileStatsRoute
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
+  '/api/public/evolution-test-send': typeof ApiPublicEvolutionTestSendRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
@@ -357,6 +366,7 @@ export interface FileRoutesById {
   '/api/mobile/stats': typeof ApiMobileStatsRoute
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
+  '/api/public/evolution-test-send': typeof ApiPublicEvolutionTestSendRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
@@ -400,6 +410,7 @@ export interface FileRouteTypes {
     | '/api/mobile/stats'
     | '/api/mobile/uploads'
     | '/api/public/daraja-callback'
+    | '/api/public/evolution-test-send'
     | '/api/public/evolution-webhook'
     | '/api/public/publish-scheduled'
     | '/api/mobile/auth/me'
@@ -440,6 +451,7 @@ export interface FileRouteTypes {
     | '/api/mobile/stats'
     | '/api/mobile/uploads'
     | '/api/public/daraja-callback'
+    | '/api/public/evolution-test-send'
     | '/api/public/evolution-webhook'
     | '/api/public/publish-scheduled'
     | '/api/mobile/auth/me'
@@ -481,6 +493,7 @@ export interface FileRouteTypes {
     | '/api/mobile/stats'
     | '/api/mobile/uploads'
     | '/api/public/daraja-callback'
+    | '/api/public/evolution-test-send'
     | '/api/public/evolution-webhook'
     | '/api/public/publish-scheduled'
     | '/api/mobile/auth/me'
@@ -516,6 +529,7 @@ export interface RootRouteChildren {
   ApiMobileStatsRoute: typeof ApiMobileStatsRoute
   ApiMobileUploadsRoute: typeof ApiMobileUploadsRoute
   ApiPublicDarajaCallbackRoute: typeof ApiPublicDarajaCallbackRoute
+  ApiPublicEvolutionTestSendRoute: typeof ApiPublicEvolutionTestSendRoute
   ApiPublicEvolutionWebhookRoute: typeof ApiPublicEvolutionWebhookRouteWithChildren
   ApiPublicPublishScheduledRoute: typeof ApiPublicPublishScheduledRoute
   ApiMobileAuthMeRoute: typeof ApiMobileAuthMeRoute
@@ -612,6 +626,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/evolution-webhook'
       fullPath: '/api/public/evolution-webhook'
       preLoaderRoute: typeof ApiPublicEvolutionWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/evolution-test-send': {
+      id: '/api/public/evolution-test-send'
+      path: '/api/public/evolution-test-send'
+      fullPath: '/api/public/evolution-test-send'
+      preLoaderRoute: typeof ApiPublicEvolutionTestSendRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/daraja-callback': {
@@ -960,6 +981,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMobileStatsRoute: ApiMobileStatsRoute,
   ApiMobileUploadsRoute: ApiMobileUploadsRoute,
   ApiPublicDarajaCallbackRoute: ApiPublicDarajaCallbackRoute,
+  ApiPublicEvolutionTestSendRoute: ApiPublicEvolutionTestSendRoute,
   ApiPublicEvolutionWebhookRoute: ApiPublicEvolutionWebhookRouteWithChildren,
   ApiPublicPublishScheduledRoute: ApiPublicPublishScheduledRoute,
   ApiMobileAuthMeRoute: ApiMobileAuthMeRoute,
