@@ -4,12 +4,10 @@ import { runAgent } from "@/server/ai-agent";
 import { sendWhatsAppText, normalizeNumber } from "@/server/evolution";
 
 // Evolution API posts events here. Configure webhook in Evolution to:
-//   https://<your-domain>/api/public/evolution-webhook?secret=<EVOLUTION_WEBHOOK_SECRET>
-// We only act on inbound text messages from real users (not from us).
-export const Route = createFileRoute("/api/public/evolution-webhook")({
-  server: {
-    handlers: {
-      POST: async ({ request }) => {
+//   https://<your-domain>/api/public/evolution-webhook
+// Evolution may append the event name as a path segment (e.g. /messages-upsert);
+// the splat route in evolution-webhook.$.ts handles those.
+export async function handleEvolutionWebhook(request: Request): Promise<Response> {
         // Optional shared secret. Evolution doesn't send custom headers by default,
         // so we also accept ?secret=... in the URL, or the Evolution apikey in the body.
         const expected = process.env.EVOLUTION_WEBHOOK_SECRET;
@@ -113,7 +111,12 @@ export const Route = createFileRoute("/api/public/evolution-webhook")({
           try { await sendWhatsAppText(number, reply); } catch (e) { console.error("send fail", e); }
         }
         return new Response("ok", { status: 200 });
-      },
+}
+
+export const Route = createFileRoute("/api/public/evolution-webhook")({
+  server: {
+    handlers: {
+      POST: async ({ request }) => handleEvolutionWebhook(request),
     },
   },
 });

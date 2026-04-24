@@ -32,6 +32,7 @@ import { Route as ApiMobilePackagesRouteImport } from './routes/api/mobile/packa
 import { Route as ApiMobileMarketingRouteImport } from './routes/api/mobile/marketing'
 import { Route as ApiMobileConversationsRouteImport } from './routes/api/mobile/conversations'
 import { Route as ApiMobileClientsRouteImport } from './routes/api/mobile/clients'
+import { Route as ApiPublicEvolutionWebhookSplatRouteImport } from './routes/api/public/evolution-webhook.$'
 import { Route as ApiMobileRatesIdRouteImport } from './routes/api/mobile/rates.$id'
 import { Route as ApiMobilePaymentsIdRouteImport } from './routes/api/mobile/payments.$id'
 import { Route as ApiMobilePackagesIdRouteImport } from './routes/api/mobile/packages.$id'
@@ -159,6 +160,12 @@ const ApiMobileClientsRoute = ApiMobileClientsRouteImport.update({
   path: '/api/mobile/clients',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicEvolutionWebhookSplatRoute =
+  ApiPublicEvolutionWebhookSplatRouteImport.update({
+    id: '/$',
+    path: '/$',
+    getParentRoute: () => ApiPublicEvolutionWebhookRoute,
+  } as any)
 const ApiMobileRatesIdRoute = ApiMobileRatesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -230,7 +237,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/stats': typeof ApiMobileStatsRoute
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
-  '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRoute
+  '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/clients/$id': typeof ApiMobileClientsIdRoute
@@ -239,6 +246,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
+  '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
 }
@@ -263,7 +271,7 @@ export interface FileRoutesByTo {
   '/api/mobile/stats': typeof ApiMobileStatsRoute
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
-  '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRoute
+  '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/clients/$id': typeof ApiMobileClientsIdRoute
@@ -272,6 +280,7 @@ export interface FileRoutesByTo {
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
+  '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
 }
@@ -298,7 +307,7 @@ export interface FileRoutesById {
   '/api/mobile/stats': typeof ApiMobileStatsRoute
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
-  '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRoute
+  '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/clients/$id': typeof ApiMobileClientsIdRoute
@@ -307,6 +316,7 @@ export interface FileRoutesById {
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
+  '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
 }
@@ -343,6 +353,7 @@ export interface FileRouteTypes {
     | '/api/mobile/packages/$id'
     | '/api/mobile/payments/$id'
     | '/api/mobile/rates/$id'
+    | '/api/public/evolution-webhook/$'
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/events'
   fileRoutesByTo: FileRoutesByTo
@@ -376,6 +387,7 @@ export interface FileRouteTypes {
     | '/api/mobile/packages/$id'
     | '/api/mobile/payments/$id'
     | '/api/mobile/rates/$id'
+    | '/api/public/evolution-webhook/$'
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/events'
   id:
@@ -410,6 +422,7 @@ export interface FileRouteTypes {
     | '/api/mobile/packages/$id'
     | '/api/mobile/payments/$id'
     | '/api/mobile/rates/$id'
+    | '/api/public/evolution-webhook/$'
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/events'
   fileRoutesById: FileRoutesById
@@ -429,7 +442,7 @@ export interface RootRouteChildren {
   ApiMobileStatsRoute: typeof ApiMobileStatsRoute
   ApiMobileUploadsRoute: typeof ApiMobileUploadsRoute
   ApiPublicDarajaCallbackRoute: typeof ApiPublicDarajaCallbackRoute
-  ApiPublicEvolutionWebhookRoute: typeof ApiPublicEvolutionWebhookRoute
+  ApiPublicEvolutionWebhookRoute: typeof ApiPublicEvolutionWebhookRouteWithChildren
   ApiPublicPublishScheduledRoute: typeof ApiPublicPublishScheduledRoute
   ApiMobileAuthMeRoute: typeof ApiMobileAuthMeRoute
 }
@@ -596,6 +609,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/mobile/clients'
       preLoaderRoute: typeof ApiMobileClientsRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/api/public/evolution-webhook/$': {
+      id: '/api/public/evolution-webhook/$'
+      path: '/$'
+      fullPath: '/api/public/evolution-webhook/$'
+      preLoaderRoute: typeof ApiPublicEvolutionWebhookSplatRouteImport
+      parentRoute: typeof ApiPublicEvolutionWebhookRoute
     }
     '/api/mobile/rates/$id': {
       id: '/api/mobile/rates/$id'
@@ -783,6 +803,20 @@ const ApiMobileRatesRouteWithChildren = ApiMobileRatesRoute._addFileChildren(
   ApiMobileRatesRouteChildren,
 )
 
+interface ApiPublicEvolutionWebhookRouteChildren {
+  ApiPublicEvolutionWebhookSplatRoute: typeof ApiPublicEvolutionWebhookSplatRoute
+}
+
+const ApiPublicEvolutionWebhookRouteChildren: ApiPublicEvolutionWebhookRouteChildren =
+  {
+    ApiPublicEvolutionWebhookSplatRoute: ApiPublicEvolutionWebhookSplatRoute,
+  }
+
+const ApiPublicEvolutionWebhookRouteWithChildren =
+  ApiPublicEvolutionWebhookRoute._addFileChildren(
+    ApiPublicEvolutionWebhookRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
@@ -798,7 +832,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMobileStatsRoute: ApiMobileStatsRoute,
   ApiMobileUploadsRoute: ApiMobileUploadsRoute,
   ApiPublicDarajaCallbackRoute: ApiPublicDarajaCallbackRoute,
-  ApiPublicEvolutionWebhookRoute: ApiPublicEvolutionWebhookRoute,
+  ApiPublicEvolutionWebhookRoute: ApiPublicEvolutionWebhookRouteWithChildren,
   ApiPublicPublishScheduledRoute: ApiPublicPublishScheduledRoute,
   ApiMobileAuthMeRoute: ApiMobileAuthMeRoute,
 }
