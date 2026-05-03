@@ -30,6 +30,7 @@ import { Route as ApiMobileRatesRouteImport } from './routes/api/mobile/rates'
 import { Route as ApiMobileQuoteRouteImport } from './routes/api/mobile/quote'
 import { Route as ApiMobilePaymentsRouteImport } from './routes/api/mobile/payments'
 import { Route as ApiMobilePackagesRouteImport } from './routes/api/mobile/packages'
+import { Route as ApiMobileNotificationsRouteImport } from './routes/api/mobile/notifications'
 import { Route as ApiMobileMarketingRouteImport } from './routes/api/mobile/marketing'
 import { Route as ApiMobileConversationsRouteImport } from './routes/api/mobile/conversations'
 import { Route as ApiMobileClientsRouteImport } from './routes/api/mobile/clients'
@@ -160,6 +161,11 @@ const ApiMobilePaymentsRoute = ApiMobilePaymentsRouteImport.update({
 const ApiMobilePackagesRoute = ApiMobilePackagesRouteImport.update({
   id: '/api/mobile/packages',
   path: '/api/mobile/packages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMobileNotificationsRoute = ApiMobileNotificationsRouteImport.update({
+  id: '/api/mobile/notifications',
+  path: '/api/mobile/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiMobileMarketingRoute = ApiMobileMarketingRouteImport.update({
@@ -300,6 +306,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/clients': typeof ApiMobileClientsRouteWithChildren
   '/api/mobile/conversations': typeof ApiMobileConversationsRouteWithChildren
   '/api/mobile/marketing': typeof ApiMobileMarketingRouteWithChildren
+  '/api/mobile/notifications': typeof ApiMobileNotificationsRoute
   '/api/mobile/packages': typeof ApiMobilePackagesRouteWithChildren
   '/api/mobile/payments': typeof ApiMobilePaymentsRouteWithChildren
   '/api/mobile/quote': typeof ApiMobileQuoteRoute
@@ -345,6 +352,7 @@ export interface FileRoutesByTo {
   '/api/mobile/clients': typeof ApiMobileClientsRouteWithChildren
   '/api/mobile/conversations': typeof ApiMobileConversationsRouteWithChildren
   '/api/mobile/marketing': typeof ApiMobileMarketingRouteWithChildren
+  '/api/mobile/notifications': typeof ApiMobileNotificationsRoute
   '/api/mobile/packages': typeof ApiMobilePackagesRouteWithChildren
   '/api/mobile/payments': typeof ApiMobilePaymentsRouteWithChildren
   '/api/mobile/quote': typeof ApiMobileQuoteRoute
@@ -392,6 +400,7 @@ export interface FileRoutesById {
   '/api/mobile/clients': typeof ApiMobileClientsRouteWithChildren
   '/api/mobile/conversations': typeof ApiMobileConversationsRouteWithChildren
   '/api/mobile/marketing': typeof ApiMobileMarketingRouteWithChildren
+  '/api/mobile/notifications': typeof ApiMobileNotificationsRoute
   '/api/mobile/packages': typeof ApiMobilePackagesRouteWithChildren
   '/api/mobile/payments': typeof ApiMobilePaymentsRouteWithChildren
   '/api/mobile/quote': typeof ApiMobileQuoteRoute
@@ -440,6 +449,7 @@ export interface FileRouteTypes {
     | '/api/mobile/clients'
     | '/api/mobile/conversations'
     | '/api/mobile/marketing'
+    | '/api/mobile/notifications'
     | '/api/mobile/packages'
     | '/api/mobile/payments'
     | '/api/mobile/quote'
@@ -485,6 +495,7 @@ export interface FileRouteTypes {
     | '/api/mobile/clients'
     | '/api/mobile/conversations'
     | '/api/mobile/marketing'
+    | '/api/mobile/notifications'
     | '/api/mobile/packages'
     | '/api/mobile/payments'
     | '/api/mobile/quote'
@@ -531,6 +542,7 @@ export interface FileRouteTypes {
     | '/api/mobile/clients'
     | '/api/mobile/conversations'
     | '/api/mobile/marketing'
+    | '/api/mobile/notifications'
     | '/api/mobile/packages'
     | '/api/mobile/payments'
     | '/api/mobile/quote'
@@ -571,6 +583,7 @@ export interface RootRouteChildren {
   ApiMobileClientsRoute: typeof ApiMobileClientsRouteWithChildren
   ApiMobileConversationsRoute: typeof ApiMobileConversationsRouteWithChildren
   ApiMobileMarketingRoute: typeof ApiMobileMarketingRouteWithChildren
+  ApiMobileNotificationsRoute: typeof ApiMobileNotificationsRoute
   ApiMobilePackagesRoute: typeof ApiMobilePackagesRouteWithChildren
   ApiMobilePaymentsRoute: typeof ApiMobilePaymentsRouteWithChildren
   ApiMobileQuoteRoute: typeof ApiMobileQuoteRoute
@@ -731,6 +744,13 @@ declare module '@tanstack/react-router' {
       path: '/api/mobile/packages'
       fullPath: '/api/mobile/packages'
       preLoaderRoute: typeof ApiMobilePackagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/mobile/notifications': {
+      id: '/api/mobile/notifications'
+      path: '/api/mobile/notifications'
+      fullPath: '/api/mobile/notifications'
+      preLoaderRoute: typeof ApiMobileNotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/mobile/marketing': {
@@ -1076,6 +1096,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMobileClientsRoute: ApiMobileClientsRouteWithChildren,
   ApiMobileConversationsRoute: ApiMobileConversationsRouteWithChildren,
   ApiMobileMarketingRoute: ApiMobileMarketingRouteWithChildren,
+  ApiMobileNotificationsRoute: ApiMobileNotificationsRoute,
   ApiMobilePackagesRoute: ApiMobilePackagesRouteWithChildren,
   ApiMobilePaymentsRoute: ApiMobilePaymentsRouteWithChildren,
   ApiMobileQuoteRoute: ApiMobileQuoteRoute,
