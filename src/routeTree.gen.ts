@@ -33,6 +33,7 @@ import { Route as ApiMobilePackagesRouteImport } from './routes/api/mobile/packa
 import { Route as ApiMobileMarketingRouteImport } from './routes/api/mobile/marketing'
 import { Route as ApiMobileConversationsRouteImport } from './routes/api/mobile/conversations'
 import { Route as ApiMobileClientsRouteImport } from './routes/api/mobile/clients'
+import { Route as ApiMobileBatchesRouteImport } from './routes/api/mobile/batches'
 import { Route as ApiPublicEvolutionWebhookSplatRouteImport } from './routes/api/public/evolution-webhook.$'
 import { Route as ApiMobileRatesLookupRouteImport } from './routes/api/mobile/rates.lookup'
 import { Route as ApiMobileRatesIdRouteImport } from './routes/api/mobile/rates.$id'
@@ -173,6 +174,11 @@ const ApiMobileClientsRoute = ApiMobileClientsRouteImport.update({
   path: '/api/mobile/clients',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiMobileBatchesRoute = ApiMobileBatchesRouteImport.update({
+  id: '/api/mobile/batches',
+  path: '/api/mobile/batches',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicEvolutionWebhookSplatRoute =
   ApiPublicEvolutionWebhookSplatRouteImport.update({
     id: '/$',
@@ -272,6 +278,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/packages': typeof DashboardPackagesRoute
   '/dashboard/rates': typeof DashboardRatesRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/api/mobile/batches': typeof ApiMobileBatchesRoute
   '/api/mobile/clients': typeof ApiMobileClientsRouteWithChildren
   '/api/mobile/conversations': typeof ApiMobileConversationsRouteWithChildren
   '/api/mobile/marketing': typeof ApiMobileMarketingRouteWithChildren
@@ -313,6 +320,7 @@ export interface FileRoutesByTo {
   '/dashboard/packages': typeof DashboardPackagesRoute
   '/dashboard/rates': typeof DashboardRatesRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/api/mobile/batches': typeof ApiMobileBatchesRoute
   '/api/mobile/clients': typeof ApiMobileClientsRouteWithChildren
   '/api/mobile/conversations': typeof ApiMobileConversationsRouteWithChildren
   '/api/mobile/marketing': typeof ApiMobileMarketingRouteWithChildren
@@ -356,6 +364,7 @@ export interface FileRoutesById {
   '/dashboard/packages': typeof DashboardPackagesRoute
   '/dashboard/rates': typeof DashboardRatesRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/api/mobile/batches': typeof ApiMobileBatchesRoute
   '/api/mobile/clients': typeof ApiMobileClientsRouteWithChildren
   '/api/mobile/conversations': typeof ApiMobileConversationsRouteWithChildren
   '/api/mobile/marketing': typeof ApiMobileMarketingRouteWithChildren
@@ -400,6 +409,7 @@ export interface FileRouteTypes {
     | '/dashboard/packages'
     | '/dashboard/rates'
     | '/dashboard/'
+    | '/api/mobile/batches'
     | '/api/mobile/clients'
     | '/api/mobile/conversations'
     | '/api/mobile/marketing'
@@ -441,6 +451,7 @@ export interface FileRouteTypes {
     | '/dashboard/packages'
     | '/dashboard/rates'
     | '/dashboard'
+    | '/api/mobile/batches'
     | '/api/mobile/clients'
     | '/api/mobile/conversations'
     | '/api/mobile/marketing'
@@ -483,6 +494,7 @@ export interface FileRouteTypes {
     | '/dashboard/packages'
     | '/dashboard/rates'
     | '/dashboard/'
+    | '/api/mobile/batches'
     | '/api/mobile/clients'
     | '/api/mobile/conversations'
     | '/api/mobile/marketing'
@@ -519,6 +531,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   QuoteRoute: typeof QuoteRoute
+  ApiMobileBatchesRoute: typeof ApiMobileBatchesRoute
   ApiMobileClientsRoute: typeof ApiMobileClientsRouteWithChildren
   ApiMobileConversationsRoute: typeof ApiMobileConversationsRouteWithChildren
   ApiMobileMarketingRoute: typeof ApiMobileMarketingRouteWithChildren
@@ -703,6 +716,13 @@ declare module '@tanstack/react-router' {
       path: '/api/mobile/clients'
       fullPath: '/api/mobile/clients'
       preLoaderRoute: typeof ApiMobileClientsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/mobile/batches': {
+      id: '/api/mobile/batches'
+      path: '/api/mobile/batches'
+      fullPath: '/api/mobile/batches'
+      preLoaderRoute: typeof ApiMobileBatchesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/evolution-webhook/$': {
@@ -971,6 +991,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   DashboardRoute: DashboardRouteWithChildren,
   QuoteRoute: QuoteRoute,
+  ApiMobileBatchesRoute: ApiMobileBatchesRoute,
   ApiMobileClientsRoute: ApiMobileClientsRouteWithChildren,
   ApiMobileConversationsRoute: ApiMobileConversationsRouteWithChildren,
   ApiMobileMarketingRoute: ApiMobileMarketingRouteWithChildren,
