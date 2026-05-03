@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      batch_packages: {
+        Row: {
+          batch_id: string
+          id: string
+          loaded_at: string
+          loaded_by: string | null
+          notes: string | null
+          package_id: string
+        }
+        Insert: {
+          batch_id: string
+          id?: string
+          loaded_at?: string
+          loaded_by?: string | null
+          notes?: string | null
+          package_id: string
+        }
+        Update: {
+          batch_id?: string
+          id?: string
+          loaded_at?: string
+          loaded_by?: string | null
+          notes?: string | null
+          package_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "batch_packages_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "loading_batches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "batch_packages_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clients: {
         Row: {
           address: string | null
@@ -175,6 +217,60 @@ export type Database = {
         }
         Relationships: []
       }
+      loading_batches: {
+        Row: {
+          batch_code: string
+          closed_at: string | null
+          created_at: string
+          created_by: string | null
+          cutoff_at: string
+          destination_warehouse: string
+          expected_total: number
+          id: string
+          left_behind_total: number
+          loaded_total: number
+          loading_date: string
+          notes: string | null
+          origin_warehouse: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          batch_code: string
+          closed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          cutoff_at?: string
+          destination_warehouse?: string
+          expected_total?: number
+          id?: string
+          left_behind_total?: number
+          loaded_total?: number
+          loading_date: string
+          notes?: string | null
+          origin_warehouse?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          batch_code?: string
+          closed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          cutoff_at?: string
+          destination_warehouse?: string
+          expected_total?: number
+          id?: string
+          left_behind_total?: number
+          loaded_total?: number
+          loading_date?: string
+          notes?: string | null
+          origin_warehouse?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       marketing_posts: {
         Row: {
           content: string
@@ -254,6 +350,86 @@ export type Database = {
             columns: ["conversation_id"]
             isOneToOne: false
             referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_reads: {
+        Row: {
+          notification_id: string
+          read_at: string
+          user_id: string
+        }
+        Insert: {
+          notification_id: string
+          read_at?: string
+          user_id: string
+        }
+        Update: {
+          notification_id?: string
+          read_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_reads_notification_id_fkey"
+            columns: ["notification_id"]
+            isOneToOne: false
+            referencedRelation: "notifications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          audience: string
+          batch_id: string | null
+          body: string | null
+          created_at: string
+          data: Json | null
+          id: string
+          package_id: string | null
+          severity: string
+          title: string
+          type: string
+        }
+        Insert: {
+          audience?: string
+          batch_id?: string | null
+          body?: string | null
+          created_at?: string
+          data?: Json | null
+          id?: string
+          package_id?: string | null
+          severity?: string
+          title: string
+          type: string
+        }
+        Update: {
+          audience?: string
+          batch_id?: string | null
+          body?: string | null
+          created_at?: string
+          data?: Json | null
+          id?: string
+          package_id?: string | null
+          severity?: string
+          title?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "loading_batches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "packages"
             referencedColumns: ["id"]
           },
         ]
@@ -608,6 +784,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      detect_left_behind: {
+        Args: { _batch_id: string }
+        Returns: {
+          days_in_warehouse: number
+          package_id: string
+          tracking_number: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
