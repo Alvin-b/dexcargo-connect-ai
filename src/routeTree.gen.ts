@@ -52,6 +52,7 @@ import { Route as ApiMobilePackagesIdEventsRouteImport } from './routes/api/mobi
 import { Route as ApiMobilePackagesIdDeliverRouteImport } from './routes/api/mobile/packages.$id.deliver'
 import { Route as ApiMobileConversationsIdMessagesRouteImport } from './routes/api/mobile/conversations.$id.messages'
 import { Route as ApiMobileBatchesIdScanRouteImport } from './routes/api/mobile/batches.$id.scan'
+import { Route as ApiMobileBatchesIdCloseRouteImport } from './routes/api/mobile/batches.$id.close'
 
 const QuoteRoute = QuoteRouteImport.update({
   id: '/quote',
@@ -277,6 +278,11 @@ const ApiMobileBatchesIdScanRoute = ApiMobileBatchesIdScanRouteImport.update({
   path: '/scan',
   getParentRoute: () => ApiMobileBatchesIdRoute,
 } as any)
+const ApiMobileBatchesIdCloseRoute = ApiMobileBatchesIdCloseRouteImport.update({
+  id: '/close',
+  path: '/close',
+  getParentRoute: () => ApiMobileBatchesIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -318,6 +324,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
+  '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
@@ -362,6 +369,7 @@ export interface FileRoutesByTo {
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
+  '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
@@ -408,6 +416,7 @@ export interface FileRoutesById {
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
+  '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
@@ -455,6 +464,7 @@ export interface FileRouteTypes {
     | '/api/mobile/rates/$id'
     | '/api/mobile/rates/lookup'
     | '/api/public/evolution-webhook/$'
+    | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/deliver'
@@ -499,6 +509,7 @@ export interface FileRouteTypes {
     | '/api/mobile/rates/$id'
     | '/api/mobile/rates/lookup'
     | '/api/public/evolution-webhook/$'
+    | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/deliver'
@@ -544,6 +555,7 @@ export interface FileRouteTypes {
     | '/api/mobile/rates/$id'
     | '/api/mobile/rates/lookup'
     | '/api/public/evolution-webhook/$'
+    | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/deliver'
@@ -875,6 +887,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileBatchesIdScanRouteImport
       parentRoute: typeof ApiMobileBatchesIdRoute
     }
+    '/api/mobile/batches/$id/close': {
+      id: '/api/mobile/batches/$id/close'
+      path: '/close'
+      fullPath: '/api/mobile/batches/$id/close'
+      preLoaderRoute: typeof ApiMobileBatchesIdCloseRouteImport
+      parentRoute: typeof ApiMobileBatchesIdRoute
+    }
   }
 }
 
@@ -903,10 +922,12 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 )
 
 interface ApiMobileBatchesIdRouteChildren {
+  ApiMobileBatchesIdCloseRoute: typeof ApiMobileBatchesIdCloseRoute
   ApiMobileBatchesIdScanRoute: typeof ApiMobileBatchesIdScanRoute
 }
 
 const ApiMobileBatchesIdRouteChildren: ApiMobileBatchesIdRouteChildren = {
+  ApiMobileBatchesIdCloseRoute: ApiMobileBatchesIdCloseRoute,
   ApiMobileBatchesIdScanRoute: ApiMobileBatchesIdScanRoute,
 }
 
