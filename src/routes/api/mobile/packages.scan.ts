@@ -33,6 +33,21 @@ export const Route = createFileRoute("/api/mobile/packages/scan")({
           const { error: upErr } = await supabaseAdmin.from("packages").update(patch).eq("id", pkg.id);
           if (upErr) throw upErr;
 
+          // Irregular arrival detection: package marked as arrived/delivered without ever being loaded into a batch
+          if (status === "arrived_in_kenya" || status === "delivered" || status === "ready_for_pickup") {
+            const { data: bp } = await supabaseAdmin.from("batch_packages")
+              .select("id").eq("package_id", pkg.id).limit(1).maybeSingle();
+            if (!bp) {
+              await supabaseAdmin.from("notifications").insert({
+                type: "irregular_arrival", severity: "warning", audience: "kenya",
+                title: `Irregular arrival: ${pkg.tracking_number}`,
+                body: `Package marked as ${status.replace(/_/g, " ")} but was never loaded into a batch.`,
+                package_id: pkg.id,
+                data: { status, scanned_by: auth.userId },
+              });
+            }
+          }
+
           const { data: ev, error: evErr } = await supabaseAdmin.from("package_events").insert({
             package_id: pkg.id,
             status,

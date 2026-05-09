@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Package, Users, MessageSquare, DollarSign, Megaphone, LayoutDashboard, LogOut, KeyRound } from "lucide-react";
+import { Package, Users, MessageSquare, DollarSign, Megaphone, LayoutDashboard, LogOut, KeyRound, ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard")({
   component: DashboardLayout,
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 function DashboardLayout() {
-  const { user, isStaff, loading } = useAuth();
+  const { user, isStaff, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,8 +20,7 @@ function DashboardLayout() {
 
   if (loading || !user) return <div className="min-h-screen grid place-items-center text-muted-foreground">Loading…</div>;
 
-  const nav = isStaff
-    ? [
+  const staffNav = [
         { to: "/dashboard", label: "Overview", icon: LayoutDashboard },
         { to: "/dashboard/packages", label: "Packages", icon: Package },
         { to: "/dashboard/clients", label: "Clients", icon: Users },
@@ -29,7 +28,10 @@ function DashboardLayout() {
         { to: "/dashboard/rates", label: "Rates", icon: DollarSign },
         { to: "/dashboard/marketing", label: "Marketing", icon: Megaphone },
         { to: "/dashboard/api-keys", label: "API Keys", icon: KeyRound },
-      ]
+      ];
+  if (isAdmin) staffNav.push({ to: "/dashboard/staff", label: "Staff", icon: ShieldCheck });
+  const nav = isStaff
+    ? staffNav
     : [
         { to: "/dashboard", label: "My Packages", icon: Package },
       ];
