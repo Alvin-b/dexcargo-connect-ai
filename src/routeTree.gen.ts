@@ -35,6 +35,7 @@ import { Route as ApiMobileMarketingRouteImport } from './routes/api/mobile/mark
 import { Route as ApiMobileConversationsRouteImport } from './routes/api/mobile/conversations'
 import { Route as ApiMobileClientsRouteImport } from './routes/api/mobile/clients'
 import { Route as ApiMobileBatchesRouteImport } from './routes/api/mobile/batches'
+import { Route as ApiAdminUsersRouteImport } from './routes/api/admin/users'
 import { Route as ApiPublicEvolutionWebhookSplatRouteImport } from './routes/api/public/evolution-webhook.$'
 import { Route as ApiMobileRatesLookupRouteImport } from './routes/api/mobile/rates.lookup'
 import { Route as ApiMobileRatesIdRouteImport } from './routes/api/mobile/rates.$id'
@@ -54,6 +55,7 @@ import { Route as ApiMobilePackagesIdDeliverRouteImport } from './routes/api/mob
 import { Route as ApiMobileConversationsIdMessagesRouteImport } from './routes/api/mobile/conversations.$id.messages'
 import { Route as ApiMobileBatchesIdScanRouteImport } from './routes/api/mobile/batches.$id.scan'
 import { Route as ApiMobileBatchesIdCloseRouteImport } from './routes/api/mobile/batches.$id.close'
+import { Route as ApiAdminUsersIdRolesRouteImport } from './routes/api/admin/users.$id.roles'
 
 const QuoteRoute = QuoteRouteImport.update({
   id: '/quote',
@@ -188,6 +190,11 @@ const ApiMobileBatchesRoute = ApiMobileBatchesRouteImport.update({
   path: '/api/mobile/batches',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdminUsersRoute = ApiAdminUsersRouteImport.update({
+  id: '/api/admin/users',
+  path: '/api/admin/users',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicEvolutionWebhookSplatRoute =
   ApiPublicEvolutionWebhookSplatRouteImport.update({
     id: '/$',
@@ -289,6 +296,11 @@ const ApiMobileBatchesIdCloseRoute = ApiMobileBatchesIdCloseRouteImport.update({
   path: '/close',
   getParentRoute: () => ApiMobileBatchesIdRoute,
 } as any)
+const ApiAdminUsersIdRolesRoute = ApiAdminUsersIdRolesRouteImport.update({
+  id: '/$id/roles',
+  path: '/$id/roles',
+  getParentRoute: () => ApiAdminUsersRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -302,6 +314,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/packages': typeof DashboardPackagesRoute
   '/dashboard/rates': typeof DashboardRatesRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
   '/api/mobile/batches': typeof ApiMobileBatchesRouteWithChildren
   '/api/mobile/clients': typeof ApiMobileClientsRouteWithChildren
   '/api/mobile/conversations': typeof ApiMobileConversationsRouteWithChildren
@@ -331,6 +344,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
+  '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
@@ -348,6 +362,7 @@ export interface FileRoutesByTo {
   '/dashboard/packages': typeof DashboardPackagesRoute
   '/dashboard/rates': typeof DashboardRatesRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
   '/api/mobile/batches': typeof ApiMobileBatchesRouteWithChildren
   '/api/mobile/clients': typeof ApiMobileClientsRouteWithChildren
   '/api/mobile/conversations': typeof ApiMobileConversationsRouteWithChildren
@@ -377,6 +392,7 @@ export interface FileRoutesByTo {
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
+  '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
@@ -396,6 +412,7 @@ export interface FileRoutesById {
   '/dashboard/packages': typeof DashboardPackagesRoute
   '/dashboard/rates': typeof DashboardRatesRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
   '/api/mobile/batches': typeof ApiMobileBatchesRouteWithChildren
   '/api/mobile/clients': typeof ApiMobileClientsRouteWithChildren
   '/api/mobile/conversations': typeof ApiMobileConversationsRouteWithChildren
@@ -425,6 +442,7 @@ export interface FileRoutesById {
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
+  '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
@@ -445,6 +463,7 @@ export interface FileRouteTypes {
     | '/dashboard/packages'
     | '/dashboard/rates'
     | '/dashboard/'
+    | '/api/admin/users'
     | '/api/mobile/batches'
     | '/api/mobile/clients'
     | '/api/mobile/conversations'
@@ -474,6 +493,7 @@ export interface FileRouteTypes {
     | '/api/mobile/rates/$id'
     | '/api/mobile/rates/lookup'
     | '/api/public/evolution-webhook/$'
+    | '/api/admin/users/$id/roles'
     | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
     | '/api/mobile/conversations/$id/messages'
@@ -491,6 +511,7 @@ export interface FileRouteTypes {
     | '/dashboard/packages'
     | '/dashboard/rates'
     | '/dashboard'
+    | '/api/admin/users'
     | '/api/mobile/batches'
     | '/api/mobile/clients'
     | '/api/mobile/conversations'
@@ -520,6 +541,7 @@ export interface FileRouteTypes {
     | '/api/mobile/rates/$id'
     | '/api/mobile/rates/lookup'
     | '/api/public/evolution-webhook/$'
+    | '/api/admin/users/$id/roles'
     | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
     | '/api/mobile/conversations/$id/messages'
@@ -538,6 +560,7 @@ export interface FileRouteTypes {
     | '/dashboard/packages'
     | '/dashboard/rates'
     | '/dashboard/'
+    | '/api/admin/users'
     | '/api/mobile/batches'
     | '/api/mobile/clients'
     | '/api/mobile/conversations'
@@ -567,6 +590,7 @@ export interface FileRouteTypes {
     | '/api/mobile/rates/$id'
     | '/api/mobile/rates/lookup'
     | '/api/public/evolution-webhook/$'
+    | '/api/admin/users/$id/roles'
     | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
     | '/api/mobile/conversations/$id/messages'
@@ -579,6 +603,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   QuoteRoute: typeof QuoteRoute
+  ApiAdminUsersRoute: typeof ApiAdminUsersRouteWithChildren
   ApiMobileBatchesRoute: typeof ApiMobileBatchesRouteWithChildren
   ApiMobileClientsRoute: typeof ApiMobileClientsRouteWithChildren
   ApiMobileConversationsRoute: typeof ApiMobileConversationsRouteWithChildren
@@ -781,6 +806,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileBatchesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/admin/users': {
+      id: '/api/admin/users'
+      path: '/api/admin/users'
+      fullPath: '/api/admin/users'
+      preLoaderRoute: typeof ApiAdminUsersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/evolution-webhook/$': {
       id: '/api/public/evolution-webhook/$'
       path: '/$'
@@ -914,6 +946,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileBatchesIdCloseRouteImport
       parentRoute: typeof ApiMobileBatchesIdRoute
     }
+    '/api/admin/users/$id/roles': {
+      id: '/api/admin/users/$id/roles'
+      path: '/$id/roles'
+      fullPath: '/api/admin/users/$id/roles'
+      preLoaderRoute: typeof ApiAdminUsersIdRolesRouteImport
+      parentRoute: typeof ApiAdminUsersRoute
+    }
   }
 }
 
@@ -939,6 +978,18 @@ const DashboardRouteChildren: DashboardRouteChildren = {
 
 const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
   DashboardRouteChildren,
+)
+
+interface ApiAdminUsersRouteChildren {
+  ApiAdminUsersIdRolesRoute: typeof ApiAdminUsersIdRolesRoute
+}
+
+const ApiAdminUsersRouteChildren: ApiAdminUsersRouteChildren = {
+  ApiAdminUsersIdRolesRoute: ApiAdminUsersIdRolesRoute,
+}
+
+const ApiAdminUsersRouteWithChildren = ApiAdminUsersRoute._addFileChildren(
+  ApiAdminUsersRouteChildren,
 )
 
 interface ApiMobileBatchesIdRouteChildren {
@@ -1092,6 +1143,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   DashboardRoute: DashboardRouteWithChildren,
   QuoteRoute: QuoteRoute,
+  ApiAdminUsersRoute: ApiAdminUsersRouteWithChildren,
   ApiMobileBatchesRoute: ApiMobileBatchesRouteWithChildren,
   ApiMobileClientsRoute: ApiMobileClientsRouteWithChildren,
   ApiMobileConversationsRoute: ApiMobileConversationsRouteWithChildren,
@@ -1112,3 +1164,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
