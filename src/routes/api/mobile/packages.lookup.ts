@@ -15,7 +15,6 @@ export const Route = createFileRoute("/api/mobile/packages/lookup")({
           const url = new URL(request.url);
           const tn = url.searchParams.get("tracking_number");
           if (!tn) return badRequest("tracking_number required");
-          const url = new URL(request.url);
           const autoRegister = url.searchParams.get("auto_register") === "1";
 
           const { data, error } = await supabaseAdmin
