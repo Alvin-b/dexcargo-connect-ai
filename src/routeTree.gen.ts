@@ -14,6 +14,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
+import { Route as DashboardStaffRouteImport } from './routes/dashboard.staff'
 import { Route as DashboardRatesRouteImport } from './routes/dashboard.rates'
 import { Route as DashboardPackagesRouteImport } from './routes/dashboard.packages'
 import { Route as DashboardMarketingRouteImport } from './routes/dashboard.marketing'
@@ -80,6 +81,11 @@ const IndexRoute = IndexRouteImport.update({
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardStaffRoute = DashboardStaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardRatesRoute = DashboardRatesRouteImport.update({
@@ -313,6 +319,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/marketing': typeof DashboardMarketingRoute
   '/dashboard/packages': typeof DashboardPackagesRoute
   '/dashboard/rates': typeof DashboardRatesRoute
+  '/dashboard/staff': typeof DashboardStaffRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
   '/api/mobile/batches': typeof ApiMobileBatchesRouteWithChildren
@@ -361,6 +368,7 @@ export interface FileRoutesByTo {
   '/dashboard/marketing': typeof DashboardMarketingRoute
   '/dashboard/packages': typeof DashboardPackagesRoute
   '/dashboard/rates': typeof DashboardRatesRoute
+  '/dashboard/staff': typeof DashboardStaffRoute
   '/dashboard': typeof DashboardIndexRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
   '/api/mobile/batches': typeof ApiMobileBatchesRouteWithChildren
@@ -411,6 +419,7 @@ export interface FileRoutesById {
   '/dashboard/marketing': typeof DashboardMarketingRoute
   '/dashboard/packages': typeof DashboardPackagesRoute
   '/dashboard/rates': typeof DashboardRatesRoute
+  '/dashboard/staff': typeof DashboardStaffRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
   '/api/mobile/batches': typeof ApiMobileBatchesRouteWithChildren
@@ -462,6 +471,7 @@ export interface FileRouteTypes {
     | '/dashboard/marketing'
     | '/dashboard/packages'
     | '/dashboard/rates'
+    | '/dashboard/staff'
     | '/dashboard/'
     | '/api/admin/users'
     | '/api/mobile/batches'
@@ -510,6 +520,7 @@ export interface FileRouteTypes {
     | '/dashboard/marketing'
     | '/dashboard/packages'
     | '/dashboard/rates'
+    | '/dashboard/staff'
     | '/dashboard'
     | '/api/admin/users'
     | '/api/mobile/batches'
@@ -559,6 +570,7 @@ export interface FileRouteTypes {
     | '/dashboard/marketing'
     | '/dashboard/packages'
     | '/dashboard/rates'
+    | '/dashboard/staff'
     | '/dashboard/'
     | '/api/admin/users'
     | '/api/mobile/batches'
@@ -657,6 +669,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/staff': {
+      id: '/dashboard/staff'
+      path: '/staff'
+      fullPath: '/dashboard/staff'
+      preLoaderRoute: typeof DashboardStaffRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/rates': {
@@ -963,6 +982,7 @@ interface DashboardRouteChildren {
   DashboardMarketingRoute: typeof DashboardMarketingRoute
   DashboardPackagesRoute: typeof DashboardPackagesRoute
   DashboardRatesRoute: typeof DashboardRatesRoute
+  DashboardStaffRoute: typeof DashboardStaffRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
@@ -973,6 +993,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardMarketingRoute: DashboardMarketingRoute,
   DashboardPackagesRoute: DashboardPackagesRoute,
   DashboardRatesRoute: DashboardRatesRoute,
+  DashboardStaffRoute: DashboardStaffRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
 
