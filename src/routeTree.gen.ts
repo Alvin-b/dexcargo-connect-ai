@@ -36,6 +36,7 @@ import { Route as ApiMobileMarketingRouteImport } from './routes/api/mobile/mark
 import { Route as ApiMobileConversationsRouteImport } from './routes/api/mobile/conversations'
 import { Route as ApiMobileClientsRouteImport } from './routes/api/mobile/clients'
 import { Route as ApiMobileBatchesRouteImport } from './routes/api/mobile/batches'
+import { Route as ApiMobileAnalyticsRouteImport } from './routes/api/mobile/analytics'
 import { Route as ApiAdminUsersRouteImport } from './routes/api/admin/users'
 import { Route as ApiPublicEvolutionWebhookSplatRouteImport } from './routes/api/public/evolution-webhook.$'
 import { Route as ApiMobileRatesLookupRouteImport } from './routes/api/mobile/rates.lookup'
@@ -196,6 +197,11 @@ const ApiMobileBatchesRoute = ApiMobileBatchesRouteImport.update({
   path: '/api/mobile/batches',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiMobileAnalyticsRoute = ApiMobileAnalyticsRouteImport.update({
+  id: '/api/mobile/analytics',
+  path: '/api/mobile/analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAdminUsersRoute = ApiAdminUsersRouteImport.update({
   id: '/api/admin/users',
   path: '/api/admin/users',
@@ -322,6 +328,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/staff': typeof DashboardStaffRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
+  '/api/mobile/analytics': typeof ApiMobileAnalyticsRoute
   '/api/mobile/batches': typeof ApiMobileBatchesRouteWithChildren
   '/api/mobile/clients': typeof ApiMobileClientsRouteWithChildren
   '/api/mobile/conversations': typeof ApiMobileConversationsRouteWithChildren
@@ -371,6 +378,7 @@ export interface FileRoutesByTo {
   '/dashboard/staff': typeof DashboardStaffRoute
   '/dashboard': typeof DashboardIndexRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
+  '/api/mobile/analytics': typeof ApiMobileAnalyticsRoute
   '/api/mobile/batches': typeof ApiMobileBatchesRouteWithChildren
   '/api/mobile/clients': typeof ApiMobileClientsRouteWithChildren
   '/api/mobile/conversations': typeof ApiMobileConversationsRouteWithChildren
@@ -422,6 +430,7 @@ export interface FileRoutesById {
   '/dashboard/staff': typeof DashboardStaffRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
+  '/api/mobile/analytics': typeof ApiMobileAnalyticsRoute
   '/api/mobile/batches': typeof ApiMobileBatchesRouteWithChildren
   '/api/mobile/clients': typeof ApiMobileClientsRouteWithChildren
   '/api/mobile/conversations': typeof ApiMobileConversationsRouteWithChildren
@@ -474,6 +483,7 @@ export interface FileRouteTypes {
     | '/dashboard/staff'
     | '/dashboard/'
     | '/api/admin/users'
+    | '/api/mobile/analytics'
     | '/api/mobile/batches'
     | '/api/mobile/clients'
     | '/api/mobile/conversations'
@@ -523,6 +533,7 @@ export interface FileRouteTypes {
     | '/dashboard/staff'
     | '/dashboard'
     | '/api/admin/users'
+    | '/api/mobile/analytics'
     | '/api/mobile/batches'
     | '/api/mobile/clients'
     | '/api/mobile/conversations'
@@ -573,6 +584,7 @@ export interface FileRouteTypes {
     | '/dashboard/staff'
     | '/dashboard/'
     | '/api/admin/users'
+    | '/api/mobile/analytics'
     | '/api/mobile/batches'
     | '/api/mobile/clients'
     | '/api/mobile/conversations'
@@ -616,6 +628,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRouteWithChildren
   QuoteRoute: typeof QuoteRoute
   ApiAdminUsersRoute: typeof ApiAdminUsersRouteWithChildren
+  ApiMobileAnalyticsRoute: typeof ApiMobileAnalyticsRoute
   ApiMobileBatchesRoute: typeof ApiMobileBatchesRouteWithChildren
   ApiMobileClientsRoute: typeof ApiMobileClientsRouteWithChildren
   ApiMobileConversationsRoute: typeof ApiMobileConversationsRouteWithChildren
@@ -823,6 +836,13 @@ declare module '@tanstack/react-router' {
       path: '/api/mobile/batches'
       fullPath: '/api/mobile/batches'
       preLoaderRoute: typeof ApiMobileBatchesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/mobile/analytics': {
+      id: '/api/mobile/analytics'
+      path: '/api/mobile/analytics'
+      fullPath: '/api/mobile/analytics'
+      preLoaderRoute: typeof ApiMobileAnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/admin/users': {
@@ -1165,6 +1185,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRouteWithChildren,
   QuoteRoute: QuoteRoute,
   ApiAdminUsersRoute: ApiAdminUsersRouteWithChildren,
+  ApiMobileAnalyticsRoute: ApiMobileAnalyticsRoute,
   ApiMobileBatchesRoute: ApiMobileBatchesRouteWithChildren,
   ApiMobileClientsRoute: ApiMobileClientsRouteWithChildren,
   ApiMobileConversationsRoute: ApiMobileConversationsRouteWithChildren,
