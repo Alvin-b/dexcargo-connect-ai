@@ -15,7 +15,7 @@ export async function logAudit(opts: {
       opts.request?.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
       null;
     const ua = opts.request?.headers.get("user-agent") || null;
-    await supabaseAdmin.from("audit_logs").insert({
+    await (supabaseAdmin.from as any)("audit_logs").insert({
       actor_id: opts.actorId ?? null,
       actor_email: opts.actorEmail ?? null,
       action: opts.action,
