@@ -641,21 +641,30 @@ export type Database = {
           created_at: string
           display_name: string | null
           id: string
+          is_active: boolean | null
+          language_preference: string | null
           phone: string | null
+          staff_location: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
           display_name?: string | null
           id: string
+          is_active?: boolean | null
+          language_preference?: string | null
           phone?: string | null
+          staff_location?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
           display_name?: string | null
           id?: string
+          is_active?: boolean | null
+          language_preference?: string | null
           phone?: string | null
+          staff_location?: string | null
           updated_at?: string
         }
         Relationships: []
