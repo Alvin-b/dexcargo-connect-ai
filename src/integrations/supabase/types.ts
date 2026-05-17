@@ -822,7 +822,7 @@ export type Database = {
       verify_api_key: { Args: { _raw_key: string }; Returns: string }
     }
     Enums: {
-      app_role: "admin" | "staff" | "client"
+      app_role: "admin" | "staff" | "china_staff" | "kenya_staff" | "client"
       message_role: "user" | "assistant" | "system" | "staff"
       package_status:
         | "pending"
@@ -965,7 +965,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "staff", "client"],
+      app_role: ["admin", "staff", "china_staff", "kenya_staff", "client"],
       message_role: ["user", "assistant", "system", "staff"],
       package_status: [
         "pending",

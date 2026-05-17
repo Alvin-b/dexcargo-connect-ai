@@ -16,7 +16,8 @@ export const Route = createFileRoute("/api/admin/users/$id/roles")({
           const auth = await requireAdminBearer(request);
           if (!auth.ok) return auth.response;
           const body = await readJson<{ roles: string[]; location?: string | null }>(request);
-          if (!body || !Array.isArray(body.roles) || body.roles.length === 0) return badRequest("roles[] required");
+          if (!body || !Array.isArray(body.roles) || body.roles.length === 0)
+            return badRequest("roles[] required");
           const invalid = body.roles.filter((r) => !ROLES.has(r));
           if (invalid.length) return badRequest(`invalid roles: ${invalid.join(",")}`);
 
@@ -27,7 +28,7 @@ export const Route = createFileRoute("/api/admin/users/$id/roles")({
 
           if (body.location !== undefined) {
             await (supabaseAdmin.from("profiles") as any)
-              .update({ location: body.location })
+              .update({ staff_location: body.location })
               .eq("id", params.id);
           }
 
@@ -42,7 +43,9 @@ export const Route = createFileRoute("/api/admin/users/$id/roles")({
           });
 
           return apiJson({ ok: true, roles: body.roles });
-        } catch (e) { return serverError(e); }
+        } catch (e) {
+          return serverError(e);
+        }
       },
     },
   },

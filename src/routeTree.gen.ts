@@ -27,6 +27,7 @@ import { Route as ApiPublicEvolutionTestSendRouteImport } from './routes/api/pub
 import { Route as ApiPublicDarajaCallbackRouteImport } from './routes/api/public/daraja-callback'
 import { Route as ApiMobileUploadsRouteImport } from './routes/api/mobile/uploads'
 import { Route as ApiMobileStatsRouteImport } from './routes/api/mobile/stats'
+import { Route as ApiMobileStaffRouteImport } from './routes/api/mobile/staff'
 import { Route as ApiMobileRatesRouteImport } from './routes/api/mobile/rates'
 import { Route as ApiMobileQuoteRouteImport } from './routes/api/mobile/quote'
 import { Route as ApiMobilePaymentsRouteImport } from './routes/api/mobile/payments'
@@ -150,6 +151,11 @@ const ApiMobileUploadsRoute = ApiMobileUploadsRouteImport.update({
 const ApiMobileStatsRoute = ApiMobileStatsRouteImport.update({
   id: '/api/mobile/stats',
   path: '/api/mobile/stats',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMobileStaffRoute = ApiMobileStaffRouteImport.update({
+  id: '/api/mobile/staff',
+  path: '/api/mobile/staff',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiMobileRatesRoute = ApiMobileRatesRouteImport.update({
@@ -338,6 +344,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/payments': typeof ApiMobilePaymentsRouteWithChildren
   '/api/mobile/quote': typeof ApiMobileQuoteRoute
   '/api/mobile/rates': typeof ApiMobileRatesRouteWithChildren
+  '/api/mobile/staff': typeof ApiMobileStaffRoute
   '/api/mobile/stats': typeof ApiMobileStatsRoute
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
@@ -388,6 +395,7 @@ export interface FileRoutesByTo {
   '/api/mobile/payments': typeof ApiMobilePaymentsRouteWithChildren
   '/api/mobile/quote': typeof ApiMobileQuoteRoute
   '/api/mobile/rates': typeof ApiMobileRatesRouteWithChildren
+  '/api/mobile/staff': typeof ApiMobileStaffRoute
   '/api/mobile/stats': typeof ApiMobileStatsRoute
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
@@ -440,6 +448,7 @@ export interface FileRoutesById {
   '/api/mobile/payments': typeof ApiMobilePaymentsRouteWithChildren
   '/api/mobile/quote': typeof ApiMobileQuoteRoute
   '/api/mobile/rates': typeof ApiMobileRatesRouteWithChildren
+  '/api/mobile/staff': typeof ApiMobileStaffRoute
   '/api/mobile/stats': typeof ApiMobileStatsRoute
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
@@ -493,6 +502,7 @@ export interface FileRouteTypes {
     | '/api/mobile/payments'
     | '/api/mobile/quote'
     | '/api/mobile/rates'
+    | '/api/mobile/staff'
     | '/api/mobile/stats'
     | '/api/mobile/uploads'
     | '/api/public/daraja-callback'
@@ -543,6 +553,7 @@ export interface FileRouteTypes {
     | '/api/mobile/payments'
     | '/api/mobile/quote'
     | '/api/mobile/rates'
+    | '/api/mobile/staff'
     | '/api/mobile/stats'
     | '/api/mobile/uploads'
     | '/api/public/daraja-callback'
@@ -594,6 +605,7 @@ export interface FileRouteTypes {
     | '/api/mobile/payments'
     | '/api/mobile/quote'
     | '/api/mobile/rates'
+    | '/api/mobile/staff'
     | '/api/mobile/stats'
     | '/api/mobile/uploads'
     | '/api/public/daraja-callback'
@@ -638,6 +650,7 @@ export interface RootRouteChildren {
   ApiMobilePaymentsRoute: typeof ApiMobilePaymentsRouteWithChildren
   ApiMobileQuoteRoute: typeof ApiMobileQuoteRoute
   ApiMobileRatesRoute: typeof ApiMobileRatesRouteWithChildren
+  ApiMobileStaffRoute: typeof ApiMobileStaffRoute
   ApiMobileStatsRoute: typeof ApiMobileStatsRoute
   ApiMobileUploadsRoute: typeof ApiMobileUploadsRoute
   ApiPublicDarajaCallbackRoute: typeof ApiPublicDarajaCallbackRoute
@@ -773,6 +786,13 @@ declare module '@tanstack/react-router' {
       path: '/api/mobile/stats'
       fullPath: '/api/mobile/stats'
       preLoaderRoute: typeof ApiMobileStatsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/mobile/staff': {
+      id: '/api/mobile/staff'
+      path: '/api/mobile/staff'
+      fullPath: '/api/mobile/staff'
+      preLoaderRoute: typeof ApiMobileStaffRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/mobile/rates': {
@@ -1195,6 +1215,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMobilePaymentsRoute: ApiMobilePaymentsRouteWithChildren,
   ApiMobileQuoteRoute: ApiMobileQuoteRoute,
   ApiMobileRatesRoute: ApiMobileRatesRouteWithChildren,
+  ApiMobileStaffRoute: ApiMobileStaffRoute,
   ApiMobileStatsRoute: ApiMobileStatsRoute,
   ApiMobileUploadsRoute: ApiMobileUploadsRoute,
   ApiPublicDarajaCallbackRoute: ApiPublicDarajaCallbackRoute,

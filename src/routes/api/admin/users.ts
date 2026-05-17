@@ -15,10 +15,12 @@ export const Route = createFileRoute("/api/admin/users")({
           const { data: list, error } = await supabaseAdmin.auth.admin.listUsers({ perPage: 200 });
           if (error) throw error;
           const ids = list.users.map((u) => u.id);
-          const { data: roles } = await supabaseAdmin.from("user_roles").select("user_id, role").in("user_id", ids);
-          const { data: profiles } = await (supabaseAdmin
-            .from("profiles") as any)
-            .select("id, display_name, phone, preferred_language, location")
+          const { data: roles } = await supabaseAdmin
+            .from("user_roles")
+            .select("user_id, role")
+            .in("user_id", ids);
+          const { data: profiles } = await (supabaseAdmin.from("profiles") as any)
+            .select("id, display_name, phone, language_preference, staff_location, is_active")
             .in("id", ids);
           const roleMap = new Map<string, string[]>();
           (roles ?? []).forEach((r: any) => {
@@ -36,7 +38,9 @@ export const Route = createFileRoute("/api/admin/users")({
             profile: profMap.get(u.id) ?? null,
           }));
           return apiJson({ users });
-        } catch (e) { return serverError(e); }
+        } catch (e) {
+          return serverError(e);
+        }
       },
     },
   },

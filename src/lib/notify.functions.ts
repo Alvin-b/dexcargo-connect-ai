@@ -1,7 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
-import { sendWhatsAppText, sendWhatsAppImage } from "@/server/evolution";
 
 const STATUS_LABELS: Record<string, string> = {
   pending: "Pending",
@@ -17,15 +15,31 @@ const STATUS_LABELS: Record<string, string> = {
 
 // Update package status, log event, and notify the client over WhatsApp.
 export const updatePackageStatus = createServerFn({ method: "POST" })
-  .inputValidator((d: { packageId: string; status: string; location?: string; notes?: string; photoUrl?: string }) => d)
+  .inputValidator(
+    (d: {
+      packageId: string;
+      status: string;
+      location?: string;
+      notes?: string;
+      photoUrl?: string;
+    }) => d,
+  )
   .handler(async ({ data }) => {
-    const sb = supabaseAdmin;
-    const { data: pkg, error } = await sb.from("packages").update({
-      status: data.status as any,
-      ...(data.status === "received_in_china" ? { received_at: new Date().toISOString() } : {}),
-      ...(data.status === "delivered" ? { delivered_at: new Date().toISOString() } : {}),
-      ...(data.photoUrl && data.status === "received_in_china" ? { warehouse_photo_url: data.photoUrl } : {}),
-    }).eq("id", data.packageId).select("*, clients(full_name, whatsapp_number)").single();
+    const { supabaseAdmin: sb } = await import("@/integrations/supabase/client.server");
+    const { sendWhatsAppText, sendWhatsAppImage } = await import("@/server/evolution");
+    const { data: pkg, error } = await sb
+      .from("packages")
+      .update({
+        status: data.status as any,
+        ...(data.status === "received_in_china" ? { received_at: new Date().toISOString() } : {}),
+        ...(data.status === "delivered" ? { delivered_at: new Date().toISOString() } : {}),
+        ...(data.photoUrl && data.status === "received_in_china"
+          ? { warehouse_photo_url: data.photoUrl }
+          : {}),
+      })
+      .eq("id", data.packageId)
+      .select("*, clients(full_name, whatsapp_number)")
+      .single();
     if (error || !pkg) throw new Error(error?.message || "Package not found");
 
     await sb.from("package_events").insert({
@@ -43,7 +57,9 @@ export const updatePackageStatus = createServerFn({ method: "POST" })
       try {
         if (data.photoUrl) await sendWhatsAppImage(client.whatsapp_number, data.photoUrl, text);
         else await sendWhatsAppText(client.whatsapp_number, text);
-        await sb.from("package_events").update({ notified_client: true })
+        await sb
+          .from("package_events")
+          .update({ notified_client: true })
           .eq("package_id", pkg.id)
           .eq("status", data.status as any)
           .order("created_at", { ascending: false })
@@ -56,7 +72,7 @@ export const updatePackageStatus = createServerFn({ method: "POST" })
   });
 
 export const generateMarketingPost = createServerFn({ method: "POST" })
-  .inputValidator((d: { platform: "facebook"|"instagram"|"tiktok"|"x"; topic: string }) => d)
+  .inputValidator((d: { platform: "facebook" | "instagram" | "tiktok" | "x"; topic: string }) => d)
   .handler(async ({ data }) => {
     const apiKey = process.env.LOVABLE_API_KEY;
     if (!apiKey) throw new Error("LOVABLE_API_KEY missing");
@@ -72,25 +88,35 @@ export const generateMarketingPost = createServerFn({ method: "POST" })
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "google/gemini-2.5-flash",
-        messages: [{ role: "system", content: sys }, { role: "user", content: data.topic }],
+        messages: [
+          { role: "system", content: sys },
+          { role: "user", content: data.topic },
+        ],
         response_format: { type: "json_object" },
       }),
     });
     if (!res.ok) {
       if (res.status === 429) throw new Error("Rate limited, try again shortly.");
-      if (res.status === 402) throw new Error("AI credits exhausted. Add credits in Workspace settings.");
+      if (res.status === 402)
+        throw new Error("AI credits exhausted. Add credits in Workspace settings.");
       throw new Error(`AI error: ${res.status}`);
     }
     const j = await res.json();
     let parsed: any = {};
-    try { parsed = JSON.parse(j.choices?.[0]?.message?.content || "{}"); } catch {}
-    const sb = supabaseAdmin;
-    const { data: post } = await sb.from("marketing_posts").insert({
-      platform: data.platform,
-      content: parsed.content || j.choices?.[0]?.message?.content || "",
-      hashtags: parsed.hashtags || null,
-      status: "draft",
-    }).select().single();
+    try {
+      parsed = JSON.parse(j.choices?.[0]?.message?.content || "{}");
+    } catch {}
+    const { supabaseAdmin: sb } = await import("@/integrations/supabase/client.server");
+    const { data: post } = await sb
+      .from("marketing_posts")
+      .insert({
+        platform: data.platform,
+        content: parsed.content || j.choices?.[0]?.message?.content || "",
+        hashtags: parsed.hashtags || null,
+        status: "draft",
+      })
+      .select()
+      .single();
     return { post };
   });
 
@@ -98,9 +124,13 @@ export const generateMarketingPost = createServerFn({ method: "POST" })
 export const adminInitiatePayment = createServerFn({ method: "POST" })
   .inputValidator((d: { packageId: string; phone: string; amount: number }) => d)
   .handler(async ({ data }) => {
-    const { initiateStkPush } = await import("./daraja");
-    const sb = supabaseAdmin;
-    const { data: pkg } = await sb.from("packages").select("tracking_number, client_id").eq("id", data.packageId).maybeSingle();
+    const { initiateStkPush } = await import("@/server/daraja");
+    const { supabaseAdmin: sb } = await import("@/integrations/supabase/client.server");
+    const { data: pkg } = await sb
+      .from("packages")
+      .select("tracking_number, client_id")
+      .eq("id", data.packageId)
+      .maybeSingle();
     if (!pkg) throw new Error("Package not found");
     const r = await initiateStkPush({
       phone: data.phone,
@@ -115,9 +145,17 @@ export const adminInitiatePayment = createServerFn({ method: "POST" })
 
 // Public shipping quote (used by /quote and the AI agent)
 export const quoteShipping = createServerFn({ method: "POST" })
-  .inputValidator((d: { destinationCountry: string; mode: "air"|"sea"|"express"; category?: string; weightKg?: number; cbm?: number }) => d)
+  .inputValidator(
+    (d: {
+      destinationCountry: string;
+      mode: "air" | "sea" | "express";
+      category?: string;
+      weightKg?: number;
+      cbm?: number;
+    }) => d,
+  )
   .handler(async ({ data }) => {
-    const { computeQuote } = await import("./quote");
+    const { computeQuote } = await import("@/server/quote");
     return computeQuote({
       destinationCountry: data.destinationCountry,
       mode: data.mode,
@@ -145,7 +183,8 @@ export const generateMarketingImage = createServerFn({ method: "POST" })
     });
     if (!res.ok) {
       if (res.status === 429) throw new Error("Rate limited, try again shortly.");
-      if (res.status === 402) throw new Error("AI credits exhausted. Add credits in Workspace settings.");
+      if (res.status === 402)
+        throw new Error("AI credits exhausted. Add credits in Workspace settings.");
       throw new Error(`AI image error: ${res.status}`);
     }
     const j = await res.json();
@@ -157,9 +196,11 @@ export const generateMarketingImage = createServerFn({ method: "POST" })
     const mime = m[1];
     const ext = mime.split("/")[1] || "png";
     const bytes = Uint8Array.from(atob(m[2]), (c) => c.charCodeAt(0));
-    const sb = supabaseAdmin;
+    const { supabaseAdmin: sb } = await import("@/integrations/supabase/client.server");
     const path = `marketing/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-    const { error: upErr } = await sb.storage.from("package-photos").upload(path, bytes, { contentType: mime, upsert: false });
+    const { error: upErr } = await sb.storage
+      .from("package-photos")
+      .upload(path, bytes, { contentType: mime, upsert: false });
     if (upErr) throw new Error(upErr.message);
     const { data: pub } = sb.storage.from("package-photos").getPublicUrl(path);
     const url = pub.publicUrl;
@@ -173,13 +214,16 @@ export const generateMarketingImage = createServerFn({ method: "POST" })
 export const scheduleMarketingPost = createServerFn({ method: "POST" })
   .inputValidator((d: { postId: string; scheduledFor: string }) => d)
   .handler(async ({ data }) => {
-    const sb = supabaseAdmin;
+    const { supabaseAdmin: sb } = await import("@/integrations/supabase/client.server");
     const when = new Date(data.scheduledFor);
     if (Number.isNaN(when.getTime())) throw new Error("Invalid date");
-    await sb.from("marketing_posts").update({
-      status: "scheduled",
-      scheduled_for: when.toISOString(),
-    }).eq("id", data.postId);
+    await sb
+      .from("marketing_posts")
+      .update({
+        status: "scheduled",
+        scheduled_for: when.toISOString(),
+      })
+      .eq("id", data.postId);
     return { ok: true };
   });
 
@@ -187,7 +231,7 @@ export const scheduleMarketingPost = createServerFn({ method: "POST" })
 export const publishMarketingPost = createServerFn({ method: "POST" })
   .inputValidator((d: { postId: string }) => d)
   .handler(async ({ data }) => {
-    const { publishPost } = await import("./social");
+    const { publishPost } = await import("@/server/social");
     return publishPost(data.postId);
   });
 
@@ -195,7 +239,7 @@ export const publishMarketingPost = createServerFn({ method: "POST" })
 export const deleteMarketingPost = createServerFn({ method: "POST" })
   .inputValidator((d: { postId: string }) => d)
   .handler(async ({ data }) => {
-    const sb = supabaseAdmin;
+    const { supabaseAdmin: sb } = await import("@/integrations/supabase/client.server");
     await sb.from("marketing_posts").delete().eq("id", data.postId);
     return { ok: true };
   });
@@ -204,9 +248,13 @@ export const deleteMarketingPost = createServerFn({ method: "POST" })
 export const clientInitiatePayment = createServerFn({ method: "POST" })
   .inputValidator((d: { packageId: string; phone: string; amount: number }) => d)
   .handler(async ({ data }) => {
-    const { initiateStkPush } = await import("./daraja");
-    const sb = supabaseAdmin;
-    const { data: pkg } = await sb.from("packages").select("tracking_number, client_id").eq("id", data.packageId).maybeSingle();
+    const { initiateStkPush } = await import("@/server/daraja");
+    const { supabaseAdmin: sb } = await import("@/integrations/supabase/client.server");
+    const { data: pkg } = await sb
+      .from("packages")
+      .select("tracking_number, client_id")
+      .eq("id", data.packageId)
+      .maybeSingle();
     if (!pkg) throw new Error("Package not found");
     const r = await initiateStkPush({
       phone: data.phone,
