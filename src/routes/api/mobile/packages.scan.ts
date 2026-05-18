@@ -2,7 +2,18 @@ import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { authenticate, apiJson, preflight, readJson, badRequest, notFound, serverError } from "@/server/api-auth";
 
-const PACKAGE_STATUSES = new Set([
+type PackageStatus =
+  | "pending"
+  | "received_in_china"
+  | "processing"
+  | "in_transit"
+  | "arrived_destination"
+  | "out_for_delivery"
+  | "delivered"
+  | "on_hold"
+  | "cancelled";
+
+const PACKAGE_STATUSES = new Set<PackageStatus>([
   "pending",
   "received_in_china",
   "processing",
@@ -27,7 +38,7 @@ function normalizeScanBody(body: any) {
   return body ?? {};
 }
 
-function statusForScan(body: any) {
+function statusForScan(body: any): string {
   if (body.status === "arrived_kenya" || body.status === "ready_for_pickup") return "arrived_destination";
   if (body.status) return String(body.status);
   if (body.action === "arrive") return "arrived_destination";
@@ -49,8 +60,9 @@ export const Route = createFileRoute("/api/mobile/packages/scan")({
 
           const trackingNumber = body.tracking_number ?? body.tracking_id;
           if (!trackingNumber) return badRequest("tracking_number required");
-          const status = statusForScan(body);
-          if (!PACKAGE_STATUSES.has(status)) return badRequest(`invalid package status: ${status}`);
+          const statusRaw = statusForScan(body);
+          if (!PACKAGE_STATUSES.has(statusRaw as PackageStatus)) return badRequest(`invalid package status: ${statusRaw}`);
+          const status = statusRaw as PackageStatus;
 
           const { data: existing, error: findErr } = await supabaseAdmin
             .from("packages")
