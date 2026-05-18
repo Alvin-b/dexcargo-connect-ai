@@ -11,6 +11,7 @@ import {
 
 const STAFF_ROLES = new Set(["admin", "staff", "china_staff", "kenya_staff"]);
 const STAFF_LOCATIONS = new Set(["china", "kenya", "admin"]);
+const STAFF_LANGUAGES = new Set(["en", "zh"]);
 const LOCATION_ROLES = ["admin", "staff", "china_staff", "kenya_staff"];
 
 function roleForLocation(location: string) {
@@ -55,7 +56,7 @@ export const Route = createFileRoute("/api/mobile/staff")({
             .in("user_id", ids);
           const { data: profiles } = await supabaseAdmin
             .from("profiles")
-            .select("id, display_name, phone, staff_location, is_active")
+            .select("id, display_name, phone, language_preference, staff_location, is_active")
             .in("id", ids);
 
           const roleMap = new Map<string, string[]>();
@@ -77,6 +78,7 @@ export const Route = createFileRoute("/api/mobile/staff")({
                 email: user.email ?? null,
                 display_name: profile.display_name ?? user.email ?? "Staff member",
                 phone: profile.phone ?? null,
+                language_preference: profile.language_preference ?? "en",
                 staff_location: locationForStaff(userRoles, profile.staff_location),
                 is_active: profile.is_active !== false,
                 roles: userRoles,
@@ -100,6 +102,9 @@ export const Route = createFileRoute("/api/mobile/staff")({
           const location = String(body.location ?? "china").toLowerCase();
           if (!STAFF_LOCATIONS.has(location))
             return badRequest("location must be china, kenya or admin");
+          const language = String(body.language_preference ?? body.language ?? "en").toLowerCase();
+          if (!STAFF_LANGUAGES.has(language))
+            return badRequest("language must be en or zh");
 
           const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
             email: body.email,
@@ -114,6 +119,7 @@ export const Route = createFileRoute("/api/mobile/staff")({
             id: userId,
             display_name: body.name,
             phone: body.phone ?? null,
+            language_preference: language,
             staff_location: location === "admin" ? null : location,
             is_active: true,
           });
@@ -139,6 +145,11 @@ export const Route = createFileRoute("/api/mobile/staff")({
           }
           if (body.name) patch.display_name = body.name;
           if (body.phone !== undefined) patch.phone = body.phone;
+          if (body.language_preference || body.language) {
+            const language = String(body.language_preference ?? body.language).toLowerCase();
+            if (!STAFF_LANGUAGES.has(language)) return badRequest("language must be en or zh");
+            patch.language_preference = language;
+          }
           const { error } = await supabaseAdmin.from("profiles").update(patch).eq("id", body.id);
           if (error) throw error;
           if (body.location) await replaceStaffRoles(body.id, String(body.location).toLowerCase());

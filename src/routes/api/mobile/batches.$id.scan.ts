@@ -11,7 +11,7 @@ export const Route = createFileRoute("/api/mobile/batches/$id/scan")({
       OPTIONS: async () => preflight(),
       POST: async ({ request, params }) => {
         try {
-          const auth = await authenticate(request);
+          const auth = await authenticate(request, { location: "china" });
           if (!auth.ok) return auth.response;
           const body = await readJson<any>(request);
           if (!body?.tracking_number) return badRequest("tracking_number required");
@@ -29,6 +29,10 @@ export const Route = createFileRoute("/api/mobile/batches/$id/scan")({
           const { data: existing } = await supabaseAdmin.from("batch_packages")
             .select("id").eq("batch_id", batch.id).eq("package_id", pkg.id).maybeSingle();
           if (existing) return apiJson({ ok: true, already_loaded: true, package: pkg });
+
+          if (pkg.status !== "received_in_china") {
+            return badRequest(`package cannot be loaded from status: ${pkg.status}`);
+          }
 
           // FIFO check: any older received-in-china packages not yet loaded in this batch?
           if (!body.override && pkg.received_at) {
@@ -62,9 +66,23 @@ export const Route = createFileRoute("/api/mobile/batches/$id/scan")({
           }).select().single();
           if (bpErr) throw bpErr;
 
-          await supabaseAdmin.from("packages").update({ status: "in_transit" }).eq("id", pkg.id);
+          const loadedAt = new Date().toISOString();
+          const { data: updatedPkg, error: pkgErr } = await (supabaseAdmin
+            .from("packages") as any)
+            .update({
+              status: "in_transit",
+              loaded_at: loadedAt,
+              loading_batch_id: batch.id,
+              current_location: body.location ?? "China loading bay",
+            })
+            .eq("id", pkg.id)
+            .select("*, clients(full_name, whatsapp_number)")
+            .single();
+          if (pkgErr) throw pkgErr;
+
           await supabaseAdmin.from("package_events").insert({
             package_id: pkg.id, status: "in_transit",
+            location: body.location ?? "China loading bay",
             notes: `Loaded into batch ${batch.batch_code}`, created_by: auth.userId,
           });
 
@@ -72,7 +90,7 @@ export const Route = createFileRoute("/api/mobile/batches/$id/scan")({
           await supabaseAdmin.from("loading_batches")
             .update({ loaded_total: (batch.loaded_total ?? 0) + 1 }).eq("id", batch.id);
 
-          return apiJson({ ok: true, batch_package: bp, package: pkg }, 201);
+          return apiJson({ ok: true, batch_package: bp, package: updatedPkg ?? pkg }, 201);
         } catch (e) { return serverError(e); }
       },
     },

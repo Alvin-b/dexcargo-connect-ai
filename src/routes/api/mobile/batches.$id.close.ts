@@ -10,7 +10,7 @@ export const Route = createFileRoute("/api/mobile/batches/$id/close")({
       OPTIONS: async () => preflight(),
       POST: async ({ request, params }) => {
         try {
-          const auth = await authenticate(request);
+          const auth = await authenticate(request, { location: "china" });
           if (!auth.ok) return auth.response;
 
           const { data: batch } = await supabaseAdmin.from("loading_batches").select("*").eq("id", params.id).maybeSingle();

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { authenticate, apiJson, preflight, readJson, badRequest, notFound, serverError } from "@/server/api-auth";
+import { clientNameFromPayload, clientPhoneFromPayload, resolvePackageClient } from "@/server/clients";
 
 type PackageStatus =
   | "pending"
@@ -25,8 +26,6 @@ const PACKAGE_STATUSES = new Set<PackageStatus>([
   "cancelled",
 ]);
 
-// Scan-to-receive: one-tap status update via QR/barcode.
-// action=receive marks China receipt; action=arrive marks Kenya arrival.
 function normalizeScanBody(body: any) {
   if (body?.qr_data && typeof body.qr_data === "string") {
     try {
@@ -58,8 +57,9 @@ export const Route = createFileRoute("/api/mobile/packages/scan")({
           const auth = await authenticate(request, requiredLocation ? { location: requiredLocation } : undefined);
           if (!auth.ok) return auth.response;
 
-          const trackingNumber = body.tracking_number ?? body.tracking_id;
+          const trackingNumber = String(body.tracking_number ?? body.tracking_id ?? "").trim();
           if (!trackingNumber) return badRequest("tracking_number required");
+
           const statusRaw = statusForScan(body);
           if (!PACKAGE_STATUSES.has(statusRaw as PackageStatus)) return badRequest(`invalid package status: ${statusRaw}`);
           const status = statusRaw as PackageStatus;
@@ -71,23 +71,45 @@ export const Route = createFileRoute("/api/mobile/packages/scan")({
             .maybeSingle();
           if (findErr) throw findErr;
 
-          let pkg = existing;
+          let pkg: any = existing;
           let created = false;
+          const qrPayload = body.qr_data ? normalizeScanBody({ qr_data: body.qr_data }) : body;
+          const clientId = await resolvePackageClient(body);
+          const customerName = clientNameFromPayload(body);
+          const customerPhone = clientPhoneFromPayload(body);
+
           if (!pkg) {
             if (status !== "received_in_china") return notFound("package not found for this tracking number");
-            const { data: inserted, error: insertErr } = await supabaseAdmin
-              .from("packages")
+            const billingUnit = body.billing_unit ?? (body.mode === "sea" ? "cbm" : "kg");
+            const billableQuantity = body.billable_quantity ?? (billingUnit === "cbm" ? body.cbm : body.weight_kg) ?? null;
+            const totalCharge = body.total_charge ?? body.shipping_cost ?? null;
+
+            const { data: inserted, error: insertErr } = await (supabaseAdmin.from("packages") as any)
               .insert({
                 tracking_number: trackingNumber,
                 description: body.description ?? "Auto-registered from mobile scan",
-                sender_name: body.sender_name ?? body.name ?? null,
-                sender_phone: body.sender_phone ? String(body.sender_phone).replace(/\D/g, "") : null,
+                client_id: clientId,
+                sender_name: customerName || null,
+                sender_phone: customerPhone || null,
+                category: body.category ?? null,
+                cargo_type: body.cargo_type ?? (body.mode === "special" ? "special" : "general"),
+                special_cargo_type: body.special_cargo_type ?? null,
+                mode: body.mode ?? "air",
+                weight_kg: body.weight_kg ?? null,
+                cbm: body.cbm ?? null,
+                billing_unit: billingUnit,
+                billable_quantity: billableQuantity,
+                rate_amount: body.rate_amount ?? null,
+                shipping_cost: totalCharge,
+                total_charge: totalCharge,
                 warehouse_photo_url: body.photo_url ?? body.warehouse_photo_url ?? null,
                 origin: body.origin ?? "China",
                 destination_country: body.destination_country ?? "Kenya",
                 destination_city: body.destination_city ?? null,
                 status: "received_in_china",
                 received_at: new Date().toISOString(),
+                current_location: body.location ?? "China warehouse",
+                qr_payload: qrPayload,
               })
               .select("*, clients(full_name, whatsapp_number)")
               .single();
@@ -97,12 +119,43 @@ export const Route = createFileRoute("/api/mobile/packages/scan")({
           }
 
           const patch: any = { status };
-          if (status === "received_in_china") patch.received_at = new Date().toISOString();
+          if (status === "received_in_china") patch.received_at = pkg.received_at ?? new Date().toISOString();
+          if (status === "arrived_destination") patch.arrived_at = new Date().toISOString();
           if (status === "delivered") patch.delivered_at = new Date().toISOString();
+          if (body.location) patch.current_location = body.location;
+          if (qrPayload) patch.qr_payload = qrPayload;
           if (body.photo_url && status === "received_in_china") patch.warehouse_photo_url = body.photo_url;
+          if (!pkg.client_id && clientId) patch.client_id = clientId;
+          if (!pkg.sender_name && customerName) patch.sender_name = customerName;
+          if (!pkg.sender_phone && customerPhone) patch.sender_phone = customerPhone;
+          ["category", "cargo_type", "special_cargo_type", "mode", "weight_kg", "cbm", "billing_unit", "billable_quantity", "rate_amount", "total_charge"].forEach((key) => {
+            if (body[key] !== undefined && (pkg as any)[key] == null) patch[key] = body[key];
+          });
+          if ((body.total_charge ?? body.shipping_cost) !== undefined && !pkg.shipping_cost) patch.shipping_cost = body.total_charge ?? body.shipping_cost;
 
-          const { error: upErr } = await supabaseAdmin.from("packages").update(patch).eq("id", pkg.id);
+          if (!created && status === "received_in_china" && pkg.status !== "pending") {
+            const duplicatePatch = { ...patch };
+            delete duplicatePatch.status;
+            delete duplicatePatch.received_at;
+            if (Object.keys(duplicatePatch).length > 0) {
+              const { data: updated, error: dupErr } = await (supabaseAdmin.from("packages") as any)
+                .update(duplicatePatch)
+                .eq("id", pkg.id)
+                .select("*, clients(full_name, whatsapp_number)")
+                .single();
+              if (dupErr) throw dupErr;
+              pkg = updated;
+            }
+            return apiJson({ ok: true, created: false, duplicate: true, package: pkg });
+          }
+
+          const { data: updatedPkg, error: upErr } = await (supabaseAdmin.from("packages") as any)
+            .update(patch)
+            .eq("id", pkg.id)
+            .select("*, clients(full_name, whatsapp_number)")
+            .single();
           if (upErr) throw upErr;
+          pkg = updatedPkg ?? { ...pkg, ...patch };
 
           if (status === "arrived_destination" || status === "out_for_delivery" || status === "delivered") {
             const { data: bp } = await supabaseAdmin

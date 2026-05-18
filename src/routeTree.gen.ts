@@ -25,6 +25,7 @@ import { Route as ApiPublicPublishScheduledRouteImport } from './routes/api/publ
 import { Route as ApiPublicEvolutionWebhookRouteImport } from './routes/api/public/evolution-webhook'
 import { Route as ApiPublicEvolutionTestSendRouteImport } from './routes/api/public/evolution-test-send'
 import { Route as ApiPublicDarajaCallbackRouteImport } from './routes/api/public/daraja-callback'
+import { Route as ApiPublicArchiveExpiredRecordsRouteImport } from './routes/api/public/archive-expired-records'
 import { Route as ApiMobileUploadsRouteImport } from './routes/api/mobile/uploads'
 import { Route as ApiMobileStatsRouteImport } from './routes/api/mobile/stats'
 import { Route as ApiMobileStaffRouteImport } from './routes/api/mobile/staff'
@@ -143,6 +144,12 @@ const ApiPublicDarajaCallbackRoute = ApiPublicDarajaCallbackRouteImport.update({
   path: '/api/public/daraja-callback',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicArchiveExpiredRecordsRoute =
+  ApiPublicArchiveExpiredRecordsRouteImport.update({
+    id: '/api/public/archive-expired-records',
+    path: '/api/public/archive-expired-records',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiMobileUploadsRoute = ApiMobileUploadsRouteImport.update({
   id: '/api/mobile/uploads',
   path: '/api/mobile/uploads',
@@ -347,6 +354,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/staff': typeof ApiMobileStaffRoute
   '/api/mobile/stats': typeof ApiMobileStatsRoute
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
+  '/api/public/archive-expired-records': typeof ApiPublicArchiveExpiredRecordsRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
   '/api/public/evolution-test-send': typeof ApiPublicEvolutionTestSendRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
@@ -398,6 +406,7 @@ export interface FileRoutesByTo {
   '/api/mobile/staff': typeof ApiMobileStaffRoute
   '/api/mobile/stats': typeof ApiMobileStatsRoute
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
+  '/api/public/archive-expired-records': typeof ApiPublicArchiveExpiredRecordsRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
   '/api/public/evolution-test-send': typeof ApiPublicEvolutionTestSendRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
@@ -451,6 +460,7 @@ export interface FileRoutesById {
   '/api/mobile/staff': typeof ApiMobileStaffRoute
   '/api/mobile/stats': typeof ApiMobileStatsRoute
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
+  '/api/public/archive-expired-records': typeof ApiPublicArchiveExpiredRecordsRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
   '/api/public/evolution-test-send': typeof ApiPublicEvolutionTestSendRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
@@ -505,6 +515,7 @@ export interface FileRouteTypes {
     | '/api/mobile/staff'
     | '/api/mobile/stats'
     | '/api/mobile/uploads'
+    | '/api/public/archive-expired-records'
     | '/api/public/daraja-callback'
     | '/api/public/evolution-test-send'
     | '/api/public/evolution-webhook'
@@ -556,6 +567,7 @@ export interface FileRouteTypes {
     | '/api/mobile/staff'
     | '/api/mobile/stats'
     | '/api/mobile/uploads'
+    | '/api/public/archive-expired-records'
     | '/api/public/daraja-callback'
     | '/api/public/evolution-test-send'
     | '/api/public/evolution-webhook'
@@ -608,6 +620,7 @@ export interface FileRouteTypes {
     | '/api/mobile/staff'
     | '/api/mobile/stats'
     | '/api/mobile/uploads'
+    | '/api/public/archive-expired-records'
     | '/api/public/daraja-callback'
     | '/api/public/evolution-test-send'
     | '/api/public/evolution-webhook'
@@ -653,6 +666,7 @@ export interface RootRouteChildren {
   ApiMobileStaffRoute: typeof ApiMobileStaffRoute
   ApiMobileStatsRoute: typeof ApiMobileStatsRoute
   ApiMobileUploadsRoute: typeof ApiMobileUploadsRoute
+  ApiPublicArchiveExpiredRecordsRoute: typeof ApiPublicArchiveExpiredRecordsRoute
   ApiPublicDarajaCallbackRoute: typeof ApiPublicDarajaCallbackRoute
   ApiPublicEvolutionTestSendRoute: typeof ApiPublicEvolutionTestSendRoute
   ApiPublicEvolutionWebhookRoute: typeof ApiPublicEvolutionWebhookRouteWithChildren
@@ -772,6 +786,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/daraja-callback'
       fullPath: '/api/public/daraja-callback'
       preLoaderRoute: typeof ApiPublicDarajaCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/archive-expired-records': {
+      id: '/api/public/archive-expired-records'
+      path: '/api/public/archive-expired-records'
+      fullPath: '/api/public/archive-expired-records'
+      preLoaderRoute: typeof ApiPublicArchiveExpiredRecordsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/mobile/uploads': {
@@ -1218,6 +1239,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMobileStaffRoute: ApiMobileStaffRoute,
   ApiMobileStatsRoute: ApiMobileStatsRoute,
   ApiMobileUploadsRoute: ApiMobileUploadsRoute,
+  ApiPublicArchiveExpiredRecordsRoute: ApiPublicArchiveExpiredRecordsRoute,
   ApiPublicDarajaCallbackRoute: ApiPublicDarajaCallbackRoute,
   ApiPublicEvolutionTestSendRoute: ApiPublicEvolutionTestSendRoute,
   ApiPublicEvolutionWebhookRoute: ApiPublicEvolutionWebhookRouteWithChildren,
@@ -1227,3 +1249,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}

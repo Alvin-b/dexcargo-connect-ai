@@ -11,7 +11,7 @@ export const Route = createFileRoute("/api/mobile/batches")({
       OPTIONS: async () => preflight(),
       GET: async ({ request }) => {
         try {
-          const auth = await authenticate(request);
+          const auth = await authenticate(request, { location: "china" });
           if (!auth.ok) return auth.response;
           const url = new URL(request.url);
           const status = url.searchParams.get("status");
@@ -26,7 +26,7 @@ export const Route = createFileRoute("/api/mobile/batches")({
       },
       POST: async ({ request }) => {
         try {
-          const auth = await authenticate(request);
+          const auth = await authenticate(request, { location: "china" });
           if (!auth.ok) return auth.response;
           const body = await readJson<any>(request);
           if (!body?.batch_code) return badRequest("batch_code required");

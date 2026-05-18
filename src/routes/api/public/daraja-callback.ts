@@ -25,11 +25,33 @@ export const Route = createFileRoute("/api/public/daraja-callback")({
         const sb = supabaseAdmin;
         const status = resultCode === 0 ? "success" : (resultCode === 1032 ? "cancelled" : "failed");
 
-        const { data: pay } = await sb.from("payments").update({
+        const { data: pay } = await (sb.from("payments") as any).update({
           status,
           mpesa_receipt: receipt ?? null,
           raw_callback: body,
+          verified_at: status === "success" ? new Date().toISOString() : null,
         }).eq("checkout_request_id", checkoutId).select("phone, package_id, amount").maybeSingle();
+
+        if (pay?.package_id) {
+          if (status === "success") {
+            await (sb.from("packages") as any).update({
+              status: "out_for_delivery",
+              payment_status: "paid",
+              payment_method: "mpesa",
+              cleared_at: new Date().toISOString(),
+            }).eq("id", pay.package_id);
+            await sb.from("package_events").insert({
+              package_id: pay.package_id,
+              status: "out_for_delivery",
+              notes: `M-Pesa payment verified${receipt ? ` (${receipt})` : ""}. Package cleared for release.`,
+            });
+          } else {
+            await (sb.from("packages") as any).update({
+              payment_status: status,
+              payment_method: "mpesa",
+            }).eq("id", pay.package_id);
+          }
+        }
 
         if (pay) {
           let msg = "";

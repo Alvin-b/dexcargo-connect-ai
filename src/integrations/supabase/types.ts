@@ -139,6 +139,8 @@ export type Database = {
       delivery_signatures: {
         Row: {
           amount_paid: number | null
+          archive_status: string
+          archived_at: string | null
           created_at: string
           currency: string | null
           id: string
@@ -147,12 +149,17 @@ export type Database = {
           payment_id: string | null
           payment_method: string
           recorded_by: string | null
+          retention_until: string
+          signature_mime_type: string | null
+          signature_path: string | null
           signature_url: string
           signer_name: string
           signer_phone: string | null
         }
         Insert: {
           amount_paid?: number | null
+          archive_status?: string
+          archived_at?: string | null
           created_at?: string
           currency?: string | null
           id?: string
@@ -161,12 +168,17 @@ export type Database = {
           payment_id?: string | null
           payment_method?: string
           recorded_by?: string | null
+          retention_until?: string
+          signature_mime_type?: string | null
+          signature_path?: string | null
           signature_url: string
           signer_name: string
           signer_phone?: string | null
         }
         Update: {
           amount_paid?: number | null
+          archive_status?: string
+          archived_at?: string | null
           created_at?: string
           currency?: string | null
           id?: string
@@ -175,6 +187,9 @@ export type Database = {
           payment_id?: string | null
           payment_method?: string
           recorded_by?: string | null
+          retention_until?: string
+          signature_mime_type?: string | null
+          signature_path?: string | null
           signature_url?: string
           signer_name?: string
           signer_phone?: string | null
@@ -480,11 +495,19 @@ export type Database = {
       }
       packages: {
         Row: {
+          archive_status: string
+          archived_at: string | null
+          arrived_at: string | null
+          billing_unit: string | null
+          billable_quantity: number | null
           category: string | null
           cbm: number | null
+          cargo_type: string
+          cleared_at: string | null
           client_id: string | null
           created_at: string
           currency: string | null
+          current_location: string | null
           declared_value: number | null
           delivered_at: string | null
           description: string | null
@@ -494,13 +517,23 @@ export type Database = {
           height_cm: number | null
           id: string
           length_cm: number | null
+          loaded_at: string | null
+          loading_batch_id: string | null
           mode: Database["public"]["Enums"]["shipping_mode"] | null
           origin: string | null
+          payment_method: string | null
+          payment_status: string
+          pickup_retention_until: string | null
+          qr_payload: Json | null
+          rate_amount: number | null
           received_at: string | null
+          released_by: string | null
           sender_name: string | null
           sender_phone: string | null
           shipping_cost: number | null
+          special_cargo_type: string | null
           status: Database["public"]["Enums"]["package_status"]
+          total_charge: number | null
           tracking_number: string
           updated_at: string
           warehouse_photo_url: string | null
@@ -508,11 +541,19 @@ export type Database = {
           width_cm: number | null
         }
         Insert: {
+          archive_status?: string
+          archived_at?: string | null
+          arrived_at?: string | null
+          billing_unit?: string | null
+          billable_quantity?: number | null
           category?: string | null
           cbm?: number | null
+          cargo_type?: string
+          cleared_at?: string | null
           client_id?: string | null
           created_at?: string
           currency?: string | null
+          current_location?: string | null
           declared_value?: number | null
           delivered_at?: string | null
           description?: string | null
@@ -522,13 +563,23 @@ export type Database = {
           height_cm?: number | null
           id?: string
           length_cm?: number | null
+          loaded_at?: string | null
+          loading_batch_id?: string | null
           mode?: Database["public"]["Enums"]["shipping_mode"] | null
           origin?: string | null
+          payment_method?: string | null
+          payment_status?: string
+          pickup_retention_until?: string | null
+          qr_payload?: Json | null
+          rate_amount?: number | null
           received_at?: string | null
+          released_by?: string | null
           sender_name?: string | null
           sender_phone?: string | null
           shipping_cost?: number | null
+          special_cargo_type?: string | null
           status?: Database["public"]["Enums"]["package_status"]
+          total_charge?: number | null
           tracking_number: string
           updated_at?: string
           warehouse_photo_url?: string | null
@@ -536,11 +587,19 @@ export type Database = {
           width_cm?: number | null
         }
         Update: {
+          archive_status?: string
+          archived_at?: string | null
+          arrived_at?: string | null
+          billing_unit?: string | null
+          billable_quantity?: number | null
           category?: string | null
           cbm?: number | null
+          cargo_type?: string
+          cleared_at?: string | null
           client_id?: string | null
           created_at?: string
           currency?: string | null
+          current_location?: string | null
           declared_value?: number | null
           delivered_at?: string | null
           description?: string | null
@@ -550,13 +609,23 @@ export type Database = {
           height_cm?: number | null
           id?: string
           length_cm?: number | null
+          loaded_at?: string | null
+          loading_batch_id?: string | null
           mode?: Database["public"]["Enums"]["shipping_mode"] | null
           origin?: string | null
+          payment_method?: string | null
+          payment_status?: string
+          pickup_retention_until?: string | null
+          qr_payload?: Json | null
+          rate_amount?: number | null
           received_at?: string | null
+          released_by?: string | null
           sender_name?: string | null
           sender_phone?: string | null
           shipping_cost?: number | null
+          special_cargo_type?: string | null
           status?: Database["public"]["Enums"]["package_status"]
+          total_charge?: number | null
           tracking_number?: string
           updated_at?: string
           warehouse_photo_url?: string | null
@@ -581,13 +650,16 @@ export type Database = {
           created_at: string
           currency: string
           id: string
+          initiated_by: string | null
           merchant_request_id: string | null
           mpesa_receipt: string | null
           package_id: string | null
           phone: string
+          purpose: string
           raw_callback: Json | null
           status: Database["public"]["Enums"]["payment_status"]
           updated_at: string
+          verified_at: string | null
         }
         Insert: {
           amount: number
@@ -596,13 +668,16 @@ export type Database = {
           created_at?: string
           currency?: string
           id?: string
+          initiated_by?: string | null
           merchant_request_id?: string | null
           mpesa_receipt?: string | null
           package_id?: string | null
           phone: string
+          purpose?: string
           raw_callback?: Json | null
           status?: Database["public"]["Enums"]["payment_status"]
           updated_at?: string
+          verified_at?: string | null
         }
         Update: {
           amount?: number
@@ -611,13 +686,16 @@ export type Database = {
           created_at?: string
           currency?: string
           id?: string
+          initiated_by?: string | null
           merchant_request_id?: string | null
           mpesa_receipt?: string | null
           package_id?: string | null
           phone?: string
+          purpose?: string
           raw_callback?: Json | null
           status?: Database["public"]["Enums"]["payment_status"]
           updated_at?: string
+          verified_at?: string | null
         }
         Relationships: [
           {
@@ -672,7 +750,9 @@ export type Database = {
       rates: {
         Row: {
           active: boolean
+          billing_unit: string | null
           category: string
+          cargo_type: string
           created_at: string
           currency: string
           destination_country: string
@@ -683,13 +763,17 @@ export type Database = {
           origin_country: string | null
           price_per_cbm: number | null
           price_per_kg: number | null
+          special_cargo_type: string | null
+          special_handling_fee: number
           transit_days_max: number | null
           transit_days_min: number | null
           updated_at: string
         }
         Insert: {
           active?: boolean
+          billing_unit?: string | null
           category: string
+          cargo_type?: string
           created_at?: string
           currency?: string
           destination_country: string
@@ -700,13 +784,17 @@ export type Database = {
           origin_country?: string | null
           price_per_cbm?: number | null
           price_per_kg?: number | null
+          special_cargo_type?: string | null
+          special_handling_fee?: number
           transit_days_max?: number | null
           transit_days_min?: number | null
           updated_at?: string
         }
         Update: {
           active?: boolean
+          billing_unit?: string | null
           category?: string
+          cargo_type?: string
           created_at?: string
           currency?: string
           destination_country?: string
@@ -717,6 +805,8 @@ export type Database = {
           origin_country?: string | null
           price_per_cbm?: number | null
           price_per_kg?: number | null
+          special_cargo_type?: string | null
+          special_handling_fee?: number
           transit_days_max?: number | null
           transit_days_min?: number | null
           updated_at?: string
@@ -793,6 +883,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      archive_expired_delivery_records: { Args: never; Returns: number }
       detect_left_behind: {
         Args: { _batch_id: string }
         Returns: {
@@ -836,7 +927,7 @@ export type Database = {
         | "cancelled"
       payment_status: "pending" | "success" | "failed" | "cancelled"
       post_status: "draft" | "approved" | "scheduled" | "published" | "failed"
-      shipping_mode: "air" | "sea" | "express"
+      shipping_mode: "air" | "sea" | "express" | "special"
       social_platform: "facebook" | "instagram" | "tiktok" | "x"
     }
     CompositeTypes: {
@@ -980,7 +1071,7 @@ export const Constants = {
       ],
       payment_status: ["pending", "success", "failed", "cancelled"],
       post_status: ["draft", "approved", "scheduled", "published", "failed"],
-      shipping_mode: ["air", "sea", "express"],
+      shipping_mode: ["air", "sea", "express", "special"],
       social_platform: ["facebook", "instagram", "tiktok", "x"],
     },
   },

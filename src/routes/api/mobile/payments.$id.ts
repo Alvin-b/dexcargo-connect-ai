@@ -8,7 +8,7 @@ export const Route = createFileRoute("/api/mobile/payments/$id")({
       OPTIONS: async () => preflight(),
       GET: async ({ request, params }) => {
         try {
-          const auth = await authenticate(request);
+          const auth = await authenticate(request, { location: "kenya" });
           if (!auth.ok) return auth.response;
           // Try by id, then by checkout_request_id
           let { data } = await supabaseAdmin.from("payments").select("*").eq("id", params.id).maybeSingle();

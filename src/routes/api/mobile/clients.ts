@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { authenticate, apiJson, preflight, readJson, badRequest, serverError } from "@/server/api-auth";
+import { normalizeClientPhone } from "@/server/clients";
 
 export const Route = createFileRoute("/api/mobile/clients")({
   server: {
@@ -27,15 +28,17 @@ export const Route = createFileRoute("/api/mobile/clients")({
           if (!auth.ok) return auth.response;
           const body = await readJson<any>(request);
           if (!body?.full_name || !body?.whatsapp_number) return badRequest("full_name and whatsapp_number required");
-          const { data, error } = await supabaseAdmin.from("clients").insert({
+          const whatsappNumber = normalizeClientPhone(body.whatsapp_number);
+          if (!whatsappNumber) return badRequest("valid whatsapp_number required");
+          const { data, error } = await supabaseAdmin.from("clients").upsert({
             full_name: body.full_name,
-            whatsapp_number: String(body.whatsapp_number).replace(/\D/g, ""),
+            whatsapp_number: whatsappNumber,
             email: body.email ?? null,
             country: body.country ?? null,
             city: body.city ?? null,
             address: body.address ?? null,
             notes: body.notes ?? null,
-          }).select().single();
+          }, { onConflict: "whatsapp_number" }).select().single();
           if (error) throw error;
           return apiJson(data, 201);
         } catch (e) { return serverError(e); }

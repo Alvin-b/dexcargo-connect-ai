@@ -1,4 +1,5 @@
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { normalizeClientPhone } from "./clients";
 
 const SYSTEM_PROMPT = `You are the Dex Logistics Kenya (Dexcargo) customer support AI agent on WhatsApp.
 Dex Logistics Kenya is an international logistics company specializing in shipping from China and Dubai to Kenya.
@@ -37,6 +38,13 @@ Rules:
 - Never reveal internal IDs (UUIDs). Use tracking numbers, names, and human-readable info.
 - For payments always confirm amount and phone number before triggering STK push.
 - Always include transit time when quoting (e.g. "arrives in 7–14 days by air").
+`;
+
+const CARGO_AGENT_PROMPT = `
+DEX Cargo also handles special cargo such as batteries, phones, drones, chemicals, perfumes, liquids, and magnets.
+Use the DEX Cargo name in replies. Do not call the company Dex Logistics unless source data explicitly says that.
+Always use database tools for tracking, rates, customer history, payment status, and cargo details.
+For quotes, include shipping mode, cargo class, chargeable unit, chargeable quantity, total cost, and transit time.
 `;
 
 const TOOLS = [
@@ -120,7 +128,9 @@ const TOOLS = [
         type: "object",
         properties: {
           destination_country: { type: "string" },
-          mode: { type: "string", enum: ["air", "sea", "express"] },
+          mode: { type: "string", enum: ["air", "sea", "express", "special"] },
+          cargo_type: { type: "string", enum: ["general", "special"] },
+          special_cargo_type: { type: "string", enum: ["battery", "phone", "drone", "chemical", "perfume", "liquid", "magnet", "other"] },
         },
       },
     },
@@ -134,8 +144,10 @@ const TOOLS = [
         type: "object",
         properties: {
           destination_country: { type: "string" },
-          mode: { type: "string", enum: ["air", "sea", "express"] },
+          mode: { type: "string", enum: ["air", "sea", "express", "special"] },
           category: { type: "string", description: "Optional category like electronics, clothing, general" },
+          cargo_type: { type: "string", enum: ["general", "special"] },
+          special_cargo_type: { type: "string", enum: ["battery", "phone", "drone", "chemical", "perfume", "liquid", "magnet", "other"] },
           weight_kg: { type: "number" },
           cbm: { type: "number" },
         },
@@ -192,7 +204,7 @@ async function executeTool(name: string, args: any, ctx: ToolCtx): Promise<any> 
   switch (name) {
     case "find_client": {
       let q = sb.from("clients").select("*").limit(5);
-      if (args.whatsapp_number) q = q.eq("whatsapp_number", String(args.whatsapp_number).replace(/\D/g, ""));
+      if (args.whatsapp_number) q = q.eq("whatsapp_number", normalizeClientPhone(args.whatsapp_number));
       else if (args.tracking_number) {
         const { data: pkg } = await sb.from("packages").select("client_id").eq("tracking_number", args.tracking_number).maybeSingle();
         if (!pkg?.client_id) return { found: false };
@@ -202,7 +214,8 @@ async function executeTool(name: string, args: any, ctx: ToolCtx): Promise<any> 
       return { found: (data?.length ?? 0) > 0, clients: data };
     }
     case "register_client": {
-      const wa = String(args.whatsapp_number).replace(/\D/g, "");
+      const wa = normalizeClientPhone(args.whatsapp_number);
+      if (!wa) return { ok: false, error: "valid whatsapp_number required" };
       const { data: existing } = await sb.from("clients").select("id").eq("whatsapp_number", wa).maybeSingle();
       if (existing) {
         const { data } = await sb.from("clients").update({
@@ -226,7 +239,7 @@ async function executeTool(name: string, args: any, ctx: ToolCtx): Promise<any> 
       return { ok: true, client: data, action: "created" };
     }
     case "track_package": {
-      const { data: pkg } = await sb.from("packages").select("*, clients(full_name, whatsapp_number)").eq("tracking_number", args.tracking_number).maybeSingle();
+      const { data: pkg } = await (sb.from("packages") as any).select("*, clients(full_name, whatsapp_number)").eq("tracking_number", args.tracking_number).maybeSingle();
       if (!pkg) return { found: false };
       const { data: events } = await sb.from("package_events").select("status, location, notes, created_at").eq("package_id", pkg.id).order("created_at", { ascending: true });
       return {
@@ -239,19 +252,25 @@ async function executeTool(name: string, args: any, ctx: ToolCtx): Promise<any> 
         weight_kg: pkg.weight_kg,
         cbm: pkg.cbm,
         mode: pkg.mode,
+        cargo_type: pkg.cargo_type,
+        special_cargo_type: pkg.special_cargo_type,
+        billing_unit: pkg.billing_unit,
+        billable_quantity: pkg.billable_quantity,
         origin: pkg.origin,
         destination: `${pkg.destination_city ?? ""} ${pkg.destination_country ?? ""}`.trim(),
         estimated_arrival: pkg.estimated_arrival,
-        shipping_cost: pkg.shipping_cost,
+        shipping_cost: pkg.total_charge ?? pkg.shipping_cost,
+        payment_status: pkg.payment_status,
+        payment_method: pkg.payment_method,
         currency: pkg.currency,
         has_warehouse_photo: !!pkg.warehouse_photo_url,
         events,
       };
     }
     case "search_packages": {
-      let q = sb.from("packages").select("tracking_number, description, status, mode, sender_name, sender_phone, estimated_arrival").order("created_at", { ascending: false }).limit(10);
+      let q = (sb.from("packages") as any).select("tracking_number, description, status, mode, cargo_type, special_cargo_type, sender_name, sender_phone, estimated_arrival, payment_status").order("created_at", { ascending: false }).limit(10);
       if (args.sender_phone) {
-        const phone = String(args.sender_phone).replace(/\D/g, "");
+        const phone = normalizeClientPhone(args.sender_phone);
         q = q.eq("sender_phone", phone);
       } else if (args.sender_name) {
         q = q.ilike("sender_name", `%${args.sender_name}%`);
@@ -262,16 +281,18 @@ async function executeTool(name: string, args: any, ctx: ToolCtx): Promise<any> 
       return { found: (data?.length ?? 0) > 0, packages: data ?? [] };
     }
     case "list_client_packages": {
-      const wa = String(args.whatsapp_number).replace(/\D/g, "");
+      const wa = normalizeClientPhone(args.whatsapp_number);
       const { data: client } = await sb.from("clients").select("id, full_name").eq("whatsapp_number", wa).maybeSingle();
       if (!client) return { found: false };
-      const { data } = await sb.from("packages").select("tracking_number, description, status, mode, estimated_arrival").eq("client_id", client.id).order("created_at", { ascending: false }).limit(20);
+      const { data } = await (sb.from("packages") as any).select("tracking_number, description, status, mode, cargo_type, special_cargo_type, estimated_arrival, payment_status").eq("client_id", client.id).order("created_at", { ascending: false }).limit(20);
       return { found: true, client_name: client.full_name, packages: data };
     }
     case "get_rates": {
-      let q = sb.from("rates").select("*").eq("active", true);
+      let q = (sb.from("rates") as any).select("*").eq("active", true);
       if (args.destination_country) q = q.ilike("destination_country", `%${args.destination_country}%`);
       if (args.mode) q = q.eq("mode", args.mode);
+      if (args.cargo_type) q = q.eq("cargo_type", args.cargo_type);
+      if (args.special_cargo_type) q = q.eq("special_cargo_type", args.special_cargo_type);
       const { data } = await q;
       return { rates: data };
     }
@@ -281,6 +302,8 @@ async function executeTool(name: string, args: any, ctx: ToolCtx): Promise<any> 
         destinationCountry: args.destination_country,
         mode: args.mode,
         category: args.category,
+        cargoType: args.cargo_type,
+        specialCargoType: args.special_cargo_type,
         weightKg: args.weight_kg,
         cbm: args.cbm,
       });
@@ -303,7 +326,11 @@ async function executeTool(name: string, args: any, ctx: ToolCtx): Promise<any> 
           description: `Dexcargo ${args.tracking_number}`,
           packageId: pkg?.id,
           clientId: pkg?.client_id ?? undefined,
+          purpose: "package_clearance",
         });
+        if (pkg?.id) {
+          await (sb.from("packages") as any).update({ payment_status: "pending", payment_method: "mpesa" }).eq("id", pkg.id);
+        }
         return { ok: true, message: "STK push sent. Please enter your M-Pesa PIN.", checkout_request_id: r.CheckoutRequestID };
       } catch (e: any) {
         return { ok: false, error: e.message };
@@ -327,7 +354,7 @@ export async function runAgent(opts: {
   if (!apiKey) throw new Error("LOVABLE_API_KEY missing");
 
   const messages: any[] = [
-    { role: "system", content: SYSTEM_PROMPT + `\n\nClient WhatsApp number: ${opts.whatsappNumber}` },
+    { role: "system", content: SYSTEM_PROMPT + CARGO_AGENT_PROMPT + `\n\nClient WhatsApp number: ${opts.whatsappNumber}` },
     ...opts.history.slice(-20),
     { role: "user", content: opts.userMessage },
   ];

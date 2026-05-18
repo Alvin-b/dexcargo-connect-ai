@@ -16,6 +16,8 @@ export const Route = createFileRoute("/api/mobile/quote")({
             destinationCountry: body.destination_country,
             mode: body.mode,
             category: body.category,
+            cargoType: body.cargo_type,
+            specialCargoType: body.special_cargo_type,
             weightKg: body.weight_kg,
             cbm: body.cbm,
           });

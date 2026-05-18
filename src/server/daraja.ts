@@ -50,13 +50,18 @@ export async function initiateStkPush(opts: {
   description: string;
   packageId?: string;
   clientId?: string;
-}): Promise<{ CheckoutRequestID: string; MerchantRequestID: string; ResponseCode: string; ResponseDescription: string }> {
+  initiatedBy?: string;
+  purpose?: "package_clearance" | "deposit" | "adjustment";
+}): Promise<{ CheckoutRequestID: string; MerchantRequestID: string; ResponseCode: string; ResponseDescription: string; payment?: any }> {
   const shortcode = env("DARAJA_SHORTCODE");
   const passkey = env("DARAJA_PASSKEY");
   const callbackUrl = env("DARAJA_CALLBACK_URL");
+  if (!/^https:\/\//i.test(callbackUrl)) throw new Error("DARAJA_CALLBACK_URL must be a public https URL");
+  if (!opts.amount || Number(opts.amount) <= 0) throw new Error("Payment amount must be greater than zero");
   const ts = timestamp();
   const password = Buffer.from(`${shortcode}${passkey}${ts}`).toString("base64");
   const phone = normalizePhone(opts.phone);
+  if (!/^254(7|1)\d{8}$/.test(phone)) throw new Error("Use a valid Safaricom phone number, e.g. 2547XXXXXXXX");
   const token = await getAccessToken();
 
   const body = {
@@ -83,7 +88,7 @@ export async function initiateStkPush(opts: {
     throw new Error(`STK push failed: ${j.errorMessage || j.ResponseDescription || res.status}`);
   }
 
-  await supabaseAdmin.from("payments").insert({
+  const { data: payment, error: paymentErr } = await (supabaseAdmin.from("payments") as any).insert({
     package_id: opts.packageId ?? null,
     client_id: opts.clientId ?? null,
     amount: opts.amount,
@@ -91,7 +96,11 @@ export async function initiateStkPush(opts: {
     checkout_request_id: j.CheckoutRequestID,
     merchant_request_id: j.MerchantRequestID,
     status: "pending",
-  });
+    purpose: opts.purpose ?? "package_clearance",
+    initiated_by: opts.initiatedBy ?? null,
+    raw_callback: { stk_request: j },
+  }).select().single();
+  if (paymentErr) throw paymentErr;
 
-  return j;
+  return { ...j, payment };
 }

@@ -2,6 +2,48 @@ import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { authenticate, apiJson, preflight, serverError } from "@/server/api-auth";
 
+function permissionsFor(auth: Extract<Awaited<ReturnType<typeof authenticate>>, { ok: true }>, roles: string[]) {
+  if (auth.isAdmin || roles.includes("admin")) {
+    return [
+      "packages:read",
+      "packages:write",
+      "packages:receive",
+      "packages:load",
+      "packages:arrive",
+      "packages:clear",
+      "packages:deliver",
+      "payments:manage",
+      "batches:manage",
+      "alerts:read",
+      "users:manage",
+      "analytics:read",
+      "settings:manage",
+    ];
+  }
+
+  if (auth.staffLocation === "kenya" || roles.includes("kenya_staff")) {
+    return [
+      "packages:read",
+      "packages:arrive",
+      "packages:clear",
+      "packages:deliver",
+      "payments:manage",
+      "alerts:read",
+      "analytics:read",
+    ];
+  }
+
+  return [
+    "packages:read",
+    "packages:write",
+    "packages:receive",
+    "packages:load",
+    "batches:manage",
+    "alerts:read",
+    "analytics:read",
+  ];
+}
+
 export const Route = createFileRoute("/api/mobile/auth/me")({
   server: {
     handlers: {
@@ -24,6 +66,8 @@ export const Route = createFileRoute("/api/mobile/auth/me")({
             roles: (roles ?? []).map((r) => r.role),
             is_admin: auth.isAdmin,
             staff_location: auth.staffLocation,
+            preferred_language: profile?.language_preference ?? "en",
+            permissions: permissionsFor(auth, (roles ?? []).map((r) => r.role)),
           });
         } catch (e) {
           return serverError(e);
