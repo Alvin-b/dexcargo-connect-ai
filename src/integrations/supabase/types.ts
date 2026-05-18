@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_logs: {
+        Row: {
+          action: string
+          actor_email: string | null
+          actor_id: string | null
+          created_at: string
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          resource_id: string | null
+          resource_type: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_email?: string | null
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          resource_id?: string | null
+          resource_type?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_email?: string | null
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          resource_id?: string | null
+          resource_type?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       batch_packages: {
         Row: {
           batch_id: string
@@ -60,9 +99,11 @@ export type Database = {
         Row: {
           address: string | null
           city: string | null
+          consent_data_retention: boolean | null
           country: string | null
           created_at: string
           email: string | null
+          first_seen_at: string | null
           full_name: string
           id: string
           notes: string | null
@@ -73,9 +114,11 @@ export type Database = {
         Insert: {
           address?: string | null
           city?: string | null
+          consent_data_retention?: boolean | null
           country?: string | null
           created_at?: string
           email?: string | null
+          first_seen_at?: string | null
           full_name: string
           id?: string
           notes?: string | null
@@ -86,9 +129,11 @@ export type Database = {
         Update: {
           address?: string | null
           city?: string | null
+          consent_data_retention?: boolean | null
           country?: string | null
           created_at?: string
           email?: string | null
+          first_seen_at?: string | null
           full_name?: string
           id?: string
           notes?: string | null
@@ -480,6 +525,9 @@ export type Database = {
       }
       packages: {
         Row: {
+          billable_quantity: number | null
+          billing_unit: string | null
+          cargo_type: string | null
           category: string | null
           cbm: number | null
           client_id: string | null
@@ -496,11 +544,16 @@ export type Database = {
           length_cm: number | null
           mode: Database["public"]["Enums"]["shipping_mode"] | null
           origin: string | null
+          payment_method: string | null
+          payment_status: string | null
+          rate_amount: number | null
           received_at: string | null
           sender_name: string | null
           sender_phone: string | null
           shipping_cost: number | null
+          special_cargo_type: string | null
           status: Database["public"]["Enums"]["package_status"]
+          total_charge: number | null
           tracking_number: string
           updated_at: string
           warehouse_photo_url: string | null
@@ -508,6 +561,9 @@ export type Database = {
           width_cm: number | null
         }
         Insert: {
+          billable_quantity?: number | null
+          billing_unit?: string | null
+          cargo_type?: string | null
           category?: string | null
           cbm?: number | null
           client_id?: string | null
@@ -524,11 +580,16 @@ export type Database = {
           length_cm?: number | null
           mode?: Database["public"]["Enums"]["shipping_mode"] | null
           origin?: string | null
+          payment_method?: string | null
+          payment_status?: string | null
+          rate_amount?: number | null
           received_at?: string | null
           sender_name?: string | null
           sender_phone?: string | null
           shipping_cost?: number | null
+          special_cargo_type?: string | null
           status?: Database["public"]["Enums"]["package_status"]
+          total_charge?: number | null
           tracking_number: string
           updated_at?: string
           warehouse_photo_url?: string | null
@@ -536,6 +597,9 @@ export type Database = {
           width_cm?: number | null
         }
         Update: {
+          billable_quantity?: number | null
+          billing_unit?: string | null
+          cargo_type?: string | null
           category?: string | null
           cbm?: number | null
           client_id?: string | null
@@ -552,11 +616,16 @@ export type Database = {
           length_cm?: number | null
           mode?: Database["public"]["Enums"]["shipping_mode"] | null
           origin?: string | null
+          payment_method?: string | null
+          payment_status?: string | null
+          rate_amount?: number | null
           received_at?: string | null
           sender_name?: string | null
           sender_phone?: string | null
           shipping_cost?: number | null
+          special_cargo_type?: string | null
           status?: Database["public"]["Enums"]["package_status"]
+          total_charge?: number | null
           tracking_number?: string
           updated_at?: string
           warehouse_photo_url?: string | null
@@ -585,6 +654,7 @@ export type Database = {
           mpesa_receipt: string | null
           package_id: string | null
           phone: string
+          purpose: string | null
           raw_callback: Json | null
           status: Database["public"]["Enums"]["payment_status"]
           updated_at: string
@@ -600,6 +670,7 @@ export type Database = {
           mpesa_receipt?: string | null
           package_id?: string | null
           phone: string
+          purpose?: string | null
           raw_callback?: Json | null
           status?: Database["public"]["Enums"]["payment_status"]
           updated_at?: string
@@ -615,6 +686,7 @@ export type Database = {
           mpesa_receipt?: string | null
           package_id?: string | null
           phone?: string
+          purpose?: string | null
           raw_callback?: Json | null
           status?: Database["public"]["Enums"]["payment_status"]
           updated_at?: string
@@ -669,9 +741,41 @@ export type Database = {
         }
         Relationships: []
       }
+      push_tokens: {
+        Row: {
+          created_at: string
+          device_label: string | null
+          id: string
+          last_used_at: string | null
+          platform: string
+          token: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          device_label?: string | null
+          id?: string
+          last_used_at?: string | null
+          platform: string
+          token: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          device_label?: string | null
+          id?: string
+          last_used_at?: string | null
+          platform?: string
+          token?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       rates: {
         Row: {
           active: boolean
+          billing_unit: string | null
+          cargo_type: string | null
           category: string
           created_at: string
           currency: string
@@ -683,12 +787,15 @@ export type Database = {
           origin_country: string | null
           price_per_cbm: number | null
           price_per_kg: number | null
+          special_cargo_type: string | null
           transit_days_max: number | null
           transit_days_min: number | null
           updated_at: string
         }
         Insert: {
           active?: boolean
+          billing_unit?: string | null
+          cargo_type?: string | null
           category: string
           created_at?: string
           currency?: string
@@ -700,12 +807,15 @@ export type Database = {
           origin_country?: string | null
           price_per_cbm?: number | null
           price_per_kg?: number | null
+          special_cargo_type?: string | null
           transit_days_max?: number | null
           transit_days_min?: number | null
           updated_at?: string
         }
         Update: {
           active?: boolean
+          billing_unit?: string | null
+          cargo_type?: string | null
           category?: string
           created_at?: string
           currency?: string
@@ -717,6 +827,7 @@ export type Database = {
           origin_country?: string | null
           price_per_cbm?: number | null
           price_per_kg?: number | null
+          special_cargo_type?: string | null
           transit_days_max?: number | null
           transit_days_min?: number | null
           updated_at?: string
@@ -793,6 +904,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      archive_expired_delivery_records: { Args: never; Returns: number }
       detect_left_behind: {
         Args: { _batch_id: string }
         Returns: {
@@ -836,7 +948,7 @@ export type Database = {
         | "cancelled"
       payment_status: "pending" | "success" | "failed" | "cancelled"
       post_status: "draft" | "approved" | "scheduled" | "published" | "failed"
-      shipping_mode: "air" | "sea" | "express"
+      shipping_mode: "air" | "sea" | "express" | "special"
       social_platform: "facebook" | "instagram" | "tiktok" | "x"
     }
     CompositeTypes: {
@@ -980,7 +1092,7 @@ export const Constants = {
       ],
       payment_status: ["pending", "success", "failed", "cancelled"],
       post_status: ["draft", "approved", "scheduled", "published", "failed"],
-      shipping_mode: ["air", "sea", "express"],
+      shipping_mode: ["air", "sea", "express", "special"],
       social_platform: ["facebook", "instagram", "tiktok", "x"],
     },
   },
