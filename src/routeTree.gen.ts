@@ -58,6 +58,7 @@ import { Route as ApiMobileAuthMeRouteImport } from './routes/api/mobile/auth.me
 import { Route as ApiMobilePackagesIdEventsRouteImport } from './routes/api/mobile/packages.$id.events'
 import { Route as ApiMobilePackagesIdDeliverRouteImport } from './routes/api/mobile/packages.$id.deliver'
 import { Route as ApiMobileConversationsIdMessagesRouteImport } from './routes/api/mobile/conversations.$id.messages'
+import { Route as ApiMobileClientsIdConsentRouteImport } from './routes/api/mobile/clients.$id.consent'
 import { Route as ApiMobileBatchesIdScanRouteImport } from './routes/api/mobile/batches.$id.scan'
 import { Route as ApiMobileBatchesIdCloseRouteImport } from './routes/api/mobile/batches.$id.close'
 import { Route as ApiAdminUsersIdRolesRouteImport } from './routes/api/admin/users.$id.roles'
@@ -317,6 +318,12 @@ const ApiMobileConversationsIdMessagesRoute =
     path: '/messages',
     getParentRoute: () => ApiMobileConversationsIdRoute,
   } as any)
+const ApiMobileClientsIdConsentRoute =
+  ApiMobileClientsIdConsentRouteImport.update({
+    id: '/consent',
+    path: '/consent',
+    getParentRoute: () => ApiMobileClientsIdRoute,
+  } as any)
 const ApiMobileBatchesIdScanRoute = ApiMobileBatchesIdScanRouteImport.update({
   id: '/scan',
   path: '/scan',
@@ -367,7 +374,7 @@ export interface FileRoutesByFullPath {
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/batches/$id': typeof ApiMobileBatchesIdRouteWithChildren
-  '/api/mobile/clients/$id': typeof ApiMobileClientsIdRoute
+  '/api/mobile/clients/$id': typeof ApiMobileClientsIdRouteWithChildren
   '/api/mobile/conversations/$id': typeof ApiMobileConversationsIdRouteWithChildren
   '/api/mobile/marketing/$id': typeof ApiMobileMarketingIdRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
@@ -383,6 +390,7 @@ export interface FileRoutesByFullPath {
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
+  '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
@@ -420,7 +428,7 @@ export interface FileRoutesByTo {
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/batches/$id': typeof ApiMobileBatchesIdRouteWithChildren
-  '/api/mobile/clients/$id': typeof ApiMobileClientsIdRoute
+  '/api/mobile/clients/$id': typeof ApiMobileClientsIdRouteWithChildren
   '/api/mobile/conversations/$id': typeof ApiMobileConversationsIdRouteWithChildren
   '/api/mobile/marketing/$id': typeof ApiMobileMarketingIdRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
@@ -436,6 +444,7 @@ export interface FileRoutesByTo {
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
+  '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
@@ -475,7 +484,7 @@ export interface FileRoutesById {
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/batches/$id': typeof ApiMobileBatchesIdRouteWithChildren
-  '/api/mobile/clients/$id': typeof ApiMobileClientsIdRoute
+  '/api/mobile/clients/$id': typeof ApiMobileClientsIdRouteWithChildren
   '/api/mobile/conversations/$id': typeof ApiMobileConversationsIdRouteWithChildren
   '/api/mobile/marketing/$id': typeof ApiMobileMarketingIdRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
@@ -491,6 +500,7 @@ export interface FileRoutesById {
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
+  '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
@@ -547,6 +557,7 @@ export interface FileRouteTypes {
     | '/api/admin/users/$id/roles'
     | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
+    | '/api/mobile/clients/$id/consent'
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/deliver'
     | '/api/mobile/packages/$id/events'
@@ -600,6 +611,7 @@ export interface FileRouteTypes {
     | '/api/admin/users/$id/roles'
     | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
+    | '/api/mobile/clients/$id/consent'
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/deliver'
     | '/api/mobile/packages/$id/events'
@@ -654,6 +666,7 @@ export interface FileRouteTypes {
     | '/api/admin/users/$id/roles'
     | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
+    | '/api/mobile/clients/$id/consent'
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/deliver'
     | '/api/mobile/packages/$id/events'
@@ -1032,6 +1045,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileConversationsIdMessagesRouteImport
       parentRoute: typeof ApiMobileConversationsIdRoute
     }
+    '/api/mobile/clients/$id/consent': {
+      id: '/api/mobile/clients/$id/consent'
+      path: '/consent'
+      fullPath: '/api/mobile/clients/$id/consent'
+      preLoaderRoute: typeof ApiMobileClientsIdConsentRouteImport
+      parentRoute: typeof ApiMobileClientsIdRoute
+    }
     '/api/mobile/batches/$id/scan': {
       id: '/api/mobile/batches/$id/scan'
       path: '/scan'
@@ -1118,12 +1138,23 @@ const ApiMobileBatchesRouteChildren: ApiMobileBatchesRouteChildren = {
 const ApiMobileBatchesRouteWithChildren =
   ApiMobileBatchesRoute._addFileChildren(ApiMobileBatchesRouteChildren)
 
+interface ApiMobileClientsIdRouteChildren {
+  ApiMobileClientsIdConsentRoute: typeof ApiMobileClientsIdConsentRoute
+}
+
+const ApiMobileClientsIdRouteChildren: ApiMobileClientsIdRouteChildren = {
+  ApiMobileClientsIdConsentRoute: ApiMobileClientsIdConsentRoute,
+}
+
+const ApiMobileClientsIdRouteWithChildren =
+  ApiMobileClientsIdRoute._addFileChildren(ApiMobileClientsIdRouteChildren)
+
 interface ApiMobileClientsRouteChildren {
-  ApiMobileClientsIdRoute: typeof ApiMobileClientsIdRoute
+  ApiMobileClientsIdRoute: typeof ApiMobileClientsIdRouteWithChildren
 }
 
 const ApiMobileClientsRouteChildren: ApiMobileClientsRouteChildren = {
-  ApiMobileClientsIdRoute: ApiMobileClientsIdRoute,
+  ApiMobileClientsIdRoute: ApiMobileClientsIdRouteWithChildren,
 }
 
 const ApiMobileClientsRouteWithChildren =
