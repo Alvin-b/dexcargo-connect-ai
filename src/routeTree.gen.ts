@@ -43,6 +43,7 @@ import { Route as ApiAdminUsersRouteImport } from './routes/api/admin/users'
 import { Route as ApiPublicEvolutionWebhookSplatRouteImport } from './routes/api/public/evolution-webhook.$'
 import { Route as ApiMobileRatesLookupRouteImport } from './routes/api/mobile/rates.lookup'
 import { Route as ApiMobileRatesIdRouteImport } from './routes/api/mobile/rates.$id'
+import { Route as ApiMobilePushRegisterRouteImport } from './routes/api/mobile/push.register'
 import { Route as ApiMobilePaymentsCashRouteImport } from './routes/api/mobile/payments.cash'
 import { Route as ApiMobilePaymentsIdRouteImport } from './routes/api/mobile/payments.$id'
 import { Route as ApiMobilePackagesScanRouteImport } from './routes/api/mobile/packages.scan'
@@ -236,6 +237,11 @@ const ApiMobileRatesIdRoute = ApiMobileRatesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => ApiMobileRatesRoute,
 } as any)
+const ApiMobilePushRegisterRoute = ApiMobilePushRegisterRouteImport.update({
+  id: '/api/mobile/push/register',
+  path: '/api/mobile/push/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiMobilePaymentsCashRoute = ApiMobilePaymentsCashRouteImport.update({
   id: '/cash',
   path: '/cash',
@@ -370,6 +376,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
   '/api/mobile/payments/cash': typeof ApiMobilePaymentsCashRoute
+  '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
@@ -422,6 +429,7 @@ export interface FileRoutesByTo {
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
   '/api/mobile/payments/cash': typeof ApiMobilePaymentsCashRoute
+  '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
@@ -476,6 +484,7 @@ export interface FileRoutesById {
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
   '/api/mobile/payments/cash': typeof ApiMobilePaymentsCashRoute
+  '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
@@ -531,6 +540,7 @@ export interface FileRouteTypes {
     | '/api/mobile/packages/scan'
     | '/api/mobile/payments/$id'
     | '/api/mobile/payments/cash'
+    | '/api/mobile/push/register'
     | '/api/mobile/rates/$id'
     | '/api/mobile/rates/lookup'
     | '/api/public/evolution-webhook/$'
@@ -583,6 +593,7 @@ export interface FileRouteTypes {
     | '/api/mobile/packages/scan'
     | '/api/mobile/payments/$id'
     | '/api/mobile/payments/cash'
+    | '/api/mobile/push/register'
     | '/api/mobile/rates/$id'
     | '/api/mobile/rates/lookup'
     | '/api/public/evolution-webhook/$'
@@ -636,6 +647,7 @@ export interface FileRouteTypes {
     | '/api/mobile/packages/scan'
     | '/api/mobile/payments/$id'
     | '/api/mobile/payments/cash'
+    | '/api/mobile/push/register'
     | '/api/mobile/rates/$id'
     | '/api/mobile/rates/lookup'
     | '/api/public/evolution-webhook/$'
@@ -672,6 +684,7 @@ export interface RootRouteChildren {
   ApiPublicEvolutionWebhookRoute: typeof ApiPublicEvolutionWebhookRouteWithChildren
   ApiPublicPublishScheduledRoute: typeof ApiPublicPublishScheduledRoute
   ApiMobileAuthMeRoute: typeof ApiMobileAuthMeRoute
+  ApiMobilePushRegisterRoute: typeof ApiMobilePushRegisterRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -913,6 +926,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/mobile/rates/$id'
       preLoaderRoute: typeof ApiMobileRatesIdRouteImport
       parentRoute: typeof ApiMobileRatesRoute
+    }
+    '/api/mobile/push/register': {
+      id: '/api/mobile/push/register'
+      path: '/api/mobile/push/register'
+      fullPath: '/api/mobile/push/register'
+      preLoaderRoute: typeof ApiMobilePushRegisterRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/mobile/payments/cash': {
       id: '/api/mobile/payments/cash'
@@ -1245,6 +1265,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicEvolutionWebhookRoute: ApiPublicEvolutionWebhookRouteWithChildren,
   ApiPublicPublishScheduledRoute: ApiPublicPublishScheduledRoute,
   ApiMobileAuthMeRoute: ApiMobileAuthMeRoute,
+  ApiMobilePushRegisterRoute: ApiMobilePushRegisterRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
