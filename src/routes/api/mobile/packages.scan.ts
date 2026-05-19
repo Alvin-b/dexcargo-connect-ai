@@ -174,6 +174,16 @@ export const Route = createFileRoute("/api/mobile/packages/scan")({
                 package_id: pkg.id,
                 data: { status, scanned_by: auth.userId },
               });
+              try {
+                const { sendPushToAudience } = await import("@/server/push");
+                await sendPushToAudience("kenya", {
+                  title: `Irregular arrival: ${pkg.tracking_number}`,
+                  body: `Marked as ${status.replace(/_/g, " ")} but never loaded into a batch.`,
+                  data: { type: "irregular_arrival", package_id: String(pkg.id) },
+                });
+              } catch (e) {
+                console.error("push fan-out failed", e);
+              }
             }
           }
 
