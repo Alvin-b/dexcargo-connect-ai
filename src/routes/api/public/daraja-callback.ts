@@ -25,6 +25,21 @@ export const Route = createFileRoute("/api/public/daraja-callback")({
         const sb = supabaseAdmin;
         const status = resultCode === 0 ? "success" : (resultCode === 1032 ? "cancelled" : "failed");
 
+        // Idempotency: if this receipt is already recorded as success, ack and exit.
+        if (status === "success" && receipt) {
+          const { data: existing } = await sb
+            .from("payments")
+            .select("id, status")
+            .eq("mpesa_receipt", receipt)
+            .maybeSingle();
+          if (existing && existing.status === "success") {
+            return new Response(JSON.stringify({ ResultCode: 0, ResultDesc: "Accepted (duplicate)" }), {
+              status: 200,
+              headers: { "Content-Type": "application/json" },
+            });
+          }
+        }
+
         const { data: pay } = await (sb.from("payments") as any).update({
           status,
           mpesa_receipt: receipt ?? null,

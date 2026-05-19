@@ -43,6 +43,7 @@ import { Route as ApiAdminUsersRouteImport } from './routes/api/admin/users'
 import { Route as ApiPublicEvolutionWebhookSplatRouteImport } from './routes/api/public/evolution-webhook.$'
 import { Route as ApiMobileRatesLookupRouteImport } from './routes/api/mobile/rates.lookup'
 import { Route as ApiMobileRatesIdRouteImport } from './routes/api/mobile/rates.$id'
+import { Route as ApiMobilePushRegisterRouteImport } from './routes/api/mobile/push.register'
 import { Route as ApiMobilePaymentsCashRouteImport } from './routes/api/mobile/payments.cash'
 import { Route as ApiMobilePaymentsIdRouteImport } from './routes/api/mobile/payments.$id'
 import { Route as ApiMobilePackagesScanRouteImport } from './routes/api/mobile/packages.scan'
@@ -57,6 +58,7 @@ import { Route as ApiMobileAuthMeRouteImport } from './routes/api/mobile/auth.me
 import { Route as ApiMobilePackagesIdEventsRouteImport } from './routes/api/mobile/packages.$id.events'
 import { Route as ApiMobilePackagesIdDeliverRouteImport } from './routes/api/mobile/packages.$id.deliver'
 import { Route as ApiMobileConversationsIdMessagesRouteImport } from './routes/api/mobile/conversations.$id.messages'
+import { Route as ApiMobileClientsIdConsentRouteImport } from './routes/api/mobile/clients.$id.consent'
 import { Route as ApiMobileBatchesIdScanRouteImport } from './routes/api/mobile/batches.$id.scan'
 import { Route as ApiMobileBatchesIdCloseRouteImport } from './routes/api/mobile/batches.$id.close'
 import { Route as ApiAdminUsersIdRolesRouteImport } from './routes/api/admin/users.$id.roles'
@@ -236,6 +238,11 @@ const ApiMobileRatesIdRoute = ApiMobileRatesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => ApiMobileRatesRoute,
 } as any)
+const ApiMobilePushRegisterRoute = ApiMobilePushRegisterRouteImport.update({
+  id: '/api/mobile/push/register',
+  path: '/api/mobile/push/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiMobilePaymentsCashRoute = ApiMobilePaymentsCashRouteImport.update({
   id: '/cash',
   path: '/cash',
@@ -311,6 +318,12 @@ const ApiMobileConversationsIdMessagesRoute =
     path: '/messages',
     getParentRoute: () => ApiMobileConversationsIdRoute,
   } as any)
+const ApiMobileClientsIdConsentRoute =
+  ApiMobileClientsIdConsentRouteImport.update({
+    id: '/consent',
+    path: '/consent',
+    getParentRoute: () => ApiMobileClientsIdRoute,
+  } as any)
 const ApiMobileBatchesIdScanRoute = ApiMobileBatchesIdScanRouteImport.update({
   id: '/scan',
   path: '/scan',
@@ -361,7 +374,7 @@ export interface FileRoutesByFullPath {
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/batches/$id': typeof ApiMobileBatchesIdRouteWithChildren
-  '/api/mobile/clients/$id': typeof ApiMobileClientsIdRoute
+  '/api/mobile/clients/$id': typeof ApiMobileClientsIdRouteWithChildren
   '/api/mobile/conversations/$id': typeof ApiMobileConversationsIdRouteWithChildren
   '/api/mobile/marketing/$id': typeof ApiMobileMarketingIdRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
@@ -370,12 +383,14 @@ export interface FileRoutesByFullPath {
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
   '/api/mobile/payments/cash': typeof ApiMobilePaymentsCashRoute
+  '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
+  '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
@@ -413,7 +428,7 @@ export interface FileRoutesByTo {
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/batches/$id': typeof ApiMobileBatchesIdRouteWithChildren
-  '/api/mobile/clients/$id': typeof ApiMobileClientsIdRoute
+  '/api/mobile/clients/$id': typeof ApiMobileClientsIdRouteWithChildren
   '/api/mobile/conversations/$id': typeof ApiMobileConversationsIdRouteWithChildren
   '/api/mobile/marketing/$id': typeof ApiMobileMarketingIdRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
@@ -422,12 +437,14 @@ export interface FileRoutesByTo {
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
   '/api/mobile/payments/cash': typeof ApiMobilePaymentsCashRoute
+  '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
+  '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
@@ -467,7 +484,7 @@ export interface FileRoutesById {
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/batches/$id': typeof ApiMobileBatchesIdRouteWithChildren
-  '/api/mobile/clients/$id': typeof ApiMobileClientsIdRoute
+  '/api/mobile/clients/$id': typeof ApiMobileClientsIdRouteWithChildren
   '/api/mobile/conversations/$id': typeof ApiMobileConversationsIdRouteWithChildren
   '/api/mobile/marketing/$id': typeof ApiMobileMarketingIdRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
@@ -476,12 +493,14 @@ export interface FileRoutesById {
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
   '/api/mobile/payments/cash': typeof ApiMobilePaymentsCashRoute
+  '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
+  '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
@@ -531,12 +550,14 @@ export interface FileRouteTypes {
     | '/api/mobile/packages/scan'
     | '/api/mobile/payments/$id'
     | '/api/mobile/payments/cash'
+    | '/api/mobile/push/register'
     | '/api/mobile/rates/$id'
     | '/api/mobile/rates/lookup'
     | '/api/public/evolution-webhook/$'
     | '/api/admin/users/$id/roles'
     | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
+    | '/api/mobile/clients/$id/consent'
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/deliver'
     | '/api/mobile/packages/$id/events'
@@ -583,12 +604,14 @@ export interface FileRouteTypes {
     | '/api/mobile/packages/scan'
     | '/api/mobile/payments/$id'
     | '/api/mobile/payments/cash'
+    | '/api/mobile/push/register'
     | '/api/mobile/rates/$id'
     | '/api/mobile/rates/lookup'
     | '/api/public/evolution-webhook/$'
     | '/api/admin/users/$id/roles'
     | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
+    | '/api/mobile/clients/$id/consent'
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/deliver'
     | '/api/mobile/packages/$id/events'
@@ -636,12 +659,14 @@ export interface FileRouteTypes {
     | '/api/mobile/packages/scan'
     | '/api/mobile/payments/$id'
     | '/api/mobile/payments/cash'
+    | '/api/mobile/push/register'
     | '/api/mobile/rates/$id'
     | '/api/mobile/rates/lookup'
     | '/api/public/evolution-webhook/$'
     | '/api/admin/users/$id/roles'
     | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
+    | '/api/mobile/clients/$id/consent'
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/deliver'
     | '/api/mobile/packages/$id/events'
@@ -672,6 +697,7 @@ export interface RootRouteChildren {
   ApiPublicEvolutionWebhookRoute: typeof ApiPublicEvolutionWebhookRouteWithChildren
   ApiPublicPublishScheduledRoute: typeof ApiPublicPublishScheduledRoute
   ApiMobileAuthMeRoute: typeof ApiMobileAuthMeRoute
+  ApiMobilePushRegisterRoute: typeof ApiMobilePushRegisterRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -914,6 +940,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileRatesIdRouteImport
       parentRoute: typeof ApiMobileRatesRoute
     }
+    '/api/mobile/push/register': {
+      id: '/api/mobile/push/register'
+      path: '/api/mobile/push/register'
+      fullPath: '/api/mobile/push/register'
+      preLoaderRoute: typeof ApiMobilePushRegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/mobile/payments/cash': {
       id: '/api/mobile/payments/cash'
       path: '/cash'
@@ -1012,6 +1045,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileConversationsIdMessagesRouteImport
       parentRoute: typeof ApiMobileConversationsIdRoute
     }
+    '/api/mobile/clients/$id/consent': {
+      id: '/api/mobile/clients/$id/consent'
+      path: '/consent'
+      fullPath: '/api/mobile/clients/$id/consent'
+      preLoaderRoute: typeof ApiMobileClientsIdConsentRouteImport
+      parentRoute: typeof ApiMobileClientsIdRoute
+    }
     '/api/mobile/batches/$id/scan': {
       id: '/api/mobile/batches/$id/scan'
       path: '/scan'
@@ -1098,12 +1138,23 @@ const ApiMobileBatchesRouteChildren: ApiMobileBatchesRouteChildren = {
 const ApiMobileBatchesRouteWithChildren =
   ApiMobileBatchesRoute._addFileChildren(ApiMobileBatchesRouteChildren)
 
+interface ApiMobileClientsIdRouteChildren {
+  ApiMobileClientsIdConsentRoute: typeof ApiMobileClientsIdConsentRoute
+}
+
+const ApiMobileClientsIdRouteChildren: ApiMobileClientsIdRouteChildren = {
+  ApiMobileClientsIdConsentRoute: ApiMobileClientsIdConsentRoute,
+}
+
+const ApiMobileClientsIdRouteWithChildren =
+  ApiMobileClientsIdRoute._addFileChildren(ApiMobileClientsIdRouteChildren)
+
 interface ApiMobileClientsRouteChildren {
-  ApiMobileClientsIdRoute: typeof ApiMobileClientsIdRoute
+  ApiMobileClientsIdRoute: typeof ApiMobileClientsIdRouteWithChildren
 }
 
 const ApiMobileClientsRouteChildren: ApiMobileClientsRouteChildren = {
-  ApiMobileClientsIdRoute: ApiMobileClientsIdRoute,
+  ApiMobileClientsIdRoute: ApiMobileClientsIdRouteWithChildren,
 }
 
 const ApiMobileClientsRouteWithChildren =
@@ -1245,16 +1296,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicEvolutionWebhookRoute: ApiPublicEvolutionWebhookRouteWithChildren,
   ApiPublicPublishScheduledRoute: ApiPublicPublishScheduledRoute,
   ApiMobileAuthMeRoute: ApiMobileAuthMeRoute,
+  ApiMobilePushRegisterRoute: ApiMobilePushRegisterRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
