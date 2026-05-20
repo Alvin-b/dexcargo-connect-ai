@@ -227,6 +227,8 @@ export const Route = createFileRoute("/api/mobile/packages/scan")({
           }
 
           return apiJson({ ok: true, created, package: { ...pkg, ...patch }, event: ev });
+            },
+          });
         } catch (e) {
           return serverError(e);
         }
