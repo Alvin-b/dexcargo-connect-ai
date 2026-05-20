@@ -4,7 +4,6 @@ import { authenticate, apiJson, preflight, readJson, badRequest, notFound, serve
 import { clientNameFromPayload, clientPhoneFromPayload, resolvePackageClient } from "@/server/clients";
 import { enforceRateLimit } from "@/server/rate-limit";
 import { withIdempotency } from "@/server/idempotency";
-import { logAudit } from "@/server/audit";
 
 type PackageStatus =
   | "pending"
