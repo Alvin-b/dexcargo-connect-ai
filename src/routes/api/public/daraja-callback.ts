@@ -1,6 +1,47 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { sendWhatsAppText } from "@/server/evolution";
+import { sendPushToAudience } from "@/server/push";
+import { logAudit } from "@/server/audit";
+
+// Safaricom Daraja production IP ranges (override via DARAJA_ALLOWED_IPS env, comma-separated).
+const DEFAULT_DARAJA_IPS = [
+  "196.201.214.0/24",
+  "196.201.213.0/24",
+  "196.201.212.0/24",
+  "196.201.215.0/24",
+  "196.201.216.0/24",
+  "196.201.217.0/24",
+];
+
+function ipToInt(ip: string): number | null {
+  const parts = ip.split(".").map(Number);
+  if (parts.length !== 4 || parts.some((n) => Number.isNaN(n) || n < 0 || n > 255)) return null;
+  return ((parts[0] << 24) | (parts[1] << 16) | (parts[2] << 8) | parts[3]) >>> 0;
+}
+
+function ipInCidr(ip: string, cidr: string): boolean {
+  if (!cidr.includes("/")) return ip === cidr;
+  const [base, bitsStr] = cidr.split("/");
+  const bits = Number(bitsStr);
+  const ipNum = ipToInt(ip);
+  const baseNum = ipToInt(base);
+  if (ipNum === null || baseNum === null) return false;
+  const mask = bits === 0 ? 0 : (~0 << (32 - bits)) >>> 0;
+  return (ipNum & mask) === (baseNum & mask);
+}
+
+function isAllowedIp(request: Request): boolean {
+  const skip = process.env.DARAJA_SKIP_IP_CHECK === "true";
+  if (skip) return true;
+  const ip =
+    request.headers.get("cf-connecting-ip") ||
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    "";
+  if (!ip) return false;
+  const allow = (process.env.DARAJA_ALLOWED_IPS?.split(",").map((s) => s.trim()).filter(Boolean) ?? DEFAULT_DARAJA_IPS);
+  return allow.some((c) => ipInCidr(ip, c));
+}
 
 // Configure your Safaricom Daraja STK callback to point here:
 //   https://<your-domain>/api/public/daraja-callback
@@ -8,6 +49,14 @@ export const Route = createFileRoute("/api/public/daraja-callback")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        if (!isAllowedIp(request)) {
+          await logAudit({
+            action: "daraja.callback.rejected_ip",
+            metadata: { reason: "ip not in allowlist" },
+            request,
+          });
+          return new Response(JSON.stringify({ ResultCode: 1, ResultDesc: "Forbidden" }), { status: 403 });
+        }
         let body: any;
         try { body = await request.json(); } catch {
           return new Response(JSON.stringify({ ResultCode: 0, ResultDesc: "Accepted" }), { status: 200 });
@@ -60,6 +109,14 @@ export const Route = createFileRoute("/api/public/daraja-callback")({
               status: "out_for_delivery",
               notes: `M-Pesa payment verified${receipt ? ` (${receipt})` : ""}. Package cleared for release.`,
             });
+            // Notify Kenya staff so they can release the parcel
+            try {
+              await sendPushToAudience("kenya", {
+                title: "Payment received",
+                body: `KES ${amount} cleared${receipt ? ` (${receipt})` : ""}. Package ready for release.`,
+                data: { type: "payment_success", package_id: String(pay.package_id) },
+              });
+            } catch (e) { console.error("push notify fail", e); }
           } else {
             await (sb.from("packages") as any).update({
               payment_status: status,
@@ -67,6 +124,14 @@ export const Route = createFileRoute("/api/public/daraja-callback")({
             }).eq("id", pay.package_id);
           }
         }
+
+        await logAudit({
+          action: `daraja.callback.${status}`,
+          resourceType: "payment",
+          resourceId: pay?.package_id ? String(pay.package_id) : checkoutId,
+          metadata: { receipt, amount, resultCode, checkoutId },
+          request,
+        });
 
         if (pay) {
           let msg = "";
