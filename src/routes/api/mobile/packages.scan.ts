@@ -2,6 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { authenticate, apiJson, preflight, readJson, badRequest, notFound, serverError } from "@/server/api-auth";
 import { clientNameFromPayload, clientPhoneFromPayload, resolvePackageClient } from "@/server/clients";
+import { enforceRateLimit } from "@/server/rate-limit";
+import { withIdempotency } from "@/server/idempotency";
+import { logAudit } from "@/server/audit";
 
 type PackageStatus =
   | "pending"
@@ -56,6 +59,14 @@ export const Route = createFileRoute("/api/mobile/packages/scan")({
           const requiredLocation = body.action === "arrive" ? "kenya" : body.action === "receive" ? "china" : undefined;
           const auth = await authenticate(request, requiredLocation ? { location: requiredLocation } : undefined);
           if (!auth.ok) return auth.response;
+          const limited = await enforceRateLimit({ request, endpoint: "scan", userId: auth.userId, max: 120, windowSeconds: 60 });
+          if (limited) return limited;
+          const trackingForKey = String(body.tracking_number ?? body.tracking_id ?? "").trim();
+          return withIdempotency({
+            request,
+            userId: auth.userId,
+            endpoint: `scan:${body.action ?? "default"}:${trackingForKey}`,
+            run: async () => {
 
           const trackingNumber = String(body.tracking_number ?? body.tracking_id ?? "").trim();
           if (!trackingNumber) return badRequest("tracking_number required");
