@@ -2,6 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { initiateStkPush } from "@/server/daraja";
 import { authenticate, apiJson, preflight, readJson, badRequest, serverError } from "@/server/api-auth";
+import { enforceRateLimit } from "@/server/rate-limit";
+import { withIdempotency } from "@/server/idempotency";
+import { logAudit } from "@/server/audit";
 
 export const Route = createFileRoute("/api/mobile/payments")({
   server: {
@@ -29,6 +32,14 @@ export const Route = createFileRoute("/api/mobile/payments")({
         try {
           const auth = await authenticate(request, { location: "kenya" });
           if (!auth.ok) return auth.response;
+          // Hard cap: max 10 STK pushes per minute per staff member.
+          const limited = await enforceRateLimit({ request, endpoint: "stk", userId: auth.userId, max: 10, windowSeconds: 60 });
+          if (limited) return limited;
+          return withIdempotency({
+            request,
+            userId: auth.userId,
+            endpoint: "stk-push",
+            run: async () => {
           const body = await readJson<any>(request);
           if (!body?.phone) return badRequest("phone required");
           let packageId = body.package_id ?? null;
@@ -68,11 +79,21 @@ export const Route = createFileRoute("/api/mobile/payments")({
               payment_method: "mpesa",
             }).eq("id", packageId);
           }
+          await logAudit({
+            actorId: auth.userId,
+            action: "payment.stk_initiated",
+            resourceType: "package",
+            resourceId: packageId ? String(packageId) : null,
+            metadata: { amount, phone: body.phone, reference, checkout_request_id: r.CheckoutRequestID },
+            request,
+          });
           return apiJson({
             ok: true,
             checkout_request_id: r.CheckoutRequestID,
             merchant_request_id: r.MerchantRequestID,
             payment: r.payment,
+          });
+            },
           });
         } catch (e) { return serverError(e); }
       },
