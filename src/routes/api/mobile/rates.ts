@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { authenticate, apiJson, preflight, readJson, serverError } from "@/server/api-auth";
+import { logAudit } from "@/server/audit";
 
 export const Route = createFileRoute("/api/mobile/rates")({
   server: {
@@ -29,11 +30,19 @@ export const Route = createFileRoute("/api/mobile/rates")({
       },
       POST: async ({ request }) => {
         try {
-          const auth = await authenticate(request);
+          const auth = await authenticate(request, { requireAdmin: true });
           if (!auth.ok) return auth.response;
           const body = await readJson<any>(request);
           const { data, error } = await (supabaseAdmin.from("rates") as any).insert(body).select().single();
           if (error) throw error;
+          await logAudit({
+            actorId: auth.userId,
+            action: "rate.created",
+            resourceType: "rate",
+            resourceId: String(data?.id ?? ""),
+            metadata: body ?? {},
+            request,
+          });
           return apiJson(data, 201);
         } catch (e) { return serverError(e); }
       },

@@ -1,6 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { authenticate, apiJson, preflight, readJson, badRequest, notFound, serverError } from "@/server/api-auth";
+import { withIdempotency } from "@/server/idempotency";
+import { enforceRateLimit } from "@/server/rate-limit";
+import { sendPushToAudience } from "@/server/push";
+import { logAudit } from "@/server/audit";
 
 // Deliver a package: verify/record payment, store digital signature, then mark delivered.
 export const Route = createFileRoute("/api/mobile/packages/$id/deliver")({
@@ -11,6 +15,13 @@ export const Route = createFileRoute("/api/mobile/packages/$id/deliver")({
         try {
           const auth = await authenticate(request, { location: "kenya" });
           if (!auth.ok) return auth.response;
+          const limited = await enforceRateLimit({ request, endpoint: "deliver", userId: auth.userId, max: 30, windowSeconds: 60 });
+          if (limited) return limited;
+          return withIdempotency({
+            request,
+            userId: auth.userId,
+            endpoint: `deliver:${params.id}`,
+            run: async () => {
           const body = await readJson<any>(request);
           if (!body?.signer_name) return badRequest("signer_name required");
           if (!body?.signature_data_url) return badRequest("signature_data_url required");
@@ -133,8 +144,25 @@ export const Route = createFileRoute("/api/mobile/packages/$id/deliver")({
               );
             } catch (e) { console.error("deliver notify failed", e); }
           }
+          try {
+            await sendPushToAudience("kenya", {
+              title: "Package delivered",
+              body: `${pkg.tracking_number} → ${body.signer_name}`,
+              data: { type: "package_delivered", package_id: String(pkg.id) },
+            });
+          } catch (e) { console.error("push fail", e); }
+          await logAudit({
+            actorId: auth.userId,
+            action: "package.delivered",
+            resourceType: "package",
+            resourceId: String(pkg.id),
+            metadata: { signer: body.signer_name, payment_method: releaseMethod, amount: amountPaid },
+            request,
+          });
 
           return apiJson({ ok: true, signature: sig, event: ev }, 201);
+            },
+          });
         } catch (e) { return serverError(e); }
       },
     },

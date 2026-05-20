@@ -262,6 +262,36 @@ export type Database = {
         }
         Relationships: []
       }
+      idempotency_keys: {
+        Row: {
+          created_at: string
+          endpoint: string
+          id: string
+          key: string
+          response_body: Json | null
+          response_status: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          endpoint: string
+          id?: string
+          key: string
+          response_body?: Json | null
+          response_status: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          endpoint?: string
+          id?: string
+          key?: string
+          response_body?: Json | null
+          response_status?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       loading_batches: {
         Row: {
           batch_code: string
@@ -771,6 +801,24 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limit_hits: {
+        Row: {
+          bucket: string
+          hit_at: string
+          id: number
+        }
+        Insert: {
+          bucket: string
+          hit_at?: string
+          id?: number
+        }
+        Update: {
+          bucket?: string
+          hit_at?: string
+          id?: number
+        }
+        Relationships: []
+      }
       rates: {
         Row: {
           active: boolean
@@ -905,6 +953,10 @@ export type Database = {
     }
     Functions: {
       archive_expired_delivery_records: { Args: never; Returns: number }
+      check_rate_limit: {
+        Args: { _bucket: string; _max: number; _window_seconds: number }
+        Returns: boolean
+      }
       detect_left_behind: {
         Args: { _batch_id: string }
         Returns: {
@@ -929,6 +981,7 @@ export type Database = {
           raw_key: string
         }[]
       }
+      prune_rate_limit_hits: { Args: never; Returns: number }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
       verify_api_key: { Args: { _raw_key: string }; Returns: string }
