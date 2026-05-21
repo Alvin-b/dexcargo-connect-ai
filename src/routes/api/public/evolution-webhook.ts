@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { runAgent } from "@/server/ai-agent";
 import { sendWhatsAppText, normalizeNumber } from "@/server/evolution";
+import { assignConversation } from "@/server/conversation-assignment";
 
 // Evolution API posts events here. Configure webhook in Evolution to:
 //   https://<your-domain>/api/public/evolution-webhook
@@ -63,6 +64,11 @@ export async function handleEvolutionWebhook(request: Request): Promise<Response
             }).select().single();
             conv = created!;
           }
+        }
+        const assignedStaffId = (conv as any)?.assigned_staff_id ?? null;
+        if (conv && !assignedStaffId) {
+          const assigned = await assignConversation(conv.id, assignedStaffId);
+          if (assigned) conv = { ...(conv as any), assigned_staff_id: assigned.id, assigned_at: assigned.assigned_at };
         }
 
         // Save inbound message

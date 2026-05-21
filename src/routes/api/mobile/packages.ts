@@ -52,7 +52,7 @@ export const Route = createFileRoute("/api/mobile/packages")({
           if (mode) query = query.eq("mode", mode as any);
           if (cargoType) query = (query as any).eq("cargo_type", cargoType);
           if (specialCargoType) query = (query as any).eq("special_cargo_type", specialCargoType);
-          if (q) query = query.or(`tracking_number.ilike.%${q}%,description.ilike.%${q}%,sender_name.ilike.%${q}%,sender_phone.ilike.%${q}%,category.ilike.%${q}%`);
+          if (q) query = query.or(`tracking_number.ilike.%${q}%,external_barcode.ilike.%${q}%,remark.ilike.%${q}%,description.ilike.%${q}%,sender_name.ilike.%${q}%,sender_phone.ilike.%${q}%,category.ilike.%${q}%`);
           const { data, count, error } = await query;
           if (error) throw error;
           return apiJson({ data, count, limit, offset });
@@ -98,6 +98,9 @@ export const Route = createFileRoute("/api/mobile/packages")({
           const receivedAt = status === "received_in_china" ? (body.received_at ?? new Date().toISOString()) : body.received_at ?? null;
           const qrPayload = body.qr_payload ?? {
             tracking_number: trackingNumber,
+            external_barcode: body.external_barcode ?? undefined,
+            route_code: body.route_code ?? undefined,
+            remark: body.remark ?? undefined,
             customer_name: customerName || undefined,
             customer_phone: customerPhone || undefined,
             mode,
@@ -108,8 +111,16 @@ export const Route = createFileRoute("/api/mobile/packages")({
           const { data, error } = await (supabaseAdmin.from("packages") as any).insert({
             client_id: clientId,
             tracking_number: trackingNumber,
+            external_barcode: body.external_barcode ?? null,
+            route_code: body.route_code ?? null,
             sender_name: customerName || null,
             sender_phone: customerPhone || null,
+            shipper_name: body.shipper_name ?? null,
+            shipper_phone: body.shipper_phone ?? null,
+            shipper_company: body.shipper_company ?? null,
+            shipper_address: body.shipper_address ?? null,
+            consignee_company: body.consignee_company ?? null,
+            consignee_address: body.consignee_address ?? null,
             description: body.description ?? null,
             category: body.category ?? null,
             cargo_type: cargoType,
@@ -117,13 +128,24 @@ export const Route = createFileRoute("/api/mobile/packages")({
             mode,
             weight_kg: weightKg,
             cbm,
+            chargeable_weight_kg: numberOrNull(body.chargeable_weight_kg),
+            piece_count: numberOrNull(body.piece_count),
             billing_unit: billingUnit,
             billable_quantity: billableQuantity,
             rate_amount: rateAmount,
             length_cm: numberOrNull(body.length_cm),
             width_cm: numberOrNull(body.width_cm),
             height_cm: numberOrNull(body.height_cm),
-            declared_value: numberOrNull(body.declared_value),
+            declared_value: numberOrNull(body.declared_value) ?? numberOrNull(body.declared_amount),
+            declared_amount: numberOrNull(body.declared_amount),
+            declared_currency: body.declared_currency ?? null,
+            payment_type: body.payment_type ?? null,
+            insurance_charge: numberOrNull(body.insurance_charge),
+            other_charge: numberOrNull(body.other_charge),
+            freight_charge: numberOrNull(body.freight_charge),
+            origin_total_charge: numberOrNull(body.origin_total_charge),
+            origin_currency: body.origin_currency ?? null,
+            remark: body.remark ?? null,
             shipping_cost: totalCharge,
             total_charge: totalCharge,
             currency: body.currency ?? "KES",

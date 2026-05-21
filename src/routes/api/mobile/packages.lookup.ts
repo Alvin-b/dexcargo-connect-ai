@@ -17,12 +17,20 @@ export const Route = createFileRoute("/api/mobile/packages/lookup")({
           if (!tn) return badRequest("tracking_number required");
           const autoRegister = url.searchParams.get("auto_register") === "1";
 
-          const { data, error } = await supabaseAdmin
-            .from("packages")
+          const { data, error } = await (supabaseAdmin.from("packages") as any)
             .select("*, clients(*), package_events(*), delivery_signatures(*)")
-            .eq("tracking_number", tn).maybeSingle();
+            .or(`tracking_number.eq.${tn},external_barcode.eq.${tn},remark.eq.${tn}`)
+            .maybeSingle();
           if (error) throw error;
           if (data) return apiJson({ ...data, auto_registered: false });
+
+          const { data: nestedData, error: nestedError } = await supabaseAdmin
+            .from("packages")
+            .select("*, clients(*), package_events(*), delivery_signatures(*)")
+            .contains("qr_payload", { tracking_number: tn } as any)
+            .maybeSingle();
+          if (nestedError) throw nestedError;
+          if (nestedData) return apiJson({ ...nestedData, auto_registered: false });
 
           if (!autoRegister) {
             return apiJson({ error: "package not found" }, 404);

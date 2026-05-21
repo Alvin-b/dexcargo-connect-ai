@@ -28,6 +28,12 @@ const PACKAGE_STATUSES = new Set<PackageStatus>([
   "cancelled",
 ]);
 
+function numberOrNull(value: unknown) {
+  if (value === "" || value === null || value === undefined) return null;
+  const next = Number(value);
+  return Number.isFinite(next) ? next : null;
+}
+
 function normalizeScanBody(body: any) {
   if (body?.qr_data && typeof body.qr_data === "string") {
     try {
@@ -60,26 +66,26 @@ export const Route = createFileRoute("/api/mobile/packages/scan")({
           if (!auth.ok) return auth.response;
           const limited = await enforceRateLimit({ request, endpoint: "scan", userId: auth.userId, max: 120, windowSeconds: 60 });
           if (limited) return limited;
-          const trackingForKey = String(body.tracking_number ?? body.tracking_id ?? "").trim();
+          const trackingForKey = String(body.tracking_number ?? body.tracking_id ?? body.external_barcode ?? body.remark ?? "").trim();
           return withIdempotency({
             request,
             userId: auth.userId,
             endpoint: `scan:${body.action ?? "default"}:${trackingForKey}`,
             run: async () => {
 
-          const trackingNumber = String(body.tracking_number ?? body.tracking_id ?? "").trim();
+          let trackingNumber = String(body.tracking_number ?? body.tracking_id ?? body.external_barcode ?? body.remark ?? "").trim();
           if (!trackingNumber) return badRequest("tracking_number required");
 
           const statusRaw = statusForScan(body);
           if (!PACKAGE_STATUSES.has(statusRaw as PackageStatus)) return badRequest(`invalid package status: ${statusRaw}`);
           const status = statusRaw as PackageStatus;
 
-          const { data: existing, error: findErr } = await supabaseAdmin
-            .from("packages")
+          const { data: existing, error: findErr } = await (supabaseAdmin.from("packages") as any)
             .select("*, clients(full_name, whatsapp_number)")
-            .eq("tracking_number", trackingNumber)
+            .or(`tracking_number.eq.${trackingNumber},external_barcode.eq.${trackingNumber},remark.eq.${trackingNumber}`)
             .maybeSingle();
           if (findErr) throw findErr;
+          if (existing?.tracking_number) trackingNumber = existing.tracking_number;
 
           let pkg: any = existing;
           let created = false;
@@ -97,19 +103,38 @@ export const Route = createFileRoute("/api/mobile/packages/scan")({
             const { data: inserted, error: insertErr } = await (supabaseAdmin.from("packages") as any)
               .insert({
                 tracking_number: trackingNumber,
+                external_barcode: body.external_barcode ?? null,
+                route_code: body.route_code ?? null,
                 description: body.description ?? "Auto-registered from mobile scan",
                 client_id: clientId,
                 sender_name: customerName || null,
                 sender_phone: customerPhone || null,
+                shipper_name: body.shipper_name ?? null,
+                shipper_phone: body.shipper_phone ?? null,
+                shipper_company: body.shipper_company ?? null,
+                shipper_address: body.shipper_address ?? null,
+                consignee_company: body.consignee_company ?? null,
+                consignee_address: body.consignee_address ?? null,
                 category: body.category ?? null,
                 cargo_type: body.cargo_type ?? (body.mode === "special" ? "special" : "general"),
                 special_cargo_type: body.special_cargo_type ?? null,
                 mode: body.mode ?? "air",
                 weight_kg: body.weight_kg ?? null,
                 cbm: body.cbm ?? null,
+                chargeable_weight_kg: numberOrNull(body.chargeable_weight_kg),
+                piece_count: numberOrNull(body.piece_count),
                 billing_unit: billingUnit,
                 billable_quantity: billableQuantity,
                 rate_amount: body.rate_amount ?? null,
+                declared_amount: numberOrNull(body.declared_amount),
+                declared_currency: body.declared_currency ?? null,
+                payment_type: body.payment_type ?? null,
+                insurance_charge: numberOrNull(body.insurance_charge),
+                other_charge: numberOrNull(body.other_charge),
+                freight_charge: numberOrNull(body.freight_charge),
+                origin_total_charge: numberOrNull(body.origin_total_charge),
+                origin_currency: body.origin_currency ?? null,
+                remark: body.remark ?? null,
                 shipping_cost: totalCharge,
                 total_charge: totalCharge,
                 warehouse_photo_url: body.photo_url ?? body.warehouse_photo_url ?? null,
@@ -138,7 +163,7 @@ export const Route = createFileRoute("/api/mobile/packages/scan")({
           if (!pkg.client_id && clientId) patch.client_id = clientId;
           if (!pkg.sender_name && customerName) patch.sender_name = customerName;
           if (!pkg.sender_phone && customerPhone) patch.sender_phone = customerPhone;
-          ["category", "cargo_type", "special_cargo_type", "mode", "weight_kg", "cbm", "billing_unit", "billable_quantity", "rate_amount", "total_charge"].forEach((key) => {
+          ["external_barcode", "route_code", "shipper_name", "shipper_phone", "shipper_company", "shipper_address", "consignee_company", "consignee_address", "category", "cargo_type", "special_cargo_type", "mode", "weight_kg", "cbm", "chargeable_weight_kg", "piece_count", "billing_unit", "billable_quantity", "rate_amount", "declared_amount", "declared_currency", "payment_type", "insurance_charge", "other_charge", "freight_charge", "origin_total_charge", "origin_currency", "remark", "total_charge"].forEach((key) => {
             if (body[key] !== undefined && (pkg as any)[key] == null) patch[key] = body[key];
           });
           if ((body.total_charge ?? body.shipping_cost) !== undefined && !pkg.shipping_cost) patch.shipping_cost = body.total_charge ?? body.shipping_cost;
