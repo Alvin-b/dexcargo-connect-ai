@@ -12,7 +12,7 @@ export const Route = createFileRoute("/api/mobile/rates/$id")({
           const auth = await authenticate(request, { requireAdmin: true });
           if (!auth.ok) return auth.response;
           const body = await readJson<any>(request);
-          const { data, error } = await supabaseAdmin.from("rates").update(body ?? {}).eq("id", params.id).select().maybeSingle();
+          const { data, error } = await (supabaseAdmin.from("rates") as any).update(body ?? {}).eq("id", params.id).select().maybeSingle();
           if (error) throw error;
           await logAudit({
             actorId: auth.userId,

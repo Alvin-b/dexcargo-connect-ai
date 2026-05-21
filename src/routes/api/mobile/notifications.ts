@@ -42,9 +42,19 @@ export const Route = createFileRoute("/api/mobile/notifications")({
           const body = await readJson<any>(request);
           if (!Array.isArray(body?.ids) || body.ids.length === 0) return badRequest("ids[] required");
           const rows = body.ids.map((id: string) => ({ notification_id: id, user_id: auth.userId }));
+          if (body.action === "resolve") {
+            const { error: resolveError } = await (supabaseAdmin.from("notifications") as any)
+              .update({
+                resolved_at: new Date().toISOString(),
+                resolved_by: auth.userId,
+                resolution_notes: body.notes ?? null,
+              })
+              .in("id", body.ids);
+            if (resolveError) throw resolveError;
+          }
           const { error } = await supabaseAdmin.from("notification_reads").upsert(rows, { onConflict: "notification_id,user_id" });
           if (error) throw error;
-          return apiJson({ ok: true, marked: rows.length });
+          return apiJson({ ok: true, marked: rows.length, resolved: body.action === "resolve" ? rows.length : 0 });
         } catch (e) { return serverError(e); }
       },
     },

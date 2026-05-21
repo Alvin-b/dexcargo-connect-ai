@@ -2,6 +2,23 @@ import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { authenticate, apiJson, preflight, readJson, badRequest, serverError } from "@/server/api-auth";
 import { clientNameFromPayload, clientPhoneFromPayload, resolvePackageClient } from "@/server/clients";
+import { computeQuote } from "@/server/quote";
+
+function numberOrNull(value: unknown) {
+  if (value === "" || value === null || value === undefined) return null;
+  const next = Number(value);
+  return Number.isFinite(next) ? next : null;
+}
+
+async function nextTrackingNumber() {
+  try {
+    const { data, error } = await (supabaseAdmin as any).rpc("generate_dex_tracking_number");
+    if (!error && data) return String(data);
+  } catch {
+    // Fall back below if the migration has not reached an environment yet.
+  }
+  return `DCX-${new Date().getFullYear()}-${String(Date.now()).slice(-6)}`;
+}
 
 export const Route = createFileRoute("/api/mobile/packages")({
   server: {
@@ -46,48 +63,89 @@ export const Route = createFileRoute("/api/mobile/packages")({
           const auth = await authenticate(request);
           if (!auth.ok) return auth.response;
           const body = await readJson<any>(request);
-          if (!body?.tracking_number) return badRequest("tracking_number required");
-          if (!body?.warehouse_photo_url) return badRequest("warehouse_photo_url required");
           if (!body?.client_id && !clientNameFromPayload(body) && !clientPhoneFromPayload(body)) {
             return badRequest("provide at least one of: client_id, sender_name/customer_name, sender_phone/customer_phone");
           }
-          const billingUnit = body.billing_unit ?? (body.mode === "sea" ? "cbm" : "kg");
-          const billableQuantity = body.billable_quantity ?? (billingUnit === "cbm" ? body.cbm : body.weight_kg);
-          const totalCharge = body.total_charge ?? body.shipping_cost ?? null;
+          const trackingNumber = String(body.tracking_number ?? "").trim() || await nextTrackingNumber();
+          const mode = String(body.mode ?? "air") as "air" | "sea" | "express" | "special";
+          const cargoType = (body.cargo_type ?? (mode === "special" ? "special" : "general")) as "general" | "special";
+          const weightKg = numberOrNull(body.weight_kg);
+          const cbm = numberOrNull(body.cbm);
+          const billingUnit = body.billing_unit ?? (mode === "sea" ? "cbm" : "kg");
+          const billableQuantity = numberOrNull(body.billable_quantity) ?? (billingUnit === "cbm" ? cbm : weightKg);
+          let totalCharge = numberOrNull(body.total_charge) ?? numberOrNull(body.shipping_cost);
+          let rateAmount = numberOrNull(body.rate_amount);
+          let quote: any = null;
+          if (!totalCharge) {
+            quote = await computeQuote({
+              destinationCountry: body.destination_country ?? "Kenya",
+              mode,
+              category: body.category ?? undefined,
+              cargoType,
+              specialCargoType: body.special_cargo_type ?? undefined,
+              weightKg: weightKg ?? undefined,
+              cbm: cbm ?? undefined,
+            } as any);
+            if (quote?.ok) {
+              totalCharge = quote.cost;
+              rateAmount = quote.unit === "cbm" ? Number(quote.rate?.price_per_cbm ?? 0) : Number(quote.rate?.price_per_kg ?? 0);
+            }
+          }
           const clientId = await resolvePackageClient(body);
           const customerName = clientNameFromPayload(body);
           const customerPhone = clientPhoneFromPayload(body);
+          const status = body.status ?? "received_in_china";
+          const receivedAt = status === "received_in_china" ? (body.received_at ?? new Date().toISOString()) : body.received_at ?? null;
+          const qrPayload = body.qr_payload ?? {
+            tracking_number: trackingNumber,
+            customer_name: customerName || undefined,
+            customer_phone: customerPhone || undefined,
+            mode,
+            cargo_type: cargoType,
+            special_cargo_type: body.special_cargo_type ?? undefined,
+            destination_country: body.destination_country ?? "Kenya",
+          };
           const { data, error } = await (supabaseAdmin.from("packages") as any).insert({
             client_id: clientId,
-            tracking_number: body.tracking_number,
+            tracking_number: trackingNumber,
             sender_name: customerName || null,
             sender_phone: customerPhone || null,
             description: body.description ?? null,
             category: body.category ?? null,
-            cargo_type: body.cargo_type ?? (body.mode === "special" ? "special" : "general"),
+            cargo_type: cargoType,
             special_cargo_type: body.special_cargo_type ?? null,
-            mode: body.mode ?? "air",
-            weight_kg: body.weight_kg ?? null,
-            cbm: body.cbm ?? null,
+            mode,
+            weight_kg: weightKg,
+            cbm,
             billing_unit: billingUnit,
-            billable_quantity: billableQuantity ?? null,
-            rate_amount: body.rate_amount ?? null,
-            length_cm: body.length_cm ?? null,
-            width_cm: body.width_cm ?? null,
-            height_cm: body.height_cm ?? null,
-            declared_value: body.declared_value ?? null,
+            billable_quantity: billableQuantity,
+            rate_amount: rateAmount,
+            length_cm: numberOrNull(body.length_cm),
+            width_cm: numberOrNull(body.width_cm),
+            height_cm: numberOrNull(body.height_cm),
+            declared_value: numberOrNull(body.declared_value),
             shipping_cost: totalCharge,
             total_charge: totalCharge,
             currency: body.currency ?? "KES",
             origin: body.origin ?? "China",
             destination_country: body.destination_country ?? "Kenya",
             destination_city: body.destination_city ?? null,
-            status: body.status ?? "pending",
+            status,
             warehouse_photo_url: body.warehouse_photo_url ?? null,
+            received_at: receivedAt,
+            current_location: body.current_location ?? (status === "received_in_china" ? "China warehouse" : null),
+            qr_payload: qrPayload,
             estimated_arrival: body.estimated_arrival ?? null,
-          }).select().single();
+          }).select("*, clients(full_name, whatsapp_number)").single();
           if (error) throw error;
-          return apiJson(data, 201);
+          await supabaseAdmin.from("package_events").insert({
+            package_id: data.id,
+            status,
+            location: body.current_location ?? "China warehouse",
+            notes: body.notes ?? "Package created from mobile app",
+            created_by: auth.userId,
+          });
+          return apiJson({ ok: true, package: data, quote, qr_payload: qrPayload }, 201);
         } catch (e) { return serverError(e); }
       },
     },
