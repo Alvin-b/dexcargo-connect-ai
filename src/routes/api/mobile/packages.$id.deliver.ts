@@ -77,10 +77,8 @@ export const Route = createFileRoute("/api/mobile/packages/$id/deliver")({
             amountPaid = cashPayment.amount;
             releaseMethod = "cash";
             await (supabaseAdmin.from("packages") as any).update({
-              status: "cleared",
               payment_status: "paid",
               payment_method: "cash",
-              cleared_at: new Date().toISOString(),
             }).eq("id", pkg.id);
           }
 

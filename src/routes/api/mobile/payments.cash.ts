@@ -24,7 +24,7 @@ export const Route = createFileRoute("/api/mobile/payments/cash")({
               .select("id, client_id, sender_phone, status, payment_status, total_charge, shipping_cost").eq("tracking_number", body.tracking_number).maybeSingle();
             if (!pkg) return notFound("package not found for this tracking number");
             if (pkg.payment_status === "paid") return badRequest("package payment is already marked as paid");
-            if (!["arrived_destination", "cleared", "out_for_delivery"].includes(pkg.status)) {
+            if (!["arrived_destination", "out_for_delivery"].includes(pkg.status)) {
               return badRequest("package must be arrived in Kenya before pickup payment");
             }
             packageId = pkg.id;
@@ -49,16 +49,14 @@ export const Route = createFileRoute("/api/mobile/payments/cash")({
             await (supabaseAdmin
               .from("packages") as any)
               .update({
-                status: "cleared",
                 payment_status: "paid",
                 payment_method: "cash",
-                cleared_at: new Date().toISOString(),
               })
               .eq("id", packageId);
             await (supabaseAdmin.from("package_events") as any).insert({
               package_id: packageId,
-              status: "cleared",
-              notes: "Cash payment recorded. Package cleared for release.",
+              status: "arrived_destination",
+              notes: "Cash payment recorded. Package is paid and waiting for customer signature.",
               created_by: auth.userId,
             });
           }

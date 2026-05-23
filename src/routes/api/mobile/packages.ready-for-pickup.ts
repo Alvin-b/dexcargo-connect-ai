@@ -20,7 +20,6 @@ export const Route = createFileRoute("/api/mobile/packages/ready-for-pickup")({
             .from("packages")
             .select("*, clients(full_name, whatsapp_number, email)", { count: "exact" })
             .eq("status", "arrived_destination")
-            .or("payment_status.is.null,payment_status.neq.paid")
             .order("created_at", { ascending: false })
             .limit(limit);
           if (q) query = query.or(`tracking_number.ilike.%${q}%,external_barcode.ilike.%${q}%,remark.ilike.%${q}%,description.ilike.%${q}%,sender_name.ilike.%${q}%,sender_phone.ilike.%${q}%`);

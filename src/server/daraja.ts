@@ -1,8 +1,9 @@
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
-function env(name: string): string {
-  const v = process.env[name];
-  if (!v) throw new Error(`Missing secret: ${name}`);
+function env(name: string, aliases: string[] = []): string {
+  const key = [name, ...aliases].find((item) => process.env[item]);
+  const v = key ? process.env[key] : undefined;
+  if (!v) throw new Error(`Missing secret: ${[name, ...aliases].join(" or ")}`);
   return v;
 }
 
@@ -12,8 +13,8 @@ function darajaBase() {
 }
 
 async function getAccessToken(): Promise<string> {
-  const key = env("DARAJA_CONSUMER_KEY");
-  const secret = env("DARAJA_CONSUMER_SECRET");
+  const key = env("DARAJA_CONSUMER_KEY", ["MPESA_CONSUMER_KEY", "SAFARICOM_CONSUMER_KEY"]);
+  const secret = env("DARAJA_CONSUMER_SECRET", ["MPESA_CONSUMER_SECRET", "SAFARICOM_CONSUMER_SECRET"]);
   const auth = Buffer.from(`${key}:${secret}`).toString("base64");
   const res = await fetch(`${darajaBase()}/oauth/v1/generate?grant_type=client_credentials`, {
     headers: { Authorization: `Basic ${auth}` },
@@ -53,9 +54,9 @@ export async function initiateStkPush(opts: {
   initiatedBy?: string;
   purpose?: "package_clearance" | "deposit" | "adjustment";
 }): Promise<{ CheckoutRequestID: string; MerchantRequestID: string; ResponseCode: string; ResponseDescription: string; payment?: any }> {
-  const shortcode = env("DARAJA_SHORTCODE");
-  const passkey = env("DARAJA_PASSKEY");
-  const callbackUrl = env("DARAJA_CALLBACK_URL");
+  const shortcode = env("DARAJA_SHORTCODE", ["MPESA_SHORTCODE", "DARAJA_BUSINESS_SHORTCODE", "MPESA_BUSINESS_SHORTCODE"]);
+  const passkey = env("DARAJA_PASSKEY", ["MPESA_PASSKEY", "SAFARICOM_PASSKEY"]);
+  const callbackUrl = env("DARAJA_CALLBACK_URL", ["MPESA_CALLBACK_URL", "SAFARICOM_CALLBACK_URL"]);
   if (!/^https:\/\//i.test(callbackUrl)) throw new Error("DARAJA_CALLBACK_URL must be a public https URL");
   if (!opts.amount || Number(opts.amount) <= 0) throw new Error("Payment amount must be greater than zero");
   const ts = timestamp();
@@ -68,7 +69,7 @@ export async function initiateStkPush(opts: {
     BusinessShortCode: shortcode,
     Password: password,
     Timestamp: ts,
-    TransactionType: "CustomerPayBillOnline",
+    TransactionType: process.env.DARAJA_TRANSACTION_TYPE ?? process.env.MPESA_TRANSACTION_TYPE ?? "CustomerPayBillOnline",
     Amount: Math.max(1, Math.round(opts.amount)),
     PartyA: phone,
     PartyB: shortcode,

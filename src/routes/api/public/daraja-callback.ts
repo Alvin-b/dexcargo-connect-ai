@@ -99,21 +99,19 @@ export const Route = createFileRoute("/api/public/daraja-callback")({
         if (pay?.package_id) {
           if (status === "success") {
             await (sb.from("packages") as any).update({
-              status: "cleared",
               payment_status: "paid",
               payment_method: "mpesa",
-              cleared_at: new Date().toISOString(),
             }).eq("id", pay.package_id);
             await (sb.from("package_events") as any).insert({
               package_id: pay.package_id,
-              status: "cleared",
-              notes: `M-Pesa payment verified${receipt ? ` (${receipt})` : ""}. Package cleared for release.`,
+              status: "arrived_destination",
+              notes: `M-Pesa payment verified${receipt ? ` (${receipt})` : ""}. Package is paid and waiting for customer signature.`,
             });
             // Notify Kenya staff so they can release the parcel
             try {
               await sendPushToAudience("kenya", {
                 title: "Payment received",
-                body: `KES ${amount} cleared${receipt ? ` (${receipt})` : ""}. Package ready for release.`,
+                body: `KES ${amount} paid${receipt ? ` (${receipt})` : ""}. Capture signature to clear the package.`,
                 data: { type: "payment_success", package_id: String(pay.package_id) },
               });
             } catch (e) { console.error("push notify fail", e); }
