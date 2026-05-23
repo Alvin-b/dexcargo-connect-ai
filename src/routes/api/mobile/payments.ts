@@ -57,7 +57,7 @@ export const Route = createFileRoute("/api/mobile/payments")({
               reference = pkg.tracking_number;
               amount = amount || Number(pkg.total_charge ?? pkg.shipping_cost ?? 0);
               if (pkg.payment_status === "paid") return badRequest("package payment is already marked as paid");
-              if (!["arrived_destination", "out_for_delivery"].includes(pkg.status)) {
+              if (!["arrived_destination", "cleared", "out_for_delivery"].includes(pkg.status)) {
                 return badRequest("package must be arrived in Kenya before pickup payment");
               }
             }

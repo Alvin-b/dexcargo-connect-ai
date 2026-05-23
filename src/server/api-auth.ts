@@ -101,8 +101,25 @@ export async function readJson<T = any>(request: Request): Promise<T | null> {
 
 export function badRequest(message: string) { return apiJson({ error: message }, 400); }
 export function notFound(message = "Not found") { return apiJson({ error: message }, 404); }
+
+function readableServerError(e: unknown) {
+  if (e instanceof Error) return e.message;
+  if (e && typeof e === "object") {
+    const value = e as Record<string, unknown>;
+    for (const key of ["message", "error", "details", "hint"]) {
+      if (typeof value[key] === "string") return value[key] as string;
+    }
+    try {
+      return JSON.stringify(e);
+    } catch {
+      return "Unknown server error";
+    }
+  }
+  return String(e ?? "Unknown server error");
+}
+
 export function serverError(e: unknown) {
-  const msg = e instanceof Error ? e.message : String(e);
+  const msg = readableServerError(e);
   console.error("API error:", msg);
   return apiJson({ error: msg }, 500);
 }

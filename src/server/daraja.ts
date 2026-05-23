@@ -7,7 +7,7 @@ function env(name: string): string {
 }
 
 function darajaBase() {
-  const e = (process.env.DARAJA_ENV ?? "sandbox").toLowerCase();
+  const e = (process.env.DARAJA_ENV ?? "production").toLowerCase();
   return e === "production" ? "https://api.safaricom.co.ke" : "https://sandbox.safaricom.co.ke";
 }
 

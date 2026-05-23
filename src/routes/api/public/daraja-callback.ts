@@ -34,13 +34,13 @@ function ipInCidr(ip: string, cidr: string): boolean {
 function isAllowedIp(request: Request): boolean {
   const skip = process.env.DARAJA_SKIP_IP_CHECK === "true";
   if (skip) return true;
-  const ip =
-    request.headers.get("cf-connecting-ip") ||
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    "";
-  if (!ip) return false;
+  const ips = [
+    request.headers.get("cf-connecting-ip"),
+    ...(request.headers.get("x-forwarded-for")?.split(",") ?? []),
+  ].map((ip) => ip?.trim()).filter(Boolean) as string[];
+  if (!ips.length) return true;
   const allow = (process.env.DARAJA_ALLOWED_IPS?.split(",").map((s) => s.trim()).filter(Boolean) ?? DEFAULT_DARAJA_IPS);
-  return allow.some((c) => ipInCidr(ip, c));
+  return ips.some((ip) => allow.some((c) => ipInCidr(ip, c)));
 }
 
 // Configure your Safaricom Daraja STK callback to point here:
@@ -99,14 +99,14 @@ export const Route = createFileRoute("/api/public/daraja-callback")({
         if (pay?.package_id) {
           if (status === "success") {
             await (sb.from("packages") as any).update({
-              status: "out_for_delivery",
+              status: "cleared",
               payment_status: "paid",
               payment_method: "mpesa",
               cleared_at: new Date().toISOString(),
             }).eq("id", pay.package_id);
-            await sb.from("package_events").insert({
+            await (sb.from("package_events") as any).insert({
               package_id: pay.package_id,
-              status: "out_for_delivery",
+              status: "cleared",
               notes: `M-Pesa payment verified${receipt ? ` (${receipt})` : ""}. Package cleared for release.`,
             });
             // Notify Kenya staff so they can release the parcel

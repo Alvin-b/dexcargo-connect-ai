@@ -6,7 +6,7 @@ import { enforceRateLimit } from "@/server/rate-limit";
 import { sendPushToAudience } from "@/server/push";
 import { logAudit } from "@/server/audit";
 
-// Deliver a package: verify/record payment, store digital signature, then mark delivered.
+// Release a package: verify/record payment, store digital signature, then mark cleared.
 export const Route = createFileRoute("/api/mobile/packages/$id/deliver")({
   server: {
     handlers: {
@@ -77,14 +77,14 @@ export const Route = createFileRoute("/api/mobile/packages/$id/deliver")({
             amountPaid = cashPayment.amount;
             releaseMethod = "cash";
             await (supabaseAdmin.from("packages") as any).update({
-              status: "out_for_delivery",
+              status: "cleared",
               payment_status: "paid",
               payment_method: "cash",
               cleared_at: new Date().toISOString(),
             }).eq("id", pkg.id);
           }
 
-          if (!paymentId && pkg.payment_status !== "paid" && pkg.status !== "out_for_delivery") {
+          if (!paymentId && pkg.payment_status !== "paid" && !["cleared", "out_for_delivery"].includes(pkg.status)) {
             return badRequest("package must have a verified payment or recorded cash payment before release");
           }
 
@@ -117,20 +117,21 @@ export const Route = createFileRoute("/api/mobile/packages/$id/deliver")({
           }).select().single();
           if (sigErr) throw sigErr;
 
-          const deliveredAt = new Date().toISOString();
+          const clearedAt = new Date().toISOString();
           const retentionUntil = new Date(Date.now() + 214 * 86400_000).toISOString();
           await (supabaseAdmin.from("packages") as any).update({
-            status: "delivered",
-            delivered_at: deliveredAt,
+            status: "cleared",
+            cleared_at: clearedAt,
+            delivered_at: clearedAt,
             payment_status: "paid",
             payment_method: releaseMethod ?? body.payment_method ?? "cash",
             released_by: auth.userId,
             pickup_retention_until: retentionUntil,
           }).eq("id", pkg.id);
-          const { data: ev } = await supabaseAdmin.from("package_events").insert({
+          const { data: ev } = await (supabaseAdmin.from("package_events") as any).insert({
             package_id: pkg.id,
-            status: "delivered",
-            notes: `Delivered to ${body.signer_name}${releaseMethod ? ` (paid via ${releaseMethod})` : ""}`,
+            status: "cleared",
+            notes: `Cleared and released to ${body.signer_name}${releaseMethod ? ` (paid via ${releaseMethod})` : ""}`,
             created_by: auth.userId,
           }).select().single();
 
@@ -140,20 +141,20 @@ export const Route = createFileRoute("/api/mobile/packages/$id/deliver")({
               const { sendWhatsAppText } = await import("@/server/evolution");
               await sendWhatsAppText(
                 client.whatsapp_number,
-                `Package ${pkg.tracking_number} delivered to ${body.signer_name}. Thank you for shipping with DEX Cargo!`,
+                `Package ${pkg.tracking_number} has been cleared and released to ${body.signer_name}. Thank you for shipping with DEX Cargo!`,
               );
             } catch (e) { console.error("deliver notify failed", e); }
           }
           try {
             await sendPushToAudience("kenya", {
-              title: "Package delivered",
-              body: `${pkg.tracking_number} → ${body.signer_name}`,
-              data: { type: "package_delivered", package_id: String(pkg.id) },
+              title: "Package cleared",
+              body: `${pkg.tracking_number} -> ${body.signer_name}`,
+              data: { type: "package_cleared", package_id: String(pkg.id) },
             });
           } catch (e) { console.error("push fail", e); }
           await logAudit({
             actorId: auth.userId,
-            action: "package.delivered",
+            action: "package.cleared",
             resourceType: "package",
             resourceId: String(pkg.id),
             metadata: { signer: body.signer_name, payment_method: releaseMethod, amount: amountPaid },

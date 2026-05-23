@@ -11,6 +11,7 @@ type PackageStatus =
   | "processing"
   | "in_transit"
   | "arrived_destination"
+  | "cleared"
   | "out_for_delivery"
   | "delivered"
   | "on_hold"
@@ -22,6 +23,7 @@ const PACKAGE_STATUSES = new Set<PackageStatus>([
   "processing",
   "in_transit",
   "arrived_destination",
+  "cleared",
   "out_for_delivery",
   "delivered",
   "on_hold",
@@ -184,6 +186,10 @@ export const Route = createFileRoute("/api/mobile/packages/scan")({
             return apiJson({ ok: true, created: false, duplicate: true, package: pkg });
           }
 
+          if (!created && status === "arrived_destination" && ["arrived_destination", "cleared", "out_for_delivery", "delivered"].includes(pkg.status)) {
+            return apiJson({ ok: true, created: false, duplicate: true, package: pkg, message: `Package is already ${String(pkg.status).replace(/_/g, " ")}.` });
+          }
+
           const { data: updatedPkg, error: upErr } = await (supabaseAdmin.from("packages") as any)
             .update(patch)
             .eq("id", pkg.id)
@@ -222,8 +228,8 @@ export const Route = createFileRoute("/api/mobile/packages/scan")({
             }
           }
 
-          const { data: ev, error: evErr } = await supabaseAdmin
-            .from("package_events")
+          const { data: ev, error: evErr } = await (supabaseAdmin
+            .from("package_events") as any)
             .insert({
               package_id: pkg.id,
               status,
