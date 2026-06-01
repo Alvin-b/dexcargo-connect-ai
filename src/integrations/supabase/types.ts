@@ -146,6 +146,8 @@ export type Database = {
       conversations: {
         Row: {
           ai_enabled: boolean
+          assigned_at: string | null
+          assigned_staff_id: string | null
           channel: string
           client_id: string | null
           created_at: string
@@ -155,6 +157,8 @@ export type Database = {
         }
         Insert: {
           ai_enabled?: boolean
+          assigned_at?: string | null
+          assigned_staff_id?: string | null
           channel?: string
           client_id?: string | null
           created_at?: string
@@ -164,6 +168,8 @@ export type Database = {
         }
         Update: {
           ai_enabled?: boolean
+          assigned_at?: string | null
+          assigned_staff_id?: string | null
           channel?: string
           client_id?: string | null
           created_at?: string
@@ -396,28 +402,34 @@ export type Database = {
           content: string | null
           conversation_id: string
           created_at: string
+          created_by: string | null
           evolution_message_id: string | null
           id: string
           media_url: string | null
           role: Database["public"]["Enums"]["message_role"]
+          staff_display_name: string | null
         }
         Insert: {
           content?: string | null
           conversation_id: string
           created_at?: string
+          created_by?: string | null
           evolution_message_id?: string | null
           id?: string
           media_url?: string | null
           role: Database["public"]["Enums"]["message_role"]
+          staff_display_name?: string | null
         }
         Update: {
           content?: string | null
           conversation_id?: string
           created_at?: string
+          created_by?: string | null
           evolution_message_id?: string | null
           id?: string
           media_url?: string | null
           role?: Database["public"]["Enums"]["message_role"]
+          staff_display_name?: string | null
         }
         Relationships: [
           {
@@ -555,31 +567,53 @@ export type Database = {
       }
       packages: {
         Row: {
+          arrived_at: string | null
           billable_quantity: number | null
           billing_unit: string | null
           cargo_type: string | null
           category: string | null
           cbm: number | null
+          chargeable_weight_kg: number | null
           client_id: string | null
+          consignee_address: string | null
+          consignee_company: string | null
           created_at: string
           currency: string | null
+          current_location: string | null
+          declared_amount: number | null
+          declared_currency: string | null
           declared_value: number | null
           delivered_at: string | null
           description: string | null
           destination_city: string | null
           destination_country: string | null
           estimated_arrival: string | null
+          external_barcode: string | null
+          freight_charge: number | null
           height_cm: number | null
           id: string
+          insurance_charge: number | null
           length_cm: number | null
           mode: Database["public"]["Enums"]["shipping_mode"] | null
           origin: string | null
+          origin_currency: string | null
+          origin_total_charge: number | null
+          other_charge: number | null
           payment_method: string | null
           payment_status: string | null
+          payment_type: string | null
+          piece_count: number | null
+          qr_payload: Json | null
           rate_amount: number | null
           received_at: string | null
+          remark: string | null
+          route_code: string | null
           sender_name: string | null
           sender_phone: string | null
+          shipper_address: string | null
+          shipper_company: string | null
+          shipper_name: string | null
+          shipper_phone: string | null
           shipping_cost: number | null
           special_cargo_type: string | null
           status: Database["public"]["Enums"]["package_status"]
@@ -591,31 +625,53 @@ export type Database = {
           width_cm: number | null
         }
         Insert: {
+          arrived_at?: string | null
           billable_quantity?: number | null
           billing_unit?: string | null
           cargo_type?: string | null
           category?: string | null
           cbm?: number | null
+          chargeable_weight_kg?: number | null
           client_id?: string | null
+          consignee_address?: string | null
+          consignee_company?: string | null
           created_at?: string
           currency?: string | null
+          current_location?: string | null
+          declared_amount?: number | null
+          declared_currency?: string | null
           declared_value?: number | null
           delivered_at?: string | null
           description?: string | null
           destination_city?: string | null
           destination_country?: string | null
           estimated_arrival?: string | null
+          external_barcode?: string | null
+          freight_charge?: number | null
           height_cm?: number | null
           id?: string
+          insurance_charge?: number | null
           length_cm?: number | null
           mode?: Database["public"]["Enums"]["shipping_mode"] | null
           origin?: string | null
+          origin_currency?: string | null
+          origin_total_charge?: number | null
+          other_charge?: number | null
           payment_method?: string | null
           payment_status?: string | null
+          payment_type?: string | null
+          piece_count?: number | null
+          qr_payload?: Json | null
           rate_amount?: number | null
           received_at?: string | null
+          remark?: string | null
+          route_code?: string | null
           sender_name?: string | null
           sender_phone?: string | null
+          shipper_address?: string | null
+          shipper_company?: string | null
+          shipper_name?: string | null
+          shipper_phone?: string | null
           shipping_cost?: number | null
           special_cargo_type?: string | null
           status?: Database["public"]["Enums"]["package_status"]
@@ -627,31 +683,53 @@ export type Database = {
           width_cm?: number | null
         }
         Update: {
+          arrived_at?: string | null
           billable_quantity?: number | null
           billing_unit?: string | null
           cargo_type?: string | null
           category?: string | null
           cbm?: number | null
+          chargeable_weight_kg?: number | null
           client_id?: string | null
+          consignee_address?: string | null
+          consignee_company?: string | null
           created_at?: string
           currency?: string | null
+          current_location?: string | null
+          declared_amount?: number | null
+          declared_currency?: string | null
           declared_value?: number | null
           delivered_at?: string | null
           description?: string | null
           destination_city?: string | null
           destination_country?: string | null
           estimated_arrival?: string | null
+          external_barcode?: string | null
+          freight_charge?: number | null
           height_cm?: number | null
           id?: string
+          insurance_charge?: number | null
           length_cm?: number | null
           mode?: Database["public"]["Enums"]["shipping_mode"] | null
           origin?: string | null
+          origin_currency?: string | null
+          origin_total_charge?: number | null
+          other_charge?: number | null
           payment_method?: string | null
           payment_status?: string | null
+          payment_type?: string | null
+          piece_count?: number | null
+          qr_payload?: Json | null
           rate_amount?: number | null
           received_at?: string | null
+          remark?: string | null
+          route_code?: string | null
           sender_name?: string | null
           sender_phone?: string | null
+          shipper_address?: string | null
+          shipper_company?: string | null
+          shipper_name?: string | null
+          shipper_phone?: string | null
           shipping_cost?: number | null
           special_cargo_type?: string | null
           status?: Database["public"]["Enums"]["package_status"]
@@ -680,6 +758,7 @@ export type Database = {
           created_at: string
           currency: string
           id: string
+          initiated_by: string | null
           merchant_request_id: string | null
           mpesa_receipt: string | null
           package_id: string | null
@@ -688,6 +767,7 @@ export type Database = {
           raw_callback: Json | null
           status: Database["public"]["Enums"]["payment_status"]
           updated_at: string
+          verified_at: string | null
         }
         Insert: {
           amount: number
@@ -696,6 +776,7 @@ export type Database = {
           created_at?: string
           currency?: string
           id?: string
+          initiated_by?: string | null
           merchant_request_id?: string | null
           mpesa_receipt?: string | null
           package_id?: string | null
@@ -704,6 +785,7 @@ export type Database = {
           raw_callback?: Json | null
           status?: Database["public"]["Enums"]["payment_status"]
           updated_at?: string
+          verified_at?: string | null
         }
         Update: {
           amount?: number
@@ -712,6 +794,7 @@ export type Database = {
           created_at?: string
           currency?: string
           id?: string
+          initiated_by?: string | null
           merchant_request_id?: string | null
           mpesa_receipt?: string | null
           package_id?: string | null
@@ -720,6 +803,7 @@ export type Database = {
           raw_callback?: Json | null
           status?: Database["public"]["Enums"]["payment_status"]
           updated_at?: string
+          verified_at?: string | null
         }
         Relationships: [
           {
