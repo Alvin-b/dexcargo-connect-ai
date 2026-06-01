@@ -3,6 +3,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { runAgent } from "@/server/ai-agent";
 import { sendWhatsAppText, normalizeNumber } from "@/server/evolution";
 import { assignConversation } from "@/server/conversation-assignment";
+import { sendPushToUsers } from "@/server/push";
 
 // Evolution API posts events here. Configure webhook in Evolution to:
 //   https://<your-domain>/api/public/evolution-webhook
@@ -81,6 +82,16 @@ export async function handleEvolutionWebhook(request: Request): Promise<Response
         await sb.from("conversations").update({ last_message_at: new Date().toISOString() }).eq("id", conv.id);
 
         if (!conv.ai_enabled) {
+          // AI is off — make sure the assigned human agent is notified of the new message.
+          if ((conv as any).assigned_staff_id) {
+            try {
+              await sendPushToUsers([(conv as any).assigned_staff_id], {
+                title: "New message from client",
+                body: text.slice(0, 120),
+                data: { type: "client_message", conversation_id: conv.id },
+              });
+            } catch (e) { console.error("notify staff failed", e); }
+          }
           return new Response("ok: ai disabled", { status: 200 });
         }
 
@@ -131,6 +142,24 @@ export async function handleEvolutionWebhook(request: Request): Promise<Response
             });
           }
         }
+
+        // If the AI just handed off (escalate_to_human flipped ai_enabled to false),
+        // notify the assigned human agent so they can take over.
+        try {
+          const { data: post } = await sb
+            .from("conversations")
+            .select("ai_enabled, assigned_staff_id")
+            .eq("id", conv.id)
+            .maybeSingle();
+          if (post && !post.ai_enabled && post.assigned_staff_id) {
+            await sendPushToUsers([post.assigned_staff_id], {
+              title: "Client needs a human agent",
+              body: text.slice(0, 120),
+              data: { type: "handoff", conversation_id: conv.id },
+            });
+          }
+        } catch (e) { console.error("handoff push failed", e); }
+
         return new Response("ok", { status: 200 });
 }
 

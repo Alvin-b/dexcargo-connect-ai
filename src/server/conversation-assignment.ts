@@ -1,4 +1,5 @@
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { sendPushToUsers } from "./push";
 
 type StaffCandidate = {
   id: string;
@@ -12,10 +13,18 @@ async function listAssignableStaff(): Promise<StaffCandidate[]> {
     .select("user_id, role")
     .in("role", ["admin", "staff", "china_staff", "kenya_staff"] as any);
 
-  const adminIds = new Set((roleRows ?? []).filter((row: any) => row.role === "admin").map((row: any) => row.user_id));
-  const staffIds = Array.from(new Set((roleRows ?? [])
-    .filter((row: any) => row.role !== "admin" && !adminIds.has(row.user_id))
-    .map((row: any) => row.user_id)));
+  // Conversations are ONLY assigned to Kenya-facing customer agents.
+  // Admins and china_staff are intentionally excluded from the rotation.
+  const excludedIds = new Set(
+    (roleRows ?? [])
+      .filter((row: any) => row.role === "admin" || row.role === "china_staff")
+      .map((row: any) => row.user_id),
+  );
+  const staffIds = Array.from(new Set(
+    (roleRows ?? [])
+      .filter((row: any) => (row.role === "staff" || row.role === "kenya_staff") && !excludedIds.has(row.user_id))
+      .map((row: any) => row.user_id),
+  ));
 
   if (!staffIds.length) return [];
 
@@ -26,7 +35,7 @@ async function listAssignableStaff(): Promise<StaffCandidate[]> {
   if (error) throw error;
 
   return (profiles ?? [])
-    .filter((profile: any) => profile.is_active !== false)
+    .filter((profile: any) => profile.is_active !== false && profile.staff_location !== "china")
     .map((profile: any) => ({
       id: profile.id,
       display_name: profile.display_name ?? null,
@@ -76,6 +85,22 @@ export async function assignConversation(conversationId: string, currentAssigned
     created_by: staff.id,
     staff_display_name: staff.display_name ?? null,
   });
+
+  // Notify the assigned agent on their mobile device.
+  try {
+    const { data: conv } = await (supabaseAdmin.from("conversations") as any)
+      .select("whatsapp_number, clients(full_name)")
+      .eq("id", conversationId)
+      .maybeSingle();
+    const who = (conv as any)?.clients?.full_name ?? (conv as any)?.whatsapp_number ?? "a client";
+    await sendPushToUsers([staff.id], {
+      title: "New client assigned",
+      body: `${who} has been assigned to you.`,
+      data: { type: "conversation_assigned", conversation_id: conversationId },
+    });
+  } catch (e) {
+    console.error("assignment push failed", e);
+  }
 
   return { ...staff, assigned_at: assignedAt };
 }
