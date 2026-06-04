@@ -60,6 +60,8 @@ import { Route as ApiMobileAuthMeRouteImport } from './routes/api/mobile/auth.me
 import { Route as ApiMobilePackagesIdEventsRouteImport } from './routes/api/mobile/packages.$id.events'
 import { Route as ApiMobilePackagesIdDeliverRouteImport } from './routes/api/mobile/packages.$id.deliver'
 import { Route as ApiMobileConversationsIdMessagesRouteImport } from './routes/api/mobile/conversations.$id.messages'
+import { Route as ApiMobileConversationsIdEventsRouteImport } from './routes/api/mobile/conversations.$id.events'
+import { Route as ApiMobileConversationsIdClaimRouteImport } from './routes/api/mobile/conversations.$id.claim'
 import { Route as ApiMobileClientsIdConsentRouteImport } from './routes/api/mobile/clients.$id.consent'
 import { Route as ApiMobileBatchesIdScanRouteImport } from './routes/api/mobile/batches.$id.scan'
 import { Route as ApiMobileBatchesIdCloseRouteImport } from './routes/api/mobile/batches.$id.close'
@@ -331,6 +333,18 @@ const ApiMobileConversationsIdMessagesRoute =
     path: '/messages',
     getParentRoute: () => ApiMobileConversationsIdRoute,
   } as any)
+const ApiMobileConversationsIdEventsRoute =
+  ApiMobileConversationsIdEventsRouteImport.update({
+    id: '/events',
+    path: '/events',
+    getParentRoute: () => ApiMobileConversationsIdRoute,
+  } as any)
+const ApiMobileConversationsIdClaimRoute =
+  ApiMobileConversationsIdClaimRouteImport.update({
+    id: '/claim',
+    path: '/claim',
+    getParentRoute: () => ApiMobileConversationsIdRoute,
+  } as any)
 const ApiMobileClientsIdConsentRoute =
   ApiMobileClientsIdConsentRouteImport.update({
     id: '/consent',
@@ -406,6 +420,8 @@ export interface FileRoutesByFullPath {
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
   '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
+  '/api/mobile/conversations/$id/claim': typeof ApiMobileConversationsIdClaimRoute
+  '/api/mobile/conversations/$id/events': typeof ApiMobileConversationsIdEventsRoute
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
@@ -462,6 +478,8 @@ export interface FileRoutesByTo {
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
   '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
+  '/api/mobile/conversations/$id/claim': typeof ApiMobileConversationsIdClaimRoute
+  '/api/mobile/conversations/$id/events': typeof ApiMobileConversationsIdEventsRoute
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
@@ -520,6 +538,8 @@ export interface FileRoutesById {
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
   '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
+  '/api/mobile/conversations/$id/claim': typeof ApiMobileConversationsIdClaimRoute
+  '/api/mobile/conversations/$id/events': typeof ApiMobileConversationsIdEventsRoute
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
@@ -579,6 +599,8 @@ export interface FileRouteTypes {
     | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
     | '/api/mobile/clients/$id/consent'
+    | '/api/mobile/conversations/$id/claim'
+    | '/api/mobile/conversations/$id/events'
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/deliver'
     | '/api/mobile/packages/$id/events'
@@ -635,6 +657,8 @@ export interface FileRouteTypes {
     | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
     | '/api/mobile/clients/$id/consent'
+    | '/api/mobile/conversations/$id/claim'
+    | '/api/mobile/conversations/$id/events'
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/deliver'
     | '/api/mobile/packages/$id/events'
@@ -692,6 +716,8 @@ export interface FileRouteTypes {
     | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
     | '/api/mobile/clients/$id/consent'
+    | '/api/mobile/conversations/$id/claim'
+    | '/api/mobile/conversations/$id/events'
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/deliver'
     | '/api/mobile/packages/$id/events'
@@ -1085,6 +1111,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileConversationsIdMessagesRouteImport
       parentRoute: typeof ApiMobileConversationsIdRoute
     }
+    '/api/mobile/conversations/$id/events': {
+      id: '/api/mobile/conversations/$id/events'
+      path: '/events'
+      fullPath: '/api/mobile/conversations/$id/events'
+      preLoaderRoute: typeof ApiMobileConversationsIdEventsRouteImport
+      parentRoute: typeof ApiMobileConversationsIdRoute
+    }
+    '/api/mobile/conversations/$id/claim': {
+      id: '/api/mobile/conversations/$id/claim'
+      path: '/claim'
+      fullPath: '/api/mobile/conversations/$id/claim'
+      preLoaderRoute: typeof ApiMobileConversationsIdClaimRouteImport
+      parentRoute: typeof ApiMobileConversationsIdRoute
+    }
     '/api/mobile/clients/$id/consent': {
       id: '/api/mobile/clients/$id/consent'
       path: '/consent'
@@ -1201,11 +1241,15 @@ const ApiMobileClientsRouteWithChildren =
   ApiMobileClientsRoute._addFileChildren(ApiMobileClientsRouteChildren)
 
 interface ApiMobileConversationsIdRouteChildren {
+  ApiMobileConversationsIdClaimRoute: typeof ApiMobileConversationsIdClaimRoute
+  ApiMobileConversationsIdEventsRoute: typeof ApiMobileConversationsIdEventsRoute
   ApiMobileConversationsIdMessagesRoute: typeof ApiMobileConversationsIdMessagesRoute
 }
 
 const ApiMobileConversationsIdRouteChildren: ApiMobileConversationsIdRouteChildren =
   {
+    ApiMobileConversationsIdClaimRoute: ApiMobileConversationsIdClaimRoute,
+    ApiMobileConversationsIdEventsRoute: ApiMobileConversationsIdEventsRoute,
     ApiMobileConversationsIdMessagesRoute:
       ApiMobileConversationsIdMessagesRoute,
   }
