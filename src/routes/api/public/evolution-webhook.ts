@@ -2,8 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { runAgent } from "@/server/ai-agent";
 import { sendWhatsAppText, normalizeNumber } from "@/server/evolution";
-import { assignConversation } from "@/server/conversation-assignment";
-import { logAssignmentEvent } from "@/server/conversation-assignment";
+import { assignConversation, logAssignmentEvent } from "@/server/conversation-assignment";
 import { sendPushToUsers } from "@/server/push";
 
 // Evolution API posts events here. Configure webhook in Evolution to:
