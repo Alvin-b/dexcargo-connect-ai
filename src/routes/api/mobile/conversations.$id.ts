@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { authenticate, apiJson, preflight, readJson, badRequest, notFound, serverError } from "@/server/api-auth";
-import { assignConversation } from "@/server/conversation-assignment";
+import { assignConversation, logAssignmentEvent } from "@/server/conversation-assignment";
 
 async function loadConversationForStaff(id: string, auth: any) {
   let { data: conv, error } = await (supabaseAdmin.from("conversations") as any)
@@ -50,6 +50,15 @@ export const Route = createFileRoute("/api/mobile/conversations/$id")({
           if (!Object.keys(patch).length) return apiJson(conv);
           const { data, error } = await supabaseAdmin.from("conversations").update(patch).eq("id", params.id).select().maybeSingle();
           if (error) throw error;
+          if (typeof body?.ai_enabled === "boolean" && body.ai_enabled !== conv.ai_enabled) {
+            await logAssignmentEvent({
+              conversationId: params.id,
+              eventType: body.ai_enabled ? "ai_enabled" : "ai_disabled",
+              actorId: auth.userId,
+              toStaffId: (conv as any).assigned_staff_id ?? null,
+              metadata: { source: "staff_toggle" },
+            });
+          }
           return apiJson(data);
         } catch (e) { return serverError(e); }
       },

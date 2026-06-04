@@ -143,6 +143,50 @@ export type Database = {
         }
         Relationships: []
       }
+      conversation_assignment_events: {
+        Row: {
+          actor_display_name: string | null
+          actor_id: string | null
+          conversation_id: string
+          created_at: string
+          event_type: string
+          from_staff_id: string | null
+          id: string
+          metadata: Json | null
+          to_staff_id: string | null
+        }
+        Insert: {
+          actor_display_name?: string | null
+          actor_id?: string | null
+          conversation_id: string
+          created_at?: string
+          event_type: string
+          from_staff_id?: string | null
+          id?: string
+          metadata?: Json | null
+          to_staff_id?: string | null
+        }
+        Update: {
+          actor_display_name?: string | null
+          actor_id?: string | null
+          conversation_id?: string
+          created_at?: string
+          event_type?: string
+          from_staff_id?: string | null
+          id?: string
+          metadata?: Json | null
+          to_staff_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversation_assignment_events_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       conversations: {
         Row: {
           ai_enabled: boolean
@@ -1037,6 +1081,14 @@ export type Database = {
     }
     Functions: {
       archive_expired_delivery_records: { Args: never; Returns: number }
+      atomic_claim_conversation: {
+        Args: {
+          _conversation_id: string
+          _expected_current?: string
+          _staff_id: string
+        }
+        Returns: string
+      }
       check_rate_limit: {
         Args: { _bucket: string; _max: number; _window_seconds: number }
         Returns: boolean
