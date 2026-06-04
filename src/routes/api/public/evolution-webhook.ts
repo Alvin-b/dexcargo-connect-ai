@@ -3,6 +3,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { runAgent } from "@/server/ai-agent";
 import { sendWhatsAppText, normalizeNumber } from "@/server/evolution";
 import { assignConversation } from "@/server/conversation-assignment";
+import { logAssignmentEvent } from "@/server/conversation-assignment";
 import { sendPushToUsers } from "@/server/push";
 
 // Evolution API posts events here. Configure webhook in Evolution to:
@@ -157,6 +158,15 @@ export async function handleEvolutionWebhook(request: Request): Promise<Response
               body: text.slice(0, 120),
               data: { type: "handoff", conversation_id: conv.id },
             });
+            if ((conv as any).ai_enabled !== false) {
+              await logAssignmentEvent({
+                conversationId: conv.id,
+                eventType: "handoff",
+                actorDisplayName: "ai_agent",
+                toStaffId: post.assigned_staff_id,
+                metadata: { trigger: "ai_disabled_during_turn" },
+              });
+            }
           }
         } catch (e) { console.error("handoff push failed", e); }
 

@@ -337,7 +337,29 @@ async function executeTool(name: string, args: any, ctx: ToolCtx): Promise<any> 
       }
     }
     case "escalate_to_human": {
+      const { data: prev } = await (sb.from("conversations") as any)
+        .select("assigned_staff_id, ai_enabled")
+        .eq("id", ctx.conversationId)
+        .maybeSingle();
       await sb.from("conversations").update({ ai_enabled: false }).eq("id", ctx.conversationId);
+      try {
+        const { logAssignmentEvent } = await import("./conversation-assignment");
+        if (prev?.ai_enabled !== false) {
+          await logAssignmentEvent({
+            conversationId: ctx.conversationId,
+            eventType: "escalation",
+            actorDisplayName: "ai_agent",
+            toStaffId: prev?.assigned_staff_id ?? null,
+            metadata: { reason: "escalate_to_human tool call" },
+          });
+          await logAssignmentEvent({
+            conversationId: ctx.conversationId,
+            eventType: "ai_disabled",
+            actorDisplayName: "ai_agent",
+            toStaffId: prev?.assigned_staff_id ?? null,
+          });
+        }
+      } catch (e) { console.error("escalation audit failed", e); }
       return { ok: true, message: "A human agent will contact you shortly." };
     }
   }

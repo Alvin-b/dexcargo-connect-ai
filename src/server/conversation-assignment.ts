@@ -1,5 +1,49 @@
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { sendPushToUsers } from "./push";
+import { logAudit } from "./audit";
+
+export async function logAssignmentEvent(opts: {
+  conversationId: string;
+  eventType:
+    | "assigned"
+    | "reassigned"
+    | "claimed"
+    | "unassigned"
+    | "ai_disabled"
+    | "ai_enabled"
+    | "handoff"
+    | "escalation";
+  actorId?: string | null;
+  actorDisplayName?: string | null;
+  fromStaffId?: string | null;
+  toStaffId?: string | null;
+  metadata?: Record<string, unknown> | null;
+}) {
+  try {
+    await (supabaseAdmin.from("conversation_assignment_events") as any).insert({
+      conversation_id: opts.conversationId,
+      event_type: opts.eventType,
+      actor_id: opts.actorId ?? null,
+      actor_display_name: opts.actorDisplayName ?? null,
+      from_staff_id: opts.fromStaffId ?? null,
+      to_staff_id: opts.toStaffId ?? null,
+      metadata: opts.metadata ?? null,
+    });
+    await logAudit({
+      actorId: opts.actorId ?? null,
+      action: `conversation.${opts.eventType}`,
+      resourceType: "conversation",
+      resourceId: opts.conversationId,
+      metadata: {
+        from_staff_id: opts.fromStaffId ?? null,
+        to_staff_id: opts.toStaffId ?? null,
+        ...(opts.metadata ?? {}),
+      },
+    });
+  } catch (e) {
+    console.error("logAssignmentEvent failed", e);
+  }
+}
 
 type StaffCandidate = {
   id: string;
@@ -69,14 +113,15 @@ export async function assignConversation(conversationId: string, currentAssigned
   const staff = await pickBalancedStaff();
   if (!staff) return null;
 
-  const assignedAt = new Date().toISOString();
-  const { error } = await (supabaseAdmin.from("conversations") as any)
-    .update({
-      assigned_staff_id: staff.id,
-      assigned_at: assignedAt,
-    })
-    .eq("id", conversationId);
+  // Atomic, race-free claim. If another request grabbed the conversation
+  // a microsecond earlier, this returns NULL and we abort cleanly.
+  const { data: claimed, error } = await (supabaseAdmin.rpc as any)(
+    "atomic_claim_conversation",
+    { _conversation_id: conversationId, _staff_id: staff.id, _expected_current: null },
+  );
   if (error) throw error;
+  if (!claimed || claimed !== staff.id) return null;
+  const assignedAt = new Date().toISOString();
 
   await (supabaseAdmin.from("messages") as any).insert({
     conversation_id: conversationId,
@@ -84,6 +129,15 @@ export async function assignConversation(conversationId: string, currentAssigned
     content: `Assigned to ${staff.display_name ?? "staff member"}.`,
     created_by: staff.id,
     staff_display_name: staff.display_name ?? null,
+  });
+
+  await logAssignmentEvent({
+    conversationId,
+    eventType: "assigned",
+    actorId: null, // system auto-assignment
+    toStaffId: staff.id,
+    actorDisplayName: "system",
+    metadata: { strategy: "balanced_round_robin", display_name: staff.display_name },
   });
 
   // Notify the assigned agent on their mobile device.
