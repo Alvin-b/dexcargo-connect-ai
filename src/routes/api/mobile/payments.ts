@@ -25,12 +25,7 @@ type PaymentRequestBody = {
 
 type PaymentStatus = "pending" | "success" | "failed" | "cancelled";
 
-const paymentStatuses = new Set<PaymentStatus>([
-  "pending",
-  "success",
-  "failed",
-  "cancelled",
-]);
+const paymentStatuses = new Set<PaymentStatus>(["pending", "success", "failed", "cancelled"]);
 
 function parsePositiveAmount(value: unknown) {
   if (value === undefined || value === null || value === "") return null;
