@@ -23,6 +23,15 @@ type PaymentRequestBody = {
   description?: string;
 };
 
+type PaymentStatus = "pending" | "success" | "failed" | "cancelled";
+
+const paymentStatuses = new Set<PaymentStatus>([
+  "pending",
+  "success",
+  "failed",
+  "cancelled",
+]);
+
 function parsePositiveAmount(value: unknown) {
   if (value === undefined || value === null || value === "") return null;
   const amount = Number(value);
@@ -65,7 +74,12 @@ export const Route = createFileRoute("/api/mobile/payments")({
             .select("*, clients(full_name, whatsapp_number), packages(tracking_number)")
             .order("created_at", { ascending: false })
             .limit(limit);
-          if (status) q = q.eq("status", status);
+          if (status) {
+            if (!paymentStatuses.has(status as PaymentStatus)) {
+              return badRequest("invalid payment status");
+            }
+            q = q.eq("status", status as PaymentStatus);
+          }
           if (clientId) q = q.eq("client_id", clientId);
           if (packageId) q = q.eq("package_id", packageId);
           const { data, error } = await q;
@@ -134,7 +148,7 @@ export const Route = createFileRoute("/api/mobile/payments")({
                 }
               }
               if (!amount) return badRequest("amount must be greater than zero");
-              let r;
+              let r: Awaited<ReturnType<typeof initiateStkPush>>;
               try {
                 r = await initiateStkPush({
                   phone,
