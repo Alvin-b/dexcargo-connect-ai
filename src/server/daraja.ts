@@ -30,7 +30,10 @@ function darajaBase() {
 
 async function getAccessToken(): Promise<string> {
   const key = env("DARAJA_CONSUMER_KEY", ["MPESA_CONSUMER_KEY", "SAFARICOM_CONSUMER_KEY"]);
-  const secret = env("DARAJA_CONSUMER_SECRET", ["MPESA_CONSUMER_SECRET", "SAFARICOM_CONSUMER_SECRET"]);
+  const secret = env("DARAJA_CONSUMER_SECRET", [
+    "MPESA_CONSUMER_SECRET",
+    "SAFARICOM_CONSUMER_SECRET",
+  ]);
   const auth = Buffer.from(`${key}:${secret}`).toString("base64");
   let res: Response;
   try {
@@ -38,17 +41,29 @@ async function getAccessToken(): Promise<string> {
       headers: { Authorization: `Basic ${auth}` },
     });
   } catch (error) {
-    throw new DarajaError("DARAJA_NETWORK_ERROR", "M-Pesa service is unreachable. Please try again.", 503, { step: "auth", error: String(error) });
+    throw new DarajaError(
+      "DARAJA_NETWORK_ERROR",
+      "M-Pesa service is unreachable. Please try again.",
+      503,
+      { step: "auth", error: String(error) },
+    );
   }
   const raw = await res.text();
   const j = raw ? JSON.parse(raw) : {};
   if (!res.ok) {
-    throw new DarajaError("DARAJA_AUTH_FAILED", "M-Pesa configuration could not be authenticated.", 502, {
-      status: res.status,
-      response: j,
-    });
+    throw new DarajaError(
+      "DARAJA_AUTH_FAILED",
+      "M-Pesa configuration could not be authenticated.",
+      502,
+      {
+        status: res.status,
+        response: j,
+      },
+    );
   }
-  if (!j.access_token) throw new DarajaError("DARAJA_AUTH_FAILED", "M-Pesa did not return an access token.", 502, j);
+  if (!j.access_token) {
+    throw new DarajaError("DARAJA_AUTH_FAILED", "M-Pesa did not return an access token.", 502, j);
+  }
   return j.access_token;
 }
 
@@ -69,7 +84,13 @@ export function normalizeSafaricomPhone(phone: string): string {
   let p = phone.replace(/\D/g, "");
   if (p.startsWith("0")) p = "254" + p.slice(1);
   if (p.startsWith("7") || p.startsWith("1")) p = "254" + p;
-  if (!/^254(7|1)\d{8}$/.test(p)) throw new DarajaError("INVALID_MPESA_PHONE", "Use a valid Safaricom phone number, e.g. 2547XXXXXXXX.", 400);
+  if (!/^254(7|1)\d{8}$/.test(p)) {
+    throw new DarajaError(
+      "INVALID_MPESA_PHONE",
+      "Use a valid Safaricom phone number, e.g. 2547XXXXXXXX.",
+      400,
+    );
+  }
   return p;
 }
 
@@ -82,14 +103,32 @@ export async function initiateStkPush(opts: {
   clientId?: string;
   initiatedBy?: string;
   purpose?: "package_clearance" | "deposit" | "adjustment";
-}): Promise<{ CheckoutRequestID: string; MerchantRequestID: string; ResponseCode: string; ResponseDescription: string; payment?: any }> {
+}): Promise<{
+  CheckoutRequestID: string;
+  MerchantRequestID: string;
+  ResponseCode: string;
+  ResponseDescription: string;
+  payment?: unknown;
+}> {
   const amount = Number(opts.amount);
-  if (!Number.isFinite(amount) || amount <= 0) throw new DarajaError("INVALID_AMOUNT", "Payment amount must be greater than zero.", 400);
+  if (!Number.isFinite(amount) || amount <= 0) {
+    throw new DarajaError("INVALID_AMOUNT", "Payment amount must be greater than zero.", 400);
+  }
   const phone = normalizeSafaricomPhone(opts.phone);
-  const shortcode = env("DARAJA_SHORTCODE", ["MPESA_SHORTCODE", "DARAJA_BUSINESS_SHORTCODE", "MPESA_BUSINESS_SHORTCODE"]);
+  const shortcode = env("DARAJA_SHORTCODE", [
+    "MPESA_SHORTCODE",
+    "DARAJA_BUSINESS_SHORTCODE",
+    "MPESA_BUSINESS_SHORTCODE",
+  ]);
   const passkey = env("DARAJA_PASSKEY", ["MPESA_PASSKEY", "SAFARICOM_PASSKEY"]);
-  const callbackUrl = process.env.DARAJA_CALLBACK_URL ?? process.env.MPESA_CALLBACK_URL ?? process.env.SAFARICOM_CALLBACK_URL ?? "https://dex-connect-flow.lovable.app/api/public/daraja-callback";
-  if (!/^https:\/\//i.test(callbackUrl)) throw new Error("DARAJA_CALLBACK_URL must be a public https URL");
+  const callbackUrl =
+    process.env.DARAJA_CALLBACK_URL ??
+    process.env.MPESA_CALLBACK_URL ??
+    process.env.SAFARICOM_CALLBACK_URL ??
+    "https://dex-connect-flow.lovable.app/api/public/daraja-callback";
+  if (!/^https:\/\//i.test(callbackUrl)) {
+    throw new Error("DARAJA_CALLBACK_URL must be a public https URL");
+  }
   const ts = timestamp();
   const password = Buffer.from(`${shortcode}${passkey}${ts}`).toString("base64");
   const token = await getAccessToken();
@@ -98,7 +137,10 @@ export async function initiateStkPush(opts: {
     BusinessShortCode: shortcode,
     Password: password,
     Timestamp: ts,
-    TransactionType: process.env.DARAJA_TRANSACTION_TYPE ?? process.env.MPESA_TRANSACTION_TYPE ?? "CustomerPayBillOnline",
+    TransactionType:
+      process.env.DARAJA_TRANSACTION_TYPE ??
+      process.env.MPESA_TRANSACTION_TYPE ??
+      "CustomerPayBillOnline",
     Amount: Math.round(amount),
     PartyA: phone,
     PartyB: shortcode,
@@ -116,29 +158,43 @@ export async function initiateStkPush(opts: {
       body: JSON.stringify(body),
     });
   } catch (error) {
-    throw new DarajaError("DARAJA_NETWORK_ERROR", "M-Pesa service is unreachable. Please try again.", 503, { step: "stk", error: String(error) });
+    throw new DarajaError(
+      "DARAJA_NETWORK_ERROR",
+      "M-Pesa service is unreachable. Please try again.",
+      503,
+      { step: "stk", error: String(error) },
+    );
   }
   const raw = await res.text();
   const j = raw ? JSON.parse(raw) : {};
   if (!res.ok || j.ResponseCode !== "0") {
-    throw new DarajaError("STK_PUSH_FAILED", j.errorMessage || j.ResponseDescription || "M-Pesa STK push failed.", res.status >= 400 && res.status < 500 ? 400 : 502, {
-      status: res.status,
-      response: j,
-    });
+    throw new DarajaError(
+      "STK_PUSH_FAILED",
+      j.errorMessage || j.ResponseDescription || "M-Pesa STK push failed.",
+      res.status >= 400 && res.status < 500 ? 400 : 502,
+      {
+        status: res.status,
+        response: j,
+      },
+    );
   }
 
-  const { data: payment, error: paymentErr } = await (supabaseAdmin.from("payments") as any).insert({
-    package_id: opts.packageId ?? null,
-    client_id: opts.clientId ?? null,
-    amount,
-    phone,
-    checkout_request_id: j.CheckoutRequestID,
-    merchant_request_id: j.MerchantRequestID,
-    status: "pending",
-    purpose: opts.purpose ?? "package_clearance",
-    initiated_by: opts.initiatedBy ?? null,
-    raw_callback: { stk_request: j },
-  }).select().single();
+  const { data: payment, error: paymentErr } = await supabaseAdmin
+    .from("payments")
+    .insert({
+      package_id: opts.packageId ?? null,
+      client_id: opts.clientId ?? null,
+      amount,
+      phone,
+      checkout_request_id: j.CheckoutRequestID,
+      merchant_request_id: j.MerchantRequestID,
+      status: "pending",
+      purpose: opts.purpose ?? "package_clearance",
+      initiated_by: opts.initiatedBy ?? null,
+      raw_callback: { stk_request: j },
+    })
+    .select()
+    .single();
   if (paymentErr) throw paymentErr;
 
   return { ...j, payment };
