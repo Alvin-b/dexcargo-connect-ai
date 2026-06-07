@@ -81,13 +81,16 @@ function timestamp(): string {
 }
 
 export function normalizeSafaricomPhone(phone: string): string {
-  let p = phone.replace(/\D/g, "");
+  const original = String(phone ?? "");
+  let p = original.replace(/\D/g, "");
+  // Handle double country code like "2540759..." -> "254759..."
+  if (p.startsWith("2540")) p = "254" + p.slice(4);
   if (p.startsWith("0")) p = "254" + p.slice(1);
   if (p.startsWith("7") || p.startsWith("1")) p = "254" + p;
   if (!/^254(7|1)\d{8}$/.test(p)) {
     throw new DarajaError(
       "INVALID_MPESA_PHONE",
-      "Use a valid Safaricom phone number, e.g. 2547XXXXXXXX.",
+      `Use a valid Safaricom phone number, e.g. 0759951373 or 2547XXXXXXXX. Received: "${original}"`,
       400,
     );
   }
