@@ -89,10 +89,22 @@ export const Route = createFileRoute("/api/public/daraja-callback")({
           }
         }
 
+        const { data: existingPay } = await (sb.from("payments") as any)
+          .select("raw_callback")
+          .eq("checkout_request_id", checkoutId)
+          .maybeSingle();
+        const previousRaw = existingPay?.raw_callback && typeof existingPay.raw_callback === "object"
+          ? existingPay.raw_callback
+          : {};
+
         const { data: pay } = await (sb.from("payments") as any).update({
           status,
           mpesa_receipt: receipt ?? null,
-          raw_callback: body,
+          raw_callback: {
+            ...previousRaw,
+            callback: body,
+            daraja_result: { code: resultCode, description: stk.ResultDesc ?? null },
+          },
           verified_at: status === "success" ? new Date().toISOString() : null,
         }).eq("checkout_request_id", checkoutId).select("phone, package_id, amount").maybeSingle();
 
@@ -127,7 +139,7 @@ export const Route = createFileRoute("/api/public/daraja-callback")({
           action: `daraja.callback.${status}`,
           resourceType: "payment",
           resourceId: pay?.package_id ? String(pay.package_id) : checkoutId,
-          metadata: { receipt, amount, resultCode, checkoutId },
+          metadata: { receipt, amount, resultCode, resultDesc: stk.ResultDesc ?? null, checkoutId },
           request,
         });
 
