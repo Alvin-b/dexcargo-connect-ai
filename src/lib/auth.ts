@@ -10,26 +10,32 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      if (cancelled) return;
       setUser(session?.user ?? null);
       if (session?.user) {
         setTimeout(async () => {
           const { data } = await supabase.from("user_roles").select("role").eq("user_id", session.user.id);
-          setRoles((data ?? []).map((r) => r.role as AppRole));
+          if (!cancelled) setRoles((data ?? []).map((r) => r.role as AppRole));
         }, 0);
       } else {
         setRoles([]);
       }
+      setLoading(false);
     });
     supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (cancelled) return;
       setUser(session?.user ?? null);
       if (session?.user) {
         const { data } = await supabase.from("user_roles").select("role").eq("user_id", session.user.id);
-        setRoles((data ?? []).map((r) => r.role as AppRole));
+        if (!cancelled) setRoles((data ?? []).map((r) => r.role as AppRole));
       }
       setLoading(false);
-    });
-    return () => sub.subscription.unsubscribe();
+    }).catch(() => { if (!cancelled) setLoading(false); });
+    // Safety: if the gotrue lock hangs, don't trap the UI on "Loading…" forever.
+    const safety = setTimeout(() => { if (!cancelled) setLoading(false); }, 4000);
+    return () => { cancelled = true; clearTimeout(safety); sub.subscription.unsubscribe(); };
   }, []);
 
   return { user, roles, loading, isStaff: roles.includes("admin") || roles.includes("staff"), isAdmin: roles.includes("admin") };
