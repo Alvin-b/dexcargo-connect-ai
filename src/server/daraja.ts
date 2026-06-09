@@ -36,7 +36,11 @@ function resolveStkConfig() {
   ]).trim();
   const partyB = (optionalEnv("DARAJA_PARTY_B", ["MPESA_PARTY_B", "DARAJA_TILL_NUMBER"]) ?? shortcode).trim();
   const configuredTransactionType = optionalEnv("DARAJA_TRANSACTION_TYPE", ["MPESA_TRANSACTION_TYPE"]);
-  const transactionType = (configuredTransactionType ?? "CustomerPayBillOnline").trim();
+  const normalized = (configuredTransactionType ?? "CustomerPayBillOnline").trim().toLowerCase();
+  const transactionType =
+    normalized === "customerbuygoodsonline" ? "CustomerBuyGoodsOnline" :
+    normalized === "customerpaybillonline" ? "CustomerPayBillOnline" :
+    (configuredTransactionType ?? "").trim();
   const accountReferenceOverride = optionalEnv("DARAJA_ACCOUNT_REFERENCE", [
     "MPESA_ACCOUNT_REFERENCE",
     "DARAJA_KCB_ACCOUNT",
@@ -45,7 +49,7 @@ function resolveStkConfig() {
   if (!["CustomerPayBillOnline", "CustomerBuyGoodsOnline"].includes(transactionType)) {
     throw new DarajaError(
       "INVALID_DARAJA_TRANSACTION_TYPE",
-      "M-Pesa transaction type must be CustomerPayBillOnline or CustomerBuyGoodsOnline.",
+      `M-Pesa transaction type must be CustomerPayBillOnline or CustomerBuyGoodsOnline (got: "${configuredTransactionType ?? ""}").`,
       500,
       { transactionType },
     );
