@@ -37,6 +37,10 @@ function resolveStkConfig() {
   const partyB = (optionalEnv("DARAJA_PARTY_B", ["MPESA_PARTY_B", "DARAJA_TILL_NUMBER"]) ?? shortcode).trim();
   const configuredTransactionType = optionalEnv("DARAJA_TRANSACTION_TYPE", ["MPESA_TRANSACTION_TYPE"]);
   const transactionType = (configuredTransactionType ?? "CustomerPayBillOnline").trim();
+  const accountReferenceOverride = optionalEnv("DARAJA_ACCOUNT_REFERENCE", [
+    "MPESA_ACCOUNT_REFERENCE",
+    "DARAJA_KCB_ACCOUNT",
+  ])?.trim();
 
   if (!["CustomerPayBillOnline", "CustomerBuyGoodsOnline"].includes(transactionType)) {
     throw new DarajaError(
@@ -47,7 +51,7 @@ function resolveStkConfig() {
     );
   }
 
-  return { shortcode, partyB, transactionType };
+  return { shortcode, partyB, transactionType, accountReferenceOverride };
 }
 
 function darajaBase() {
@@ -145,7 +149,7 @@ export async function initiateStkPush(opts: {
     throw new DarajaError("INVALID_AMOUNT", "Payment amount must be greater than zero.", 400);
   }
   const phone = normalizeSafaricomPhone(opts.phone);
-  const { shortcode, partyB, transactionType } = resolveStkConfig();
+  const { shortcode, partyB, transactionType, accountReferenceOverride } = resolveStkConfig();
   const passkey = env("DARAJA_PASSKEY", ["MPESA_PASSKEY", "SAFARICOM_PASSKEY"]);
   const callbackUrl =
     process.env.DARAJA_CALLBACK_URL ??
@@ -159,6 +163,7 @@ export async function initiateStkPush(opts: {
   const password = Buffer.from(`${shortcode}${passkey}${ts}`).toString("base64");
   const token = await getAccessToken();
 
+  const accountReference = (accountReferenceOverride ?? opts.accountReference).slice(0, 12);
   const body = {
     BusinessShortCode: shortcode,
     Password: password,
@@ -169,7 +174,7 @@ export async function initiateStkPush(opts: {
     PartyB: partyB,
     PhoneNumber: phone,
     CallBackURL: callbackUrl,
-    AccountReference: opts.accountReference.slice(0, 12),
+    AccountReference: accountReference,
     TransactionDesc: opts.description.slice(0, 13),
   };
 
@@ -208,6 +213,7 @@ export async function initiateStkPush(opts: {
     transactionType,
     shortcodeLast4: shortcode.slice(-4),
     partyBLast4: partyB.slice(-4),
+    accountReference,
     phoneLast4: phone.slice(-4),
   });
 
