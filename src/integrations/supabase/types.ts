@@ -231,6 +231,39 @@ export type Database = {
           },
         ]
       }
+      countries: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          currency: string
+          name: string
+          phone_prefix: string | null
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          currency?: string
+          name: string
+          phone_prefix?: string | null
+          role?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          currency?: string
+          name?: string
+          phone_prefix?: string | null
+          role?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       delivery_signatures: {
         Row: {
           amount_paid: number | null
@@ -1074,6 +1107,59 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      warehouses: {
+        Row: {
+          active: boolean
+          address: string | null
+          city: string | null
+          code: string
+          contact_name: string | null
+          contact_phone: string | null
+          country_code: string
+          created_at: string
+          id: string
+          name: string
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          address?: string | null
+          city?: string | null
+          code: string
+          contact_name?: string | null
+          contact_phone?: string | null
+          country_code: string
+          created_at?: string
+          id?: string
+          name: string
+          role?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          address?: string | null
+          city?: string | null
+          code?: string
+          contact_name?: string | null
+          contact_phone?: string | null
+          country_code?: string
+          created_at?: string
+          id?: string
+          name?: string
+          role?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "warehouses_country_code_fkey"
+            columns: ["country_code"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["code"]
+          },
+        ]
       }
     }
     Views: {
