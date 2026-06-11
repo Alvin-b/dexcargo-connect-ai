@@ -26,6 +26,7 @@ import { Route as ApiPublicEvolutionWebhookRouteImport } from './routes/api/publ
 import { Route as ApiPublicEvolutionTestSendRouteImport } from './routes/api/public/evolution-test-send'
 import { Route as ApiPublicDarajaCallbackRouteImport } from './routes/api/public/daraja-callback'
 import { Route as ApiPublicArchiveExpiredRecordsRouteImport } from './routes/api/public/archive-expired-records'
+import { Route as ApiMobileWarehousesRouteImport } from './routes/api/mobile/warehouses'
 import { Route as ApiMobileUploadsRouteImport } from './routes/api/mobile/uploads'
 import { Route as ApiMobileStatsRouteImport } from './routes/api/mobile/stats'
 import { Route as ApiMobileStaffRouteImport } from './routes/api/mobile/staff'
@@ -36,10 +37,12 @@ import { Route as ApiMobilePaymentsRouteImport } from './routes/api/mobile/payme
 import { Route as ApiMobilePackagesRouteImport } from './routes/api/mobile/packages'
 import { Route as ApiMobileNotificationsRouteImport } from './routes/api/mobile/notifications'
 import { Route as ApiMobileMarketingRouteImport } from './routes/api/mobile/marketing'
+import { Route as ApiMobileCountriesRouteImport } from './routes/api/mobile/countries'
 import { Route as ApiMobileConversationsRouteImport } from './routes/api/mobile/conversations'
 import { Route as ApiMobileClientsRouteImport } from './routes/api/mobile/clients'
 import { Route as ApiMobileBatchesRouteImport } from './routes/api/mobile/batches'
 import { Route as ApiMobileAnalyticsRouteImport } from './routes/api/mobile/analytics'
+import { Route as ApiDesktopLeftBehindRouteImport } from './routes/api/desktop/left-behind'
 import { Route as ApiAdminUsersRouteImport } from './routes/api/admin/users'
 import { Route as ApiPublicEvolutionWebhookSplatRouteImport } from './routes/api/public/evolution-webhook.$'
 import { Route as ApiMobileRatesLookupRouteImport } from './routes/api/mobile/rates.lookup'
@@ -57,6 +60,7 @@ import { Route as ApiMobileConversationsIdRouteImport } from './routes/api/mobil
 import { Route as ApiMobileClientsIdRouteImport } from './routes/api/mobile/clients.$id'
 import { Route as ApiMobileBatchesIdRouteImport } from './routes/api/mobile/batches.$id'
 import { Route as ApiMobileAuthMeRouteImport } from './routes/api/mobile/auth.me'
+import { Route as ApiDesktopPackagesBulkStickerRouteImport } from './routes/api/desktop/packages.bulk-sticker'
 import { Route as ApiMobilePackagesIdEventsRouteImport } from './routes/api/mobile/packages.$id.events'
 import { Route as ApiMobilePackagesIdDeliverRouteImport } from './routes/api/mobile/packages.$id.deliver'
 import { Route as ApiMobileConversationsIdMessagesRouteImport } from './routes/api/mobile/conversations.$id.messages'
@@ -65,6 +69,9 @@ import { Route as ApiMobileConversationsIdClaimRouteImport } from './routes/api/
 import { Route as ApiMobileClientsIdConsentRouteImport } from './routes/api/mobile/clients.$id.consent'
 import { Route as ApiMobileBatchesIdScanRouteImport } from './routes/api/mobile/batches.$id.scan'
 import { Route as ApiMobileBatchesIdCloseRouteImport } from './routes/api/mobile/batches.$id.close'
+import { Route as ApiDesktopPackagesIdStickerRouteImport } from './routes/api/desktop/packages.$id.sticker'
+import { Route as ApiDesktopLeftBehindIdReassignRouteImport } from './routes/api/desktop/left-behind.$id.reassign'
+import { Route as ApiDesktopLeftBehindIdHoldRouteImport } from './routes/api/desktop/left-behind.$id.hold'
 import { Route as ApiAdminUsersIdRolesRouteImport } from './routes/api/admin/users.$id.roles'
 
 const QuoteRoute = QuoteRouteImport.update({
@@ -156,6 +163,11 @@ const ApiPublicArchiveExpiredRecordsRoute =
     path: '/api/public/archive-expired-records',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiMobileWarehousesRoute = ApiMobileWarehousesRouteImport.update({
+  id: '/api/mobile/warehouses',
+  path: '/api/mobile/warehouses',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiMobileUploadsRoute = ApiMobileUploadsRouteImport.update({
   id: '/api/mobile/uploads',
   path: '/api/mobile/uploads',
@@ -206,6 +218,11 @@ const ApiMobileMarketingRoute = ApiMobileMarketingRouteImport.update({
   path: '/api/mobile/marketing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiMobileCountriesRoute = ApiMobileCountriesRouteImport.update({
+  id: '/api/mobile/countries',
+  path: '/api/mobile/countries',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiMobileConversationsRoute = ApiMobileConversationsRouteImport.update({
   id: '/api/mobile/conversations',
   path: '/api/mobile/conversations',
@@ -224,6 +241,11 @@ const ApiMobileBatchesRoute = ApiMobileBatchesRouteImport.update({
 const ApiMobileAnalyticsRoute = ApiMobileAnalyticsRouteImport.update({
   id: '/api/mobile/analytics',
   path: '/api/mobile/analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiDesktopLeftBehindRoute = ApiDesktopLeftBehindRouteImport.update({
+  id: '/api/desktop/left-behind',
+  path: '/api/desktop/left-behind',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAdminUsersRoute = ApiAdminUsersRouteImport.update({
@@ -315,6 +337,12 @@ const ApiMobileAuthMeRoute = ApiMobileAuthMeRouteImport.update({
   path: '/api/mobile/auth/me',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiDesktopPackagesBulkStickerRoute =
+  ApiDesktopPackagesBulkStickerRouteImport.update({
+    id: '/api/desktop/packages/bulk-sticker',
+    path: '/api/desktop/packages/bulk-sticker',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiMobilePackagesIdEventsRoute =
   ApiMobilePackagesIdEventsRouteImport.update({
     id: '/events',
@@ -361,6 +389,24 @@ const ApiMobileBatchesIdCloseRoute = ApiMobileBatchesIdCloseRouteImport.update({
   path: '/close',
   getParentRoute: () => ApiMobileBatchesIdRoute,
 } as any)
+const ApiDesktopPackagesIdStickerRoute =
+  ApiDesktopPackagesIdStickerRouteImport.update({
+    id: '/api/desktop/packages/$id/sticker',
+    path: '/api/desktop/packages/$id/sticker',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiDesktopLeftBehindIdReassignRoute =
+  ApiDesktopLeftBehindIdReassignRouteImport.update({
+    id: '/$id/reassign',
+    path: '/$id/reassign',
+    getParentRoute: () => ApiDesktopLeftBehindRoute,
+  } as any)
+const ApiDesktopLeftBehindIdHoldRoute =
+  ApiDesktopLeftBehindIdHoldRouteImport.update({
+    id: '/$id/hold',
+    path: '/$id/hold',
+    getParentRoute: () => ApiDesktopLeftBehindRoute,
+  } as any)
 const ApiAdminUsersIdRolesRoute = ApiAdminUsersIdRolesRouteImport.update({
   id: '/$id/roles',
   path: '/$id/roles',
@@ -381,10 +427,12 @@ export interface FileRoutesByFullPath {
   '/dashboard/staff': typeof DashboardStaffRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
+  '/api/desktop/left-behind': typeof ApiDesktopLeftBehindRouteWithChildren
   '/api/mobile/analytics': typeof ApiMobileAnalyticsRoute
   '/api/mobile/batches': typeof ApiMobileBatchesRouteWithChildren
   '/api/mobile/clients': typeof ApiMobileClientsRouteWithChildren
   '/api/mobile/conversations': typeof ApiMobileConversationsRouteWithChildren
+  '/api/mobile/countries': typeof ApiMobileCountriesRoute
   '/api/mobile/marketing': typeof ApiMobileMarketingRouteWithChildren
   '/api/mobile/notifications': typeof ApiMobileNotificationsRoute
   '/api/mobile/packages': typeof ApiMobilePackagesRouteWithChildren
@@ -395,11 +443,13 @@ export interface FileRoutesByFullPath {
   '/api/mobile/staff': typeof ApiMobileStaffRoute
   '/api/mobile/stats': typeof ApiMobileStatsRoute
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
+  '/api/mobile/warehouses': typeof ApiMobileWarehousesRoute
   '/api/public/archive-expired-records': typeof ApiPublicArchiveExpiredRecordsRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
   '/api/public/evolution-test-send': typeof ApiPublicEvolutionTestSendRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
+  '/api/desktop/packages/bulk-sticker': typeof ApiDesktopPackagesBulkStickerRoute
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/batches/$id': typeof ApiMobileBatchesIdRouteWithChildren
   '/api/mobile/clients/$id': typeof ApiMobileClientsIdRouteWithChildren
@@ -417,6 +467,9 @@ export interface FileRoutesByFullPath {
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
+  '/api/desktop/left-behind/$id/hold': typeof ApiDesktopLeftBehindIdHoldRoute
+  '/api/desktop/left-behind/$id/reassign': typeof ApiDesktopLeftBehindIdReassignRoute
+  '/api/desktop/packages/$id/sticker': typeof ApiDesktopPackagesIdStickerRoute
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
   '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
@@ -439,10 +492,12 @@ export interface FileRoutesByTo {
   '/dashboard/staff': typeof DashboardStaffRoute
   '/dashboard': typeof DashboardIndexRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
+  '/api/desktop/left-behind': typeof ApiDesktopLeftBehindRouteWithChildren
   '/api/mobile/analytics': typeof ApiMobileAnalyticsRoute
   '/api/mobile/batches': typeof ApiMobileBatchesRouteWithChildren
   '/api/mobile/clients': typeof ApiMobileClientsRouteWithChildren
   '/api/mobile/conversations': typeof ApiMobileConversationsRouteWithChildren
+  '/api/mobile/countries': typeof ApiMobileCountriesRoute
   '/api/mobile/marketing': typeof ApiMobileMarketingRouteWithChildren
   '/api/mobile/notifications': typeof ApiMobileNotificationsRoute
   '/api/mobile/packages': typeof ApiMobilePackagesRouteWithChildren
@@ -453,11 +508,13 @@ export interface FileRoutesByTo {
   '/api/mobile/staff': typeof ApiMobileStaffRoute
   '/api/mobile/stats': typeof ApiMobileStatsRoute
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
+  '/api/mobile/warehouses': typeof ApiMobileWarehousesRoute
   '/api/public/archive-expired-records': typeof ApiPublicArchiveExpiredRecordsRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
   '/api/public/evolution-test-send': typeof ApiPublicEvolutionTestSendRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
+  '/api/desktop/packages/bulk-sticker': typeof ApiDesktopPackagesBulkStickerRoute
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/batches/$id': typeof ApiMobileBatchesIdRouteWithChildren
   '/api/mobile/clients/$id': typeof ApiMobileClientsIdRouteWithChildren
@@ -475,6 +532,9 @@ export interface FileRoutesByTo {
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
+  '/api/desktop/left-behind/$id/hold': typeof ApiDesktopLeftBehindIdHoldRoute
+  '/api/desktop/left-behind/$id/reassign': typeof ApiDesktopLeftBehindIdReassignRoute
+  '/api/desktop/packages/$id/sticker': typeof ApiDesktopPackagesIdStickerRoute
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
   '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
@@ -499,10 +559,12 @@ export interface FileRoutesById {
   '/dashboard/staff': typeof DashboardStaffRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
+  '/api/desktop/left-behind': typeof ApiDesktopLeftBehindRouteWithChildren
   '/api/mobile/analytics': typeof ApiMobileAnalyticsRoute
   '/api/mobile/batches': typeof ApiMobileBatchesRouteWithChildren
   '/api/mobile/clients': typeof ApiMobileClientsRouteWithChildren
   '/api/mobile/conversations': typeof ApiMobileConversationsRouteWithChildren
+  '/api/mobile/countries': typeof ApiMobileCountriesRoute
   '/api/mobile/marketing': typeof ApiMobileMarketingRouteWithChildren
   '/api/mobile/notifications': typeof ApiMobileNotificationsRoute
   '/api/mobile/packages': typeof ApiMobilePackagesRouteWithChildren
@@ -513,11 +575,13 @@ export interface FileRoutesById {
   '/api/mobile/staff': typeof ApiMobileStaffRoute
   '/api/mobile/stats': typeof ApiMobileStatsRoute
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
+  '/api/mobile/warehouses': typeof ApiMobileWarehousesRoute
   '/api/public/archive-expired-records': typeof ApiPublicArchiveExpiredRecordsRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
   '/api/public/evolution-test-send': typeof ApiPublicEvolutionTestSendRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
+  '/api/desktop/packages/bulk-sticker': typeof ApiDesktopPackagesBulkStickerRoute
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/batches/$id': typeof ApiMobileBatchesIdRouteWithChildren
   '/api/mobile/clients/$id': typeof ApiMobileClientsIdRouteWithChildren
@@ -535,6 +599,9 @@ export interface FileRoutesById {
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
+  '/api/desktop/left-behind/$id/hold': typeof ApiDesktopLeftBehindIdHoldRoute
+  '/api/desktop/left-behind/$id/reassign': typeof ApiDesktopLeftBehindIdReassignRoute
+  '/api/desktop/packages/$id/sticker': typeof ApiDesktopPackagesIdStickerRoute
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
   '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
@@ -560,10 +627,12 @@ export interface FileRouteTypes {
     | '/dashboard/staff'
     | '/dashboard/'
     | '/api/admin/users'
+    | '/api/desktop/left-behind'
     | '/api/mobile/analytics'
     | '/api/mobile/batches'
     | '/api/mobile/clients'
     | '/api/mobile/conversations'
+    | '/api/mobile/countries'
     | '/api/mobile/marketing'
     | '/api/mobile/notifications'
     | '/api/mobile/packages'
@@ -574,11 +643,13 @@ export interface FileRouteTypes {
     | '/api/mobile/staff'
     | '/api/mobile/stats'
     | '/api/mobile/uploads'
+    | '/api/mobile/warehouses'
     | '/api/public/archive-expired-records'
     | '/api/public/daraja-callback'
     | '/api/public/evolution-test-send'
     | '/api/public/evolution-webhook'
     | '/api/public/publish-scheduled'
+    | '/api/desktop/packages/bulk-sticker'
     | '/api/mobile/auth/me'
     | '/api/mobile/batches/$id'
     | '/api/mobile/clients/$id'
@@ -596,6 +667,9 @@ export interface FileRouteTypes {
     | '/api/mobile/rates/lookup'
     | '/api/public/evolution-webhook/$'
     | '/api/admin/users/$id/roles'
+    | '/api/desktop/left-behind/$id/hold'
+    | '/api/desktop/left-behind/$id/reassign'
+    | '/api/desktop/packages/$id/sticker'
     | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
     | '/api/mobile/clients/$id/consent'
@@ -618,10 +692,12 @@ export interface FileRouteTypes {
     | '/dashboard/staff'
     | '/dashboard'
     | '/api/admin/users'
+    | '/api/desktop/left-behind'
     | '/api/mobile/analytics'
     | '/api/mobile/batches'
     | '/api/mobile/clients'
     | '/api/mobile/conversations'
+    | '/api/mobile/countries'
     | '/api/mobile/marketing'
     | '/api/mobile/notifications'
     | '/api/mobile/packages'
@@ -632,11 +708,13 @@ export interface FileRouteTypes {
     | '/api/mobile/staff'
     | '/api/mobile/stats'
     | '/api/mobile/uploads'
+    | '/api/mobile/warehouses'
     | '/api/public/archive-expired-records'
     | '/api/public/daraja-callback'
     | '/api/public/evolution-test-send'
     | '/api/public/evolution-webhook'
     | '/api/public/publish-scheduled'
+    | '/api/desktop/packages/bulk-sticker'
     | '/api/mobile/auth/me'
     | '/api/mobile/batches/$id'
     | '/api/mobile/clients/$id'
@@ -654,6 +732,9 @@ export interface FileRouteTypes {
     | '/api/mobile/rates/lookup'
     | '/api/public/evolution-webhook/$'
     | '/api/admin/users/$id/roles'
+    | '/api/desktop/left-behind/$id/hold'
+    | '/api/desktop/left-behind/$id/reassign'
+    | '/api/desktop/packages/$id/sticker'
     | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
     | '/api/mobile/clients/$id/consent'
@@ -677,10 +758,12 @@ export interface FileRouteTypes {
     | '/dashboard/staff'
     | '/dashboard/'
     | '/api/admin/users'
+    | '/api/desktop/left-behind'
     | '/api/mobile/analytics'
     | '/api/mobile/batches'
     | '/api/mobile/clients'
     | '/api/mobile/conversations'
+    | '/api/mobile/countries'
     | '/api/mobile/marketing'
     | '/api/mobile/notifications'
     | '/api/mobile/packages'
@@ -691,11 +774,13 @@ export interface FileRouteTypes {
     | '/api/mobile/staff'
     | '/api/mobile/stats'
     | '/api/mobile/uploads'
+    | '/api/mobile/warehouses'
     | '/api/public/archive-expired-records'
     | '/api/public/daraja-callback'
     | '/api/public/evolution-test-send'
     | '/api/public/evolution-webhook'
     | '/api/public/publish-scheduled'
+    | '/api/desktop/packages/bulk-sticker'
     | '/api/mobile/auth/me'
     | '/api/mobile/batches/$id'
     | '/api/mobile/clients/$id'
@@ -713,6 +798,9 @@ export interface FileRouteTypes {
     | '/api/mobile/rates/lookup'
     | '/api/public/evolution-webhook/$'
     | '/api/admin/users/$id/roles'
+    | '/api/desktop/left-behind/$id/hold'
+    | '/api/desktop/left-behind/$id/reassign'
+    | '/api/desktop/packages/$id/sticker'
     | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
     | '/api/mobile/clients/$id/consent'
@@ -729,10 +817,12 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRouteWithChildren
   QuoteRoute: typeof QuoteRoute
   ApiAdminUsersRoute: typeof ApiAdminUsersRouteWithChildren
+  ApiDesktopLeftBehindRoute: typeof ApiDesktopLeftBehindRouteWithChildren
   ApiMobileAnalyticsRoute: typeof ApiMobileAnalyticsRoute
   ApiMobileBatchesRoute: typeof ApiMobileBatchesRouteWithChildren
   ApiMobileClientsRoute: typeof ApiMobileClientsRouteWithChildren
   ApiMobileConversationsRoute: typeof ApiMobileConversationsRouteWithChildren
+  ApiMobileCountriesRoute: typeof ApiMobileCountriesRoute
   ApiMobileMarketingRoute: typeof ApiMobileMarketingRouteWithChildren
   ApiMobileNotificationsRoute: typeof ApiMobileNotificationsRoute
   ApiMobilePackagesRoute: typeof ApiMobilePackagesRouteWithChildren
@@ -743,13 +833,16 @@ export interface RootRouteChildren {
   ApiMobileStaffRoute: typeof ApiMobileStaffRoute
   ApiMobileStatsRoute: typeof ApiMobileStatsRoute
   ApiMobileUploadsRoute: typeof ApiMobileUploadsRoute
+  ApiMobileWarehousesRoute: typeof ApiMobileWarehousesRoute
   ApiPublicArchiveExpiredRecordsRoute: typeof ApiPublicArchiveExpiredRecordsRoute
   ApiPublicDarajaCallbackRoute: typeof ApiPublicDarajaCallbackRoute
   ApiPublicEvolutionTestSendRoute: typeof ApiPublicEvolutionTestSendRoute
   ApiPublicEvolutionWebhookRoute: typeof ApiPublicEvolutionWebhookRouteWithChildren
   ApiPublicPublishScheduledRoute: typeof ApiPublicPublishScheduledRoute
+  ApiDesktopPackagesBulkStickerRoute: typeof ApiDesktopPackagesBulkStickerRoute
   ApiMobileAuthMeRoute: typeof ApiMobileAuthMeRoute
   ApiMobilePushRegisterRoute: typeof ApiMobilePushRegisterRoute
+  ApiDesktopPackagesIdStickerRoute: typeof ApiDesktopPackagesIdStickerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -873,6 +966,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicArchiveExpiredRecordsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/mobile/warehouses': {
+      id: '/api/mobile/warehouses'
+      path: '/api/mobile/warehouses'
+      fullPath: '/api/mobile/warehouses'
+      preLoaderRoute: typeof ApiMobileWarehousesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/mobile/uploads': {
       id: '/api/mobile/uploads'
       path: '/api/mobile/uploads'
@@ -943,6 +1043,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileMarketingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/mobile/countries': {
+      id: '/api/mobile/countries'
+      path: '/api/mobile/countries'
+      fullPath: '/api/mobile/countries'
+      preLoaderRoute: typeof ApiMobileCountriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/mobile/conversations': {
       id: '/api/mobile/conversations'
       path: '/api/mobile/conversations'
@@ -969,6 +1076,13 @@ declare module '@tanstack/react-router' {
       path: '/api/mobile/analytics'
       fullPath: '/api/mobile/analytics'
       preLoaderRoute: typeof ApiMobileAnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/desktop/left-behind': {
+      id: '/api/desktop/left-behind'
+      path: '/api/desktop/left-behind'
+      fullPath: '/api/desktop/left-behind'
+      preLoaderRoute: typeof ApiDesktopLeftBehindRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/admin/users': {
@@ -1090,6 +1204,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileAuthMeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/desktop/packages/bulk-sticker': {
+      id: '/api/desktop/packages/bulk-sticker'
+      path: '/api/desktop/packages/bulk-sticker'
+      fullPath: '/api/desktop/packages/bulk-sticker'
+      preLoaderRoute: typeof ApiDesktopPackagesBulkStickerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/mobile/packages/$id/events': {
       id: '/api/mobile/packages/$id/events'
       path: '/events'
@@ -1146,6 +1267,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileBatchesIdCloseRouteImport
       parentRoute: typeof ApiMobileBatchesIdRoute
     }
+    '/api/desktop/packages/$id/sticker': {
+      id: '/api/desktop/packages/$id/sticker'
+      path: '/api/desktop/packages/$id/sticker'
+      fullPath: '/api/desktop/packages/$id/sticker'
+      preLoaderRoute: typeof ApiDesktopPackagesIdStickerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/desktop/left-behind/$id/reassign': {
+      id: '/api/desktop/left-behind/$id/reassign'
+      path: '/$id/reassign'
+      fullPath: '/api/desktop/left-behind/$id/reassign'
+      preLoaderRoute: typeof ApiDesktopLeftBehindIdReassignRouteImport
+      parentRoute: typeof ApiDesktopLeftBehindRoute
+    }
+    '/api/desktop/left-behind/$id/hold': {
+      id: '/api/desktop/left-behind/$id/hold'
+      path: '/$id/hold'
+      fullPath: '/api/desktop/left-behind/$id/hold'
+      preLoaderRoute: typeof ApiDesktopLeftBehindIdHoldRouteImport
+      parentRoute: typeof ApiDesktopLeftBehindRoute
+    }
     '/api/admin/users/$id/roles': {
       id: '/api/admin/users/$id/roles'
       path: '/$id/roles'
@@ -1193,6 +1335,19 @@ const ApiAdminUsersRouteChildren: ApiAdminUsersRouteChildren = {
 const ApiAdminUsersRouteWithChildren = ApiAdminUsersRoute._addFileChildren(
   ApiAdminUsersRouteChildren,
 )
+
+interface ApiDesktopLeftBehindRouteChildren {
+  ApiDesktopLeftBehindIdHoldRoute: typeof ApiDesktopLeftBehindIdHoldRoute
+  ApiDesktopLeftBehindIdReassignRoute: typeof ApiDesktopLeftBehindIdReassignRoute
+}
+
+const ApiDesktopLeftBehindRouteChildren: ApiDesktopLeftBehindRouteChildren = {
+  ApiDesktopLeftBehindIdHoldRoute: ApiDesktopLeftBehindIdHoldRoute,
+  ApiDesktopLeftBehindIdReassignRoute: ApiDesktopLeftBehindIdReassignRoute,
+}
+
+const ApiDesktopLeftBehindRouteWithChildren =
+  ApiDesktopLeftBehindRoute._addFileChildren(ApiDesktopLeftBehindRouteChildren)
 
 interface ApiMobileBatchesIdRouteChildren {
   ApiMobileBatchesIdCloseRoute: typeof ApiMobileBatchesIdCloseRoute
@@ -1363,10 +1518,12 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRouteWithChildren,
   QuoteRoute: QuoteRoute,
   ApiAdminUsersRoute: ApiAdminUsersRouteWithChildren,
+  ApiDesktopLeftBehindRoute: ApiDesktopLeftBehindRouteWithChildren,
   ApiMobileAnalyticsRoute: ApiMobileAnalyticsRoute,
   ApiMobileBatchesRoute: ApiMobileBatchesRouteWithChildren,
   ApiMobileClientsRoute: ApiMobileClientsRouteWithChildren,
   ApiMobileConversationsRoute: ApiMobileConversationsRouteWithChildren,
+  ApiMobileCountriesRoute: ApiMobileCountriesRoute,
   ApiMobileMarketingRoute: ApiMobileMarketingRouteWithChildren,
   ApiMobileNotificationsRoute: ApiMobileNotificationsRoute,
   ApiMobilePackagesRoute: ApiMobilePackagesRouteWithChildren,
@@ -1377,23 +1534,17 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMobileStaffRoute: ApiMobileStaffRoute,
   ApiMobileStatsRoute: ApiMobileStatsRoute,
   ApiMobileUploadsRoute: ApiMobileUploadsRoute,
+  ApiMobileWarehousesRoute: ApiMobileWarehousesRoute,
   ApiPublicArchiveExpiredRecordsRoute: ApiPublicArchiveExpiredRecordsRoute,
   ApiPublicDarajaCallbackRoute: ApiPublicDarajaCallbackRoute,
   ApiPublicEvolutionTestSendRoute: ApiPublicEvolutionTestSendRoute,
   ApiPublicEvolutionWebhookRoute: ApiPublicEvolutionWebhookRouteWithChildren,
   ApiPublicPublishScheduledRoute: ApiPublicPublishScheduledRoute,
+  ApiDesktopPackagesBulkStickerRoute: ApiDesktopPackagesBulkStickerRoute,
   ApiMobileAuthMeRoute: ApiMobileAuthMeRoute,
   ApiMobilePushRegisterRoute: ApiMobilePushRegisterRoute,
+  ApiDesktopPackagesIdStickerRoute: ApiDesktopPackagesIdStickerRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
