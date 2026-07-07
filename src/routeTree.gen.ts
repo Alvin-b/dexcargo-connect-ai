@@ -70,6 +70,7 @@ import { Route as ApiMobileBatchesIdScanRouteImport } from './routes/api/mobile/
 import { Route as ApiMobileBatchesIdCloseRouteImport } from './routes/api/mobile/batches.$id.close'
 import { Route as ApiMobileAdminEmployeesIdRouteImport } from './routes/api/mobile/admin/employees.$id'
 import { Route as ApiAdminUsersIdRolesRouteImport } from './routes/api/admin/users.$id.roles'
+import { Route as ApiMobileAdminEmployeesIdResetPasswordRouteImport } from './routes/api/mobile/admin/employees.$id.reset-password'
 
 const QuoteRoute = QuoteRouteImport.update({
   id: '/quote',
@@ -391,6 +392,12 @@ const ApiAdminUsersIdRolesRoute = ApiAdminUsersIdRolesRouteImport.update({
   path: '/$id/roles',
   getParentRoute: () => ApiAdminUsersRoute,
 } as any)
+const ApiMobileAdminEmployeesIdResetPasswordRoute =
+  ApiMobileAdminEmployeesIdResetPasswordRouteImport.update({
+    id: '/reset-password',
+    path: '/reset-password',
+    getParentRoute: () => ApiMobileAdminEmployeesIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -445,7 +452,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
-  '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRoute
+  '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRouteWithChildren
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
   '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
@@ -454,6 +461,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
+  '/api/mobile/admin/employees/$id/reset-password': typeof ApiMobileAdminEmployeesIdResetPasswordRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -507,7 +515,7 @@ export interface FileRoutesByTo {
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
-  '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRoute
+  '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRouteWithChildren
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
   '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
@@ -516,6 +524,7 @@ export interface FileRoutesByTo {
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
+  '/api/mobile/admin/employees/$id/reset-password': typeof ApiMobileAdminEmployeesIdResetPasswordRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -571,7 +580,7 @@ export interface FileRoutesById {
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
-  '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRoute
+  '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRouteWithChildren
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
   '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
@@ -580,6 +589,7 @@ export interface FileRoutesById {
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
+  '/api/mobile/admin/employees/$id/reset-password': typeof ApiMobileAdminEmployeesIdResetPasswordRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -645,6 +655,7 @@ export interface FileRouteTypes {
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/deliver'
     | '/api/mobile/packages/$id/events'
+    | '/api/mobile/admin/employees/$id/reset-password'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -707,6 +718,7 @@ export interface FileRouteTypes {
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/deliver'
     | '/api/mobile/packages/$id/events'
+    | '/api/mobile/admin/employees/$id/reset-password'
   id:
     | '__root__'
     | '/'
@@ -770,6 +782,7 @@ export interface FileRouteTypes {
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/deliver'
     | '/api/mobile/packages/$id/events'
+    | '/api/mobile/admin/employees/$id/reset-password'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1233,6 +1246,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAdminUsersIdRolesRouteImport
       parentRoute: typeof ApiAdminUsersRoute
     }
+    '/api/mobile/admin/employees/$id/reset-password': {
+      id: '/api/mobile/admin/employees/$id/reset-password'
+      path: '/reset-password'
+      fullPath: '/api/mobile/admin/employees/$id/reset-password'
+      preLoaderRoute: typeof ApiMobileAdminEmployeesIdResetPasswordRouteImport
+      parentRoute: typeof ApiMobileAdminEmployeesIdRoute
+    }
   }
 }
 
@@ -1437,13 +1457,28 @@ const ApiPublicEvolutionWebhookRouteWithChildren =
     ApiPublicEvolutionWebhookRouteChildren,
   )
 
+interface ApiMobileAdminEmployeesIdRouteChildren {
+  ApiMobileAdminEmployeesIdResetPasswordRoute: typeof ApiMobileAdminEmployeesIdResetPasswordRoute
+}
+
+const ApiMobileAdminEmployeesIdRouteChildren: ApiMobileAdminEmployeesIdRouteChildren =
+  {
+    ApiMobileAdminEmployeesIdResetPasswordRoute:
+      ApiMobileAdminEmployeesIdResetPasswordRoute,
+  }
+
+const ApiMobileAdminEmployeesIdRouteWithChildren =
+  ApiMobileAdminEmployeesIdRoute._addFileChildren(
+    ApiMobileAdminEmployeesIdRouteChildren,
+  )
+
 interface ApiMobileAdminEmployeesRouteChildren {
-  ApiMobileAdminEmployeesIdRoute: typeof ApiMobileAdminEmployeesIdRoute
+  ApiMobileAdminEmployeesIdRoute: typeof ApiMobileAdminEmployeesIdRouteWithChildren
 }
 
 const ApiMobileAdminEmployeesRouteChildren: ApiMobileAdminEmployeesRouteChildren =
   {
-    ApiMobileAdminEmployeesIdRoute: ApiMobileAdminEmployeesIdRoute,
+    ApiMobileAdminEmployeesIdRoute: ApiMobileAdminEmployeesIdRouteWithChildren,
   }
 
 const ApiMobileAdminEmployeesRouteWithChildren =
