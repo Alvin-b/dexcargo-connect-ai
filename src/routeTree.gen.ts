@@ -60,6 +60,7 @@ import { Route as ApiMobileClientsIdRouteImport } from './routes/api/mobile/clie
 import { Route as ApiMobileBatchesIdRouteImport } from './routes/api/mobile/batches.$id'
 import { Route as ApiMobileAuthMeRouteImport } from './routes/api/mobile/auth.me'
 import { Route as ApiMobileAdminEmployeesRouteImport } from './routes/api/mobile/admin/employees'
+import { Route as ApiMobileAdminAuditRouteImport } from './routes/api/mobile/admin/audit'
 import { Route as ApiMobilePackagesIdEventsRouteImport } from './routes/api/mobile/packages.$id.events'
 import { Route as ApiMobilePackagesIdDeliverRouteImport } from './routes/api/mobile/packages.$id.deliver'
 import { Route as ApiMobileConversationsIdMessagesRouteImport } from './routes/api/mobile/conversations.$id.messages'
@@ -336,6 +337,11 @@ const ApiMobileAdminEmployeesRoute = ApiMobileAdminEmployeesRouteImport.update({
   path: '/api/mobile/admin/employees',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiMobileAdminAuditRoute = ApiMobileAdminAuditRouteImport.update({
+  id: '/api/mobile/admin/audit',
+  path: '/api/mobile/admin/audit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiMobilePackagesIdEventsRoute =
   ApiMobilePackagesIdEventsRouteImport.update({
     id: '/events',
@@ -441,6 +447,7 @@ export interface FileRoutesByFullPath {
   '/api/public/evolution-test-send': typeof ApiPublicEvolutionTestSendRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
+  '/api/mobile/admin/audit': typeof ApiMobileAdminAuditRoute
   '/api/mobile/admin/employees': typeof ApiMobileAdminEmployeesRouteWithChildren
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/batches/$id': typeof ApiMobileBatchesIdRouteWithChildren
@@ -505,6 +512,7 @@ export interface FileRoutesByTo {
   '/api/public/evolution-test-send': typeof ApiPublicEvolutionTestSendRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
+  '/api/mobile/admin/audit': typeof ApiMobileAdminAuditRoute
   '/api/mobile/admin/employees': typeof ApiMobileAdminEmployeesRouteWithChildren
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/batches/$id': typeof ApiMobileBatchesIdRouteWithChildren
@@ -571,6 +579,7 @@ export interface FileRoutesById {
   '/api/public/evolution-test-send': typeof ApiPublicEvolutionTestSendRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
+  '/api/mobile/admin/audit': typeof ApiMobileAdminAuditRoute
   '/api/mobile/admin/employees': typeof ApiMobileAdminEmployeesRouteWithChildren
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/batches/$id': typeof ApiMobileBatchesIdRouteWithChildren
@@ -638,6 +647,7 @@ export interface FileRouteTypes {
     | '/api/public/evolution-test-send'
     | '/api/public/evolution-webhook'
     | '/api/public/publish-scheduled'
+    | '/api/mobile/admin/audit'
     | '/api/mobile/admin/employees'
     | '/api/mobile/auth/me'
     | '/api/mobile/batches/$id'
@@ -702,6 +712,7 @@ export interface FileRouteTypes {
     | '/api/public/evolution-test-send'
     | '/api/public/evolution-webhook'
     | '/api/public/publish-scheduled'
+    | '/api/mobile/admin/audit'
     | '/api/mobile/admin/employees'
     | '/api/mobile/auth/me'
     | '/api/mobile/batches/$id'
@@ -767,6 +778,7 @@ export interface FileRouteTypes {
     | '/api/public/evolution-test-send'
     | '/api/public/evolution-webhook'
     | '/api/public/publish-scheduled'
+    | '/api/mobile/admin/audit'
     | '/api/mobile/admin/employees'
     | '/api/mobile/auth/me'
     | '/api/mobile/batches/$id'
@@ -825,6 +837,7 @@ export interface RootRouteChildren {
   ApiPublicEvolutionTestSendRoute: typeof ApiPublicEvolutionTestSendRoute
   ApiPublicEvolutionWebhookRoute: typeof ApiPublicEvolutionWebhookRouteWithChildren
   ApiPublicPublishScheduledRoute: typeof ApiPublicPublishScheduledRoute
+  ApiMobileAdminAuditRoute: typeof ApiMobileAdminAuditRoute
   ApiMobileAdminEmployeesRoute: typeof ApiMobileAdminEmployeesRouteWithChildren
   ApiMobileAuthMeRoute: typeof ApiMobileAuthMeRoute
   ApiMobilePushRegisterRoute: typeof ApiMobilePushRegisterRoute
@@ -1189,6 +1202,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileAdminEmployeesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/mobile/admin/audit': {
+      id: '/api/mobile/admin/audit'
+      path: '/api/mobile/admin/audit'
+      fullPath: '/api/mobile/admin/audit'
+      preLoaderRoute: typeof ApiMobileAdminAuditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/mobile/packages/$id/events': {
       id: '/api/mobile/packages/$id/events'
       path: '/events'
@@ -1536,6 +1556,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicEvolutionTestSendRoute: ApiPublicEvolutionTestSendRoute,
   ApiPublicEvolutionWebhookRoute: ApiPublicEvolutionWebhookRouteWithChildren,
   ApiPublicPublishScheduledRoute: ApiPublicPublishScheduledRoute,
+  ApiMobileAdminAuditRoute: ApiMobileAdminAuditRoute,
   ApiMobileAdminEmployeesRoute: ApiMobileAdminEmployeesRouteWithChildren,
   ApiMobileAuthMeRoute: ApiMobileAuthMeRoute,
   ApiMobilePushRegisterRoute: ApiMobilePushRegisterRoute,
