@@ -45,6 +45,7 @@ import { Route as ApiMobileBatchesRouteImport } from './routes/api/mobile/batche
 import { Route as ApiMobileAnalyticsRouteImport } from './routes/api/mobile/analytics'
 import { Route as ApiAdminUsersRouteImport } from './routes/api/admin/users'
 import { Route as ApiPublicEvolutionWebhookSplatRouteImport } from './routes/api/public/evolution-webhook.$'
+import { Route as ApiMobileStatsDashboardRouteImport } from './routes/api/mobile/stats.dashboard'
 import { Route as ApiMobileRatesLookupRouteImport } from './routes/api/mobile/rates.lookup'
 import { Route as ApiMobileRatesIdRouteImport } from './routes/api/mobile/rates.$id'
 import { Route as ApiMobilePushRegisterRouteImport } from './routes/api/mobile/push.register'
@@ -264,6 +265,11 @@ const ApiPublicEvolutionWebhookSplatRoute =
     path: '/$',
     getParentRoute: () => ApiPublicEvolutionWebhookRoute,
   } as any)
+const ApiMobileStatsDashboardRoute = ApiMobileStatsDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => ApiMobileStatsRoute,
+} as any)
 const ApiMobileRatesLookupRoute = ApiMobileRatesLookupRouteImport.update({
   id: '/lookup',
   path: '/lookup',
@@ -472,7 +478,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/search': typeof ApiMobileSearchRoute
   '/api/mobile/settings': typeof ApiMobileSettingsRoute
   '/api/mobile/staff': typeof ApiMobileStaffRoute
-  '/api/mobile/stats': typeof ApiMobileStatsRoute
+  '/api/mobile/stats': typeof ApiMobileStatsRouteWithChildren
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
   '/api/mobile/warehouses': typeof ApiMobileWarehousesRoute
   '/api/public/archive-expired-records': typeof ApiPublicArchiveExpiredRecordsRoute
@@ -500,6 +506,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
+  '/api/mobile/stats/dashboard': typeof ApiMobileStatsDashboardRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
   '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRouteWithChildren
@@ -542,7 +549,7 @@ export interface FileRoutesByTo {
   '/api/mobile/search': typeof ApiMobileSearchRoute
   '/api/mobile/settings': typeof ApiMobileSettingsRoute
   '/api/mobile/staff': typeof ApiMobileStaffRoute
-  '/api/mobile/stats': typeof ApiMobileStatsRoute
+  '/api/mobile/stats': typeof ApiMobileStatsRouteWithChildren
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
   '/api/mobile/warehouses': typeof ApiMobileWarehousesRoute
   '/api/public/archive-expired-records': typeof ApiPublicArchiveExpiredRecordsRoute
@@ -570,6 +577,7 @@ export interface FileRoutesByTo {
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
+  '/api/mobile/stats/dashboard': typeof ApiMobileStatsDashboardRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
   '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRouteWithChildren
@@ -614,7 +622,7 @@ export interface FileRoutesById {
   '/api/mobile/search': typeof ApiMobileSearchRoute
   '/api/mobile/settings': typeof ApiMobileSettingsRoute
   '/api/mobile/staff': typeof ApiMobileStaffRoute
-  '/api/mobile/stats': typeof ApiMobileStatsRoute
+  '/api/mobile/stats': typeof ApiMobileStatsRouteWithChildren
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
   '/api/mobile/warehouses': typeof ApiMobileWarehousesRoute
   '/api/public/archive-expired-records': typeof ApiPublicArchiveExpiredRecordsRoute
@@ -642,6 +650,7 @@ export interface FileRoutesById {
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
+  '/api/mobile/stats/dashboard': typeof ApiMobileStatsDashboardRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
   '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRouteWithChildren
@@ -715,6 +724,7 @@ export interface FileRouteTypes {
     | '/api/mobile/push/register'
     | '/api/mobile/rates/$id'
     | '/api/mobile/rates/lookup'
+    | '/api/mobile/stats/dashboard'
     | '/api/public/evolution-webhook/$'
     | '/api/admin/users/$id/roles'
     | '/api/mobile/admin/employees/$id'
@@ -785,6 +795,7 @@ export interface FileRouteTypes {
     | '/api/mobile/push/register'
     | '/api/mobile/rates/$id'
     | '/api/mobile/rates/lookup'
+    | '/api/mobile/stats/dashboard'
     | '/api/public/evolution-webhook/$'
     | '/api/admin/users/$id/roles'
     | '/api/mobile/admin/employees/$id'
@@ -856,6 +867,7 @@ export interface FileRouteTypes {
     | '/api/mobile/push/register'
     | '/api/mobile/rates/$id'
     | '/api/mobile/rates/lookup'
+    | '/api/mobile/stats/dashboard'
     | '/api/public/evolution-webhook/$'
     | '/api/admin/users/$id/roles'
     | '/api/mobile/admin/employees/$id'
@@ -892,7 +904,7 @@ export interface RootRouteChildren {
   ApiMobileSearchRoute: typeof ApiMobileSearchRoute
   ApiMobileSettingsRoute: typeof ApiMobileSettingsRoute
   ApiMobileStaffRoute: typeof ApiMobileStaffRoute
-  ApiMobileStatsRoute: typeof ApiMobileStatsRoute
+  ApiMobileStatsRoute: typeof ApiMobileStatsRouteWithChildren
   ApiMobileUploadsRoute: typeof ApiMobileUploadsRoute
   ApiMobileWarehousesRoute: typeof ApiMobileWarehousesRoute
   ApiPublicArchiveExpiredRecordsRoute: typeof ApiPublicArchiveExpiredRecordsRoute
@@ -1159,6 +1171,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/public/evolution-webhook/$'
       preLoaderRoute: typeof ApiPublicEvolutionWebhookSplatRouteImport
       parentRoute: typeof ApiPublicEvolutionWebhookRoute
+    }
+    '/api/mobile/stats/dashboard': {
+      id: '/api/mobile/stats/dashboard'
+      path: '/dashboard'
+      fullPath: '/api/mobile/stats/dashboard'
+      preLoaderRoute: typeof ApiMobileStatsDashboardRouteImport
+      parentRoute: typeof ApiMobileStatsRoute
     }
     '/api/mobile/rates/lookup': {
       id: '/api/mobile/rates/lookup'
@@ -1589,6 +1608,18 @@ const ApiMobileRatesRouteWithChildren = ApiMobileRatesRoute._addFileChildren(
   ApiMobileRatesRouteChildren,
 )
 
+interface ApiMobileStatsRouteChildren {
+  ApiMobileStatsDashboardRoute: typeof ApiMobileStatsDashboardRoute
+}
+
+const ApiMobileStatsRouteChildren: ApiMobileStatsRouteChildren = {
+  ApiMobileStatsDashboardRoute: ApiMobileStatsDashboardRoute,
+}
+
+const ApiMobileStatsRouteWithChildren = ApiMobileStatsRoute._addFileChildren(
+  ApiMobileStatsRouteChildren,
+)
+
 interface ApiPublicEvolutionWebhookRouteChildren {
   ApiPublicEvolutionWebhookSplatRoute: typeof ApiPublicEvolutionWebhookSplatRoute
 }
@@ -1655,7 +1686,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMobileSearchRoute: ApiMobileSearchRoute,
   ApiMobileSettingsRoute: ApiMobileSettingsRoute,
   ApiMobileStaffRoute: ApiMobileStaffRoute,
-  ApiMobileStatsRoute: ApiMobileStatsRoute,
+  ApiMobileStatsRoute: ApiMobileStatsRouteWithChildren,
   ApiMobileUploadsRoute: ApiMobileUploadsRoute,
   ApiMobileWarehousesRoute: ApiMobileWarehousesRoute,
   ApiPublicArchiveExpiredRecordsRoute: ApiPublicArchiveExpiredRecordsRoute,
