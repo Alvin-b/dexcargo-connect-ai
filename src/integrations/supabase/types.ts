@@ -345,6 +345,68 @@ export type Database = {
         }
         Relationships: []
       }
+      employees: {
+        Row: {
+          branch_id: string | null
+          created_at: string
+          created_by: string | null
+          deactivated_at: string | null
+          deactivated_by: string | null
+          email: string
+          employee_code: string
+          full_name: string
+          id: string
+          notes: string | null
+          phone: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          branch_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          deactivated_at?: string | null
+          deactivated_by?: string | null
+          email: string
+          employee_code: string
+          full_name: string
+          id?: string
+          notes?: string | null
+          phone?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          branch_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          deactivated_at?: string | null
+          deactivated_by?: string | null
+          email?: string
+          employee_code?: string
+          full_name?: string
+          id?: string
+          notes?: string | null
+          phone?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employees_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "warehouses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       idempotency_keys: {
         Row: {
           created_at: string
@@ -670,8 +732,12 @@ export type Database = {
           height_cm: number | null
           id: string
           insurance_charge: number | null
+          intake_photo_url: string | null
           length_cm: number | null
           mode: Database["public"]["Enums"]["shipping_mode"] | null
+          mpesa_code: string | null
+          ocr_confidence: number | null
+          ocr_payload: Json | null
           origin: string | null
           origin_currency: string | null
           origin_total_charge: number | null
@@ -683,6 +749,12 @@ export type Database = {
           qr_payload: Json | null
           rate_amount: number | null
           received_at: string | null
+          received_by_employee_id: string | null
+          recipient_id_number: string | null
+          recipient_name: string | null
+          recipient_phone: string | null
+          released_at: string | null
+          released_by_employee_id: string | null
           remark: string | null
           route_code: string | null
           sender_name: string | null
@@ -728,8 +800,12 @@ export type Database = {
           height_cm?: number | null
           id?: string
           insurance_charge?: number | null
+          intake_photo_url?: string | null
           length_cm?: number | null
           mode?: Database["public"]["Enums"]["shipping_mode"] | null
+          mpesa_code?: string | null
+          ocr_confidence?: number | null
+          ocr_payload?: Json | null
           origin?: string | null
           origin_currency?: string | null
           origin_total_charge?: number | null
@@ -741,6 +817,12 @@ export type Database = {
           qr_payload?: Json | null
           rate_amount?: number | null
           received_at?: string | null
+          received_by_employee_id?: string | null
+          recipient_id_number?: string | null
+          recipient_name?: string | null
+          recipient_phone?: string | null
+          released_at?: string | null
+          released_by_employee_id?: string | null
           remark?: string | null
           route_code?: string | null
           sender_name?: string | null
@@ -786,8 +868,12 @@ export type Database = {
           height_cm?: number | null
           id?: string
           insurance_charge?: number | null
+          intake_photo_url?: string | null
           length_cm?: number | null
           mode?: Database["public"]["Enums"]["shipping_mode"] | null
+          mpesa_code?: string | null
+          ocr_confidence?: number | null
+          ocr_payload?: Json | null
           origin?: string | null
           origin_currency?: string | null
           origin_total_charge?: number | null
@@ -799,6 +885,12 @@ export type Database = {
           qr_payload?: Json | null
           rate_amount?: number | null
           received_at?: string | null
+          received_by_employee_id?: string | null
+          recipient_id_number?: string | null
+          recipient_name?: string | null
+          recipient_phone?: string | null
+          released_at?: string | null
+          released_by_employee_id?: string | null
           remark?: string | null
           route_code?: string | null
           sender_name?: string | null
@@ -825,6 +917,20 @@ export type Database = {
             referencedRelation: "clients"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "packages_received_by_employee_id_fkey"
+            columns: ["received_by_employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "packages_released_by_employee_id_fkey"
+            columns: ["released_by_employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
         ]
       }
       payments: {
@@ -837,11 +943,14 @@ export type Database = {
           id: string
           initiated_by: string | null
           merchant_request_id: string | null
+          method: string | null
+          mpesa_code: string | null
           mpesa_receipt: string | null
           package_id: string | null
           phone: string
           purpose: string | null
           raw_callback: Json | null
+          recorded_by_employee_id: string | null
           status: Database["public"]["Enums"]["payment_status"]
           updated_at: string
           verified_at: string | null
@@ -855,11 +964,14 @@ export type Database = {
           id?: string
           initiated_by?: string | null
           merchant_request_id?: string | null
+          method?: string | null
+          mpesa_code?: string | null
           mpesa_receipt?: string | null
           package_id?: string | null
           phone: string
           purpose?: string | null
           raw_callback?: Json | null
+          recorded_by_employee_id?: string | null
           status?: Database["public"]["Enums"]["payment_status"]
           updated_at?: string
           verified_at?: string | null
@@ -873,11 +985,14 @@ export type Database = {
           id?: string
           initiated_by?: string | null
           merchant_request_id?: string | null
+          method?: string | null
+          mpesa_code?: string | null
           mpesa_receipt?: string | null
           package_id?: string | null
           phone?: string
           purpose?: string | null
           raw_callback?: Json | null
+          recorded_by_employee_id?: string | null
           status?: Database["public"]["Enums"]["payment_status"]
           updated_at?: string
           verified_at?: string | null
@@ -895,6 +1010,13 @@ export type Database = {
             columns: ["package_id"]
             isOneToOne: false
             referencedRelation: "packages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_recorded_by_employee_id_fkey"
+            columns: ["recorded_by_employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
         ]
@@ -1166,6 +1288,40 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_register_employee: {
+        Args: {
+          _branch_id?: string
+          _email: string
+          _full_name: string
+          _notes?: string
+          _phone: string
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: {
+          branch_id: string | null
+          created_at: string
+          created_by: string | null
+          deactivated_at: string | null
+          deactivated_by: string | null
+          email: string
+          employee_code: string
+          full_name: string
+          id: string
+          notes: string | null
+          phone: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "employees"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       archive_expired_delivery_records: { Args: never; Returns: number }
       atomic_claim_conversation: {
         Args: {
@@ -1221,6 +1377,11 @@ export type Database = {
         | "delivered"
         | "on_hold"
         | "cancelled"
+        | "awaiting_payment"
+        | "paid"
+        | "ready_for_collection"
+        | "released"
+        | "cleared"
       payment_status: "pending" | "success" | "failed" | "cancelled"
       post_status: "draft" | "approved" | "scheduled" | "published" | "failed"
       shipping_mode: "air" | "sea" | "express" | "special"
@@ -1364,6 +1525,11 @@ export const Constants = {
         "delivered",
         "on_hold",
         "cancelled",
+        "awaiting_payment",
+        "paid",
+        "ready_for_collection",
+        "released",
+        "cleared",
       ],
       payment_status: ["pending", "success", "failed", "cancelled"],
       post_status: ["draft", "approved", "scheduled", "published", "failed"],
