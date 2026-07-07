@@ -62,6 +62,7 @@ import { Route as ApiMobileBatchesIdRouteImport } from './routes/api/mobile/batc
 import { Route as ApiMobileAuthMeRouteImport } from './routes/api/mobile/auth.me'
 import { Route as ApiMobileAdminEmployeesRouteImport } from './routes/api/mobile/admin/employees'
 import { Route as ApiMobileAdminAuditRouteImport } from './routes/api/mobile/admin/audit'
+import { Route as ApiMobilePackagesIdReleaseRouteImport } from './routes/api/mobile/packages.$id.release'
 import { Route as ApiMobilePackagesIdEventsRouteImport } from './routes/api/mobile/packages.$id.events'
 import { Route as ApiMobilePackagesIdDeliverRouteImport } from './routes/api/mobile/packages.$id.deliver'
 import { Route as ApiMobileConversationsIdMessagesRouteImport } from './routes/api/mobile/conversations.$id.messages'
@@ -348,6 +349,12 @@ const ApiMobileAdminAuditRoute = ApiMobileAdminAuditRouteImport.update({
   path: '/api/mobile/admin/audit',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiMobilePackagesIdReleaseRoute =
+  ApiMobilePackagesIdReleaseRouteImport.update({
+    id: '/release',
+    path: '/release',
+    getParentRoute: () => ApiMobilePackagesIdRoute,
+  } as any)
 const ApiMobilePackagesIdEventsRoute =
   ApiMobilePackagesIdEventsRouteImport.update({
     id: '/events',
@@ -482,6 +489,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
+  '/api/mobile/packages/$id/release': typeof ApiMobilePackagesIdReleaseRoute
   '/api/mobile/admin/employees/$id/activity': typeof ApiMobileAdminEmployeesIdActivityRoute
   '/api/mobile/admin/employees/$id/reset-password': typeof ApiMobileAdminEmployeesIdResetPasswordRoute
 }
@@ -548,6 +556,7 @@ export interface FileRoutesByTo {
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
+  '/api/mobile/packages/$id/release': typeof ApiMobilePackagesIdReleaseRoute
   '/api/mobile/admin/employees/$id/activity': typeof ApiMobileAdminEmployeesIdActivityRoute
   '/api/mobile/admin/employees/$id/reset-password': typeof ApiMobileAdminEmployeesIdResetPasswordRoute
 }
@@ -616,6 +625,7 @@ export interface FileRoutesById {
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
+  '/api/mobile/packages/$id/release': typeof ApiMobilePackagesIdReleaseRoute
   '/api/mobile/admin/employees/$id/activity': typeof ApiMobileAdminEmployeesIdActivityRoute
   '/api/mobile/admin/employees/$id/reset-password': typeof ApiMobileAdminEmployeesIdResetPasswordRoute
 }
@@ -685,6 +695,7 @@ export interface FileRouteTypes {
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/deliver'
     | '/api/mobile/packages/$id/events'
+    | '/api/mobile/packages/$id/release'
     | '/api/mobile/admin/employees/$id/activity'
     | '/api/mobile/admin/employees/$id/reset-password'
   fileRoutesByTo: FileRoutesByTo
@@ -751,6 +762,7 @@ export interface FileRouteTypes {
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/deliver'
     | '/api/mobile/packages/$id/events'
+    | '/api/mobile/packages/$id/release'
     | '/api/mobile/admin/employees/$id/activity'
     | '/api/mobile/admin/employees/$id/reset-password'
   id:
@@ -818,6 +830,7 @@ export interface FileRouteTypes {
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/deliver'
     | '/api/mobile/packages/$id/events'
+    | '/api/mobile/packages/$id/release'
     | '/api/mobile/admin/employees/$id/activity'
     | '/api/mobile/admin/employees/$id/reset-password'
   fileRoutesById: FileRoutesById
@@ -1228,6 +1241,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileAdminAuditRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/mobile/packages/$id/release': {
+      id: '/api/mobile/packages/$id/release'
+      path: '/release'
+      fullPath: '/api/mobile/packages/$id/release'
+      preLoaderRoute: typeof ApiMobilePackagesIdReleaseRouteImport
+      parentRoute: typeof ApiMobilePackagesIdRoute
+    }
     '/api/mobile/packages/$id/events': {
       id: '/api/mobile/packages/$id/events'
       path: '/events'
@@ -1446,11 +1466,13 @@ const ApiMobileMarketingRouteWithChildren =
 interface ApiMobilePackagesIdRouteChildren {
   ApiMobilePackagesIdDeliverRoute: typeof ApiMobilePackagesIdDeliverRoute
   ApiMobilePackagesIdEventsRoute: typeof ApiMobilePackagesIdEventsRoute
+  ApiMobilePackagesIdReleaseRoute: typeof ApiMobilePackagesIdReleaseRoute
 }
 
 const ApiMobilePackagesIdRouteChildren: ApiMobilePackagesIdRouteChildren = {
   ApiMobilePackagesIdDeliverRoute: ApiMobilePackagesIdDeliverRoute,
   ApiMobilePackagesIdEventsRoute: ApiMobilePackagesIdEventsRoute,
+  ApiMobilePackagesIdReleaseRoute: ApiMobilePackagesIdReleaseRoute,
 }
 
 const ApiMobilePackagesIdRouteWithChildren =
