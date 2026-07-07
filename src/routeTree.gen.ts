@@ -31,6 +31,7 @@ import { Route as ApiMobileUploadsRouteImport } from './routes/api/mobile/upload
 import { Route as ApiMobileStatsRouteImport } from './routes/api/mobile/stats'
 import { Route as ApiMobileStaffRouteImport } from './routes/api/mobile/staff'
 import { Route as ApiMobileSettingsRouteImport } from './routes/api/mobile/settings'
+import { Route as ApiMobileSearchRouteImport } from './routes/api/mobile/search'
 import { Route as ApiMobileRatesRouteImport } from './routes/api/mobile/rates'
 import { Route as ApiMobileQuoteRouteImport } from './routes/api/mobile/quote'
 import { Route as ApiMobilePaymentsRouteImport } from './routes/api/mobile/payments'
@@ -42,25 +43,30 @@ import { Route as ApiMobileConversationsRouteImport } from './routes/api/mobile/
 import { Route as ApiMobileClientsRouteImport } from './routes/api/mobile/clients'
 import { Route as ApiMobileBatchesRouteImport } from './routes/api/mobile/batches'
 import { Route as ApiMobileAnalyticsRouteImport } from './routes/api/mobile/analytics'
-import { Route as ApiDesktopLeftBehindRouteImport } from './routes/api/desktop/left-behind'
 import { Route as ApiAdminUsersRouteImport } from './routes/api/admin/users'
 import { Route as ApiPublicEvolutionWebhookSplatRouteImport } from './routes/api/public/evolution-webhook.$'
+import { Route as ApiMobileStatsDashboardRouteImport } from './routes/api/mobile/stats.dashboard'
 import { Route as ApiMobileRatesLookupRouteImport } from './routes/api/mobile/rates.lookup'
 import { Route as ApiMobileRatesIdRouteImport } from './routes/api/mobile/rates.$id'
 import { Route as ApiMobilePushRegisterRouteImport } from './routes/api/mobile/push.register'
+import { Route as ApiMobilePaymentsManualRouteImport } from './routes/api/mobile/payments.manual'
 import { Route as ApiMobilePaymentsCashRouteImport } from './routes/api/mobile/payments.cash'
 import { Route as ApiMobilePaymentsIdRouteImport } from './routes/api/mobile/payments.$id'
 import { Route as ApiMobilePackagesScanRouteImport } from './routes/api/mobile/packages.scan'
 import { Route as ApiMobilePackagesReadyForPickupRouteImport } from './routes/api/mobile/packages.ready-for-pickup'
 import { Route as ApiMobilePackagesLookupRouteImport } from './routes/api/mobile/packages.lookup'
+import { Route as ApiMobilePackagesIntakeRouteImport } from './routes/api/mobile/packages.intake'
 import { Route as ApiMobilePackagesExtractLabelRouteImport } from './routes/api/mobile/packages.extract-label'
+import { Route as ApiMobilePackagesClearedRouteImport } from './routes/api/mobile/packages.cleared'
 import { Route as ApiMobilePackagesIdRouteImport } from './routes/api/mobile/packages.$id'
 import { Route as ApiMobileMarketingIdRouteImport } from './routes/api/mobile/marketing.$id'
 import { Route as ApiMobileConversationsIdRouteImport } from './routes/api/mobile/conversations.$id'
 import { Route as ApiMobileClientsIdRouteImport } from './routes/api/mobile/clients.$id'
 import { Route as ApiMobileBatchesIdRouteImport } from './routes/api/mobile/batches.$id'
 import { Route as ApiMobileAuthMeRouteImport } from './routes/api/mobile/auth.me'
-import { Route as ApiDesktopPackagesBulkStickerRouteImport } from './routes/api/desktop/packages.bulk-sticker'
+import { Route as ApiMobileAdminEmployeesRouteImport } from './routes/api/mobile/admin/employees'
+import { Route as ApiMobileAdminAuditRouteImport } from './routes/api/mobile/admin/audit'
+import { Route as ApiMobilePackagesIdReleaseRouteImport } from './routes/api/mobile/packages.$id.release'
 import { Route as ApiMobilePackagesIdEventsRouteImport } from './routes/api/mobile/packages.$id.events'
 import { Route as ApiMobilePackagesIdDeliverRouteImport } from './routes/api/mobile/packages.$id.deliver'
 import { Route as ApiMobileConversationsIdMessagesRouteImport } from './routes/api/mobile/conversations.$id.messages'
@@ -69,10 +75,10 @@ import { Route as ApiMobileConversationsIdClaimRouteImport } from './routes/api/
 import { Route as ApiMobileClientsIdConsentRouteImport } from './routes/api/mobile/clients.$id.consent'
 import { Route as ApiMobileBatchesIdScanRouteImport } from './routes/api/mobile/batches.$id.scan'
 import { Route as ApiMobileBatchesIdCloseRouteImport } from './routes/api/mobile/batches.$id.close'
-import { Route as ApiDesktopPackagesIdStickerRouteImport } from './routes/api/desktop/packages.$id.sticker'
-import { Route as ApiDesktopLeftBehindIdReassignRouteImport } from './routes/api/desktop/left-behind.$id.reassign'
-import { Route as ApiDesktopLeftBehindIdHoldRouteImport } from './routes/api/desktop/left-behind.$id.hold'
+import { Route as ApiMobileAdminEmployeesIdRouteImport } from './routes/api/mobile/admin/employees.$id'
 import { Route as ApiAdminUsersIdRolesRouteImport } from './routes/api/admin/users.$id.roles'
+import { Route as ApiMobileAdminEmployeesIdResetPasswordRouteImport } from './routes/api/mobile/admin/employees.$id.reset-password'
+import { Route as ApiMobileAdminEmployeesIdActivityRouteImport } from './routes/api/mobile/admin/employees.$id.activity'
 
 const QuoteRoute = QuoteRouteImport.update({
   id: '/quote',
@@ -188,6 +194,11 @@ const ApiMobileSettingsRoute = ApiMobileSettingsRouteImport.update({
   path: '/api/mobile/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiMobileSearchRoute = ApiMobileSearchRouteImport.update({
+  id: '/api/mobile/search',
+  path: '/api/mobile/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiMobileRatesRoute = ApiMobileRatesRouteImport.update({
   id: '/api/mobile/rates',
   path: '/api/mobile/rates',
@@ -243,11 +254,6 @@ const ApiMobileAnalyticsRoute = ApiMobileAnalyticsRouteImport.update({
   path: '/api/mobile/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiDesktopLeftBehindRoute = ApiDesktopLeftBehindRouteImport.update({
-  id: '/api/desktop/left-behind',
-  path: '/api/desktop/left-behind',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiAdminUsersRoute = ApiAdminUsersRouteImport.update({
   id: '/api/admin/users',
   path: '/api/admin/users',
@@ -259,6 +265,11 @@ const ApiPublicEvolutionWebhookSplatRoute =
     path: '/$',
     getParentRoute: () => ApiPublicEvolutionWebhookRoute,
   } as any)
+const ApiMobileStatsDashboardRoute = ApiMobileStatsDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => ApiMobileStatsRoute,
+} as any)
 const ApiMobileRatesLookupRoute = ApiMobileRatesLookupRouteImport.update({
   id: '/lookup',
   path: '/lookup',
@@ -273,6 +284,11 @@ const ApiMobilePushRegisterRoute = ApiMobilePushRegisterRouteImport.update({
   id: '/api/mobile/push/register',
   path: '/api/mobile/push/register',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMobilePaymentsManualRoute = ApiMobilePaymentsManualRouteImport.update({
+  id: '/manual',
+  path: '/manual',
+  getParentRoute: () => ApiMobilePaymentsRoute,
 } as any)
 const ApiMobilePaymentsCashRoute = ApiMobilePaymentsCashRouteImport.update({
   id: '/cash',
@@ -300,10 +316,21 @@ const ApiMobilePackagesLookupRoute = ApiMobilePackagesLookupRouteImport.update({
   path: '/lookup',
   getParentRoute: () => ApiMobilePackagesRoute,
 } as any)
+const ApiMobilePackagesIntakeRoute = ApiMobilePackagesIntakeRouteImport.update({
+  id: '/intake',
+  path: '/intake',
+  getParentRoute: () => ApiMobilePackagesRoute,
+} as any)
 const ApiMobilePackagesExtractLabelRoute =
   ApiMobilePackagesExtractLabelRouteImport.update({
     id: '/extract-label',
     path: '/extract-label',
+    getParentRoute: () => ApiMobilePackagesRoute,
+  } as any)
+const ApiMobilePackagesClearedRoute =
+  ApiMobilePackagesClearedRouteImport.update({
+    id: '/cleared',
+    path: '/cleared',
     getParentRoute: () => ApiMobilePackagesRoute,
   } as any)
 const ApiMobilePackagesIdRoute = ApiMobilePackagesIdRouteImport.update({
@@ -337,11 +364,21 @@ const ApiMobileAuthMeRoute = ApiMobileAuthMeRouteImport.update({
   path: '/api/mobile/auth/me',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiDesktopPackagesBulkStickerRoute =
-  ApiDesktopPackagesBulkStickerRouteImport.update({
-    id: '/api/desktop/packages/bulk-sticker',
-    path: '/api/desktop/packages/bulk-sticker',
-    getParentRoute: () => rootRouteImport,
+const ApiMobileAdminEmployeesRoute = ApiMobileAdminEmployeesRouteImport.update({
+  id: '/api/mobile/admin/employees',
+  path: '/api/mobile/admin/employees',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMobileAdminAuditRoute = ApiMobileAdminAuditRouteImport.update({
+  id: '/api/mobile/admin/audit',
+  path: '/api/mobile/admin/audit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMobilePackagesIdReleaseRoute =
+  ApiMobilePackagesIdReleaseRouteImport.update({
+    id: '/release',
+    path: '/release',
+    getParentRoute: () => ApiMobilePackagesIdRoute,
   } as any)
 const ApiMobilePackagesIdEventsRoute =
   ApiMobilePackagesIdEventsRouteImport.update({
@@ -389,29 +426,29 @@ const ApiMobileBatchesIdCloseRoute = ApiMobileBatchesIdCloseRouteImport.update({
   path: '/close',
   getParentRoute: () => ApiMobileBatchesIdRoute,
 } as any)
-const ApiDesktopPackagesIdStickerRoute =
-  ApiDesktopPackagesIdStickerRouteImport.update({
-    id: '/api/desktop/packages/$id/sticker',
-    path: '/api/desktop/packages/$id/sticker',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ApiDesktopLeftBehindIdReassignRoute =
-  ApiDesktopLeftBehindIdReassignRouteImport.update({
-    id: '/$id/reassign',
-    path: '/$id/reassign',
-    getParentRoute: () => ApiDesktopLeftBehindRoute,
-  } as any)
-const ApiDesktopLeftBehindIdHoldRoute =
-  ApiDesktopLeftBehindIdHoldRouteImport.update({
-    id: '/$id/hold',
-    path: '/$id/hold',
-    getParentRoute: () => ApiDesktopLeftBehindRoute,
+const ApiMobileAdminEmployeesIdRoute =
+  ApiMobileAdminEmployeesIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => ApiMobileAdminEmployeesRoute,
   } as any)
 const ApiAdminUsersIdRolesRoute = ApiAdminUsersIdRolesRouteImport.update({
   id: '/$id/roles',
   path: '/$id/roles',
   getParentRoute: () => ApiAdminUsersRoute,
 } as any)
+const ApiMobileAdminEmployeesIdResetPasswordRoute =
+  ApiMobileAdminEmployeesIdResetPasswordRouteImport.update({
+    id: '/reset-password',
+    path: '/reset-password',
+    getParentRoute: () => ApiMobileAdminEmployeesIdRoute,
+  } as any)
+const ApiMobileAdminEmployeesIdActivityRoute =
+  ApiMobileAdminEmployeesIdActivityRouteImport.update({
+    id: '/activity',
+    path: '/activity',
+    getParentRoute: () => ApiMobileAdminEmployeesIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -427,7 +464,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/staff': typeof DashboardStaffRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
-  '/api/desktop/left-behind': typeof ApiDesktopLeftBehindRouteWithChildren
   '/api/mobile/analytics': typeof ApiMobileAnalyticsRoute
   '/api/mobile/batches': typeof ApiMobileBatchesRouteWithChildren
   '/api/mobile/clients': typeof ApiMobileClientsRouteWithChildren
@@ -439,9 +475,10 @@ export interface FileRoutesByFullPath {
   '/api/mobile/payments': typeof ApiMobilePaymentsRouteWithChildren
   '/api/mobile/quote': typeof ApiMobileQuoteRoute
   '/api/mobile/rates': typeof ApiMobileRatesRouteWithChildren
+  '/api/mobile/search': typeof ApiMobileSearchRoute
   '/api/mobile/settings': typeof ApiMobileSettingsRoute
   '/api/mobile/staff': typeof ApiMobileStaffRoute
-  '/api/mobile/stats': typeof ApiMobileStatsRoute
+  '/api/mobile/stats': typeof ApiMobileStatsRouteWithChildren
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
   '/api/mobile/warehouses': typeof ApiMobileWarehousesRoute
   '/api/public/archive-expired-records': typeof ApiPublicArchiveExpiredRecordsRoute
@@ -449,27 +486,30 @@ export interface FileRoutesByFullPath {
   '/api/public/evolution-test-send': typeof ApiPublicEvolutionTestSendRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
-  '/api/desktop/packages/bulk-sticker': typeof ApiDesktopPackagesBulkStickerRoute
+  '/api/mobile/admin/audit': typeof ApiMobileAdminAuditRoute
+  '/api/mobile/admin/employees': typeof ApiMobileAdminEmployeesRouteWithChildren
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/batches/$id': typeof ApiMobileBatchesIdRouteWithChildren
   '/api/mobile/clients/$id': typeof ApiMobileClientsIdRouteWithChildren
   '/api/mobile/conversations/$id': typeof ApiMobileConversationsIdRouteWithChildren
   '/api/mobile/marketing/$id': typeof ApiMobileMarketingIdRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
+  '/api/mobile/packages/cleared': typeof ApiMobilePackagesClearedRoute
   '/api/mobile/packages/extract-label': typeof ApiMobilePackagesExtractLabelRoute
+  '/api/mobile/packages/intake': typeof ApiMobilePackagesIntakeRoute
   '/api/mobile/packages/lookup': typeof ApiMobilePackagesLookupRoute
   '/api/mobile/packages/ready-for-pickup': typeof ApiMobilePackagesReadyForPickupRoute
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
   '/api/mobile/payments/cash': typeof ApiMobilePaymentsCashRoute
+  '/api/mobile/payments/manual': typeof ApiMobilePaymentsManualRoute
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
+  '/api/mobile/stats/dashboard': typeof ApiMobileStatsDashboardRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
-  '/api/desktop/left-behind/$id/hold': typeof ApiDesktopLeftBehindIdHoldRoute
-  '/api/desktop/left-behind/$id/reassign': typeof ApiDesktopLeftBehindIdReassignRoute
-  '/api/desktop/packages/$id/sticker': typeof ApiDesktopPackagesIdStickerRoute
+  '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRouteWithChildren
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
   '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
@@ -478,6 +518,9 @@ export interface FileRoutesByFullPath {
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
+  '/api/mobile/packages/$id/release': typeof ApiMobilePackagesIdReleaseRoute
+  '/api/mobile/admin/employees/$id/activity': typeof ApiMobileAdminEmployeesIdActivityRoute
+  '/api/mobile/admin/employees/$id/reset-password': typeof ApiMobileAdminEmployeesIdResetPasswordRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -492,7 +535,6 @@ export interface FileRoutesByTo {
   '/dashboard/staff': typeof DashboardStaffRoute
   '/dashboard': typeof DashboardIndexRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
-  '/api/desktop/left-behind': typeof ApiDesktopLeftBehindRouteWithChildren
   '/api/mobile/analytics': typeof ApiMobileAnalyticsRoute
   '/api/mobile/batches': typeof ApiMobileBatchesRouteWithChildren
   '/api/mobile/clients': typeof ApiMobileClientsRouteWithChildren
@@ -504,9 +546,10 @@ export interface FileRoutesByTo {
   '/api/mobile/payments': typeof ApiMobilePaymentsRouteWithChildren
   '/api/mobile/quote': typeof ApiMobileQuoteRoute
   '/api/mobile/rates': typeof ApiMobileRatesRouteWithChildren
+  '/api/mobile/search': typeof ApiMobileSearchRoute
   '/api/mobile/settings': typeof ApiMobileSettingsRoute
   '/api/mobile/staff': typeof ApiMobileStaffRoute
-  '/api/mobile/stats': typeof ApiMobileStatsRoute
+  '/api/mobile/stats': typeof ApiMobileStatsRouteWithChildren
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
   '/api/mobile/warehouses': typeof ApiMobileWarehousesRoute
   '/api/public/archive-expired-records': typeof ApiPublicArchiveExpiredRecordsRoute
@@ -514,27 +557,30 @@ export interface FileRoutesByTo {
   '/api/public/evolution-test-send': typeof ApiPublicEvolutionTestSendRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
-  '/api/desktop/packages/bulk-sticker': typeof ApiDesktopPackagesBulkStickerRoute
+  '/api/mobile/admin/audit': typeof ApiMobileAdminAuditRoute
+  '/api/mobile/admin/employees': typeof ApiMobileAdminEmployeesRouteWithChildren
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/batches/$id': typeof ApiMobileBatchesIdRouteWithChildren
   '/api/mobile/clients/$id': typeof ApiMobileClientsIdRouteWithChildren
   '/api/mobile/conversations/$id': typeof ApiMobileConversationsIdRouteWithChildren
   '/api/mobile/marketing/$id': typeof ApiMobileMarketingIdRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
+  '/api/mobile/packages/cleared': typeof ApiMobilePackagesClearedRoute
   '/api/mobile/packages/extract-label': typeof ApiMobilePackagesExtractLabelRoute
+  '/api/mobile/packages/intake': typeof ApiMobilePackagesIntakeRoute
   '/api/mobile/packages/lookup': typeof ApiMobilePackagesLookupRoute
   '/api/mobile/packages/ready-for-pickup': typeof ApiMobilePackagesReadyForPickupRoute
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
   '/api/mobile/payments/cash': typeof ApiMobilePaymentsCashRoute
+  '/api/mobile/payments/manual': typeof ApiMobilePaymentsManualRoute
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
+  '/api/mobile/stats/dashboard': typeof ApiMobileStatsDashboardRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
-  '/api/desktop/left-behind/$id/hold': typeof ApiDesktopLeftBehindIdHoldRoute
-  '/api/desktop/left-behind/$id/reassign': typeof ApiDesktopLeftBehindIdReassignRoute
-  '/api/desktop/packages/$id/sticker': typeof ApiDesktopPackagesIdStickerRoute
+  '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRouteWithChildren
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
   '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
@@ -543,6 +589,9 @@ export interface FileRoutesByTo {
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
+  '/api/mobile/packages/$id/release': typeof ApiMobilePackagesIdReleaseRoute
+  '/api/mobile/admin/employees/$id/activity': typeof ApiMobileAdminEmployeesIdActivityRoute
+  '/api/mobile/admin/employees/$id/reset-password': typeof ApiMobileAdminEmployeesIdResetPasswordRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -559,7 +608,6 @@ export interface FileRoutesById {
   '/dashboard/staff': typeof DashboardStaffRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
-  '/api/desktop/left-behind': typeof ApiDesktopLeftBehindRouteWithChildren
   '/api/mobile/analytics': typeof ApiMobileAnalyticsRoute
   '/api/mobile/batches': typeof ApiMobileBatchesRouteWithChildren
   '/api/mobile/clients': typeof ApiMobileClientsRouteWithChildren
@@ -571,9 +619,10 @@ export interface FileRoutesById {
   '/api/mobile/payments': typeof ApiMobilePaymentsRouteWithChildren
   '/api/mobile/quote': typeof ApiMobileQuoteRoute
   '/api/mobile/rates': typeof ApiMobileRatesRouteWithChildren
+  '/api/mobile/search': typeof ApiMobileSearchRoute
   '/api/mobile/settings': typeof ApiMobileSettingsRoute
   '/api/mobile/staff': typeof ApiMobileStaffRoute
-  '/api/mobile/stats': typeof ApiMobileStatsRoute
+  '/api/mobile/stats': typeof ApiMobileStatsRouteWithChildren
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
   '/api/mobile/warehouses': typeof ApiMobileWarehousesRoute
   '/api/public/archive-expired-records': typeof ApiPublicArchiveExpiredRecordsRoute
@@ -581,27 +630,30 @@ export interface FileRoutesById {
   '/api/public/evolution-test-send': typeof ApiPublicEvolutionTestSendRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
-  '/api/desktop/packages/bulk-sticker': typeof ApiDesktopPackagesBulkStickerRoute
+  '/api/mobile/admin/audit': typeof ApiMobileAdminAuditRoute
+  '/api/mobile/admin/employees': typeof ApiMobileAdminEmployeesRouteWithChildren
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/batches/$id': typeof ApiMobileBatchesIdRouteWithChildren
   '/api/mobile/clients/$id': typeof ApiMobileClientsIdRouteWithChildren
   '/api/mobile/conversations/$id': typeof ApiMobileConversationsIdRouteWithChildren
   '/api/mobile/marketing/$id': typeof ApiMobileMarketingIdRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
+  '/api/mobile/packages/cleared': typeof ApiMobilePackagesClearedRoute
   '/api/mobile/packages/extract-label': typeof ApiMobilePackagesExtractLabelRoute
+  '/api/mobile/packages/intake': typeof ApiMobilePackagesIntakeRoute
   '/api/mobile/packages/lookup': typeof ApiMobilePackagesLookupRoute
   '/api/mobile/packages/ready-for-pickup': typeof ApiMobilePackagesReadyForPickupRoute
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
   '/api/mobile/payments/cash': typeof ApiMobilePaymentsCashRoute
+  '/api/mobile/payments/manual': typeof ApiMobilePaymentsManualRoute
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
+  '/api/mobile/stats/dashboard': typeof ApiMobileStatsDashboardRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
-  '/api/desktop/left-behind/$id/hold': typeof ApiDesktopLeftBehindIdHoldRoute
-  '/api/desktop/left-behind/$id/reassign': typeof ApiDesktopLeftBehindIdReassignRoute
-  '/api/desktop/packages/$id/sticker': typeof ApiDesktopPackagesIdStickerRoute
+  '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRouteWithChildren
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
   '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
@@ -610,6 +662,9 @@ export interface FileRoutesById {
   '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
   '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
   '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
+  '/api/mobile/packages/$id/release': typeof ApiMobilePackagesIdReleaseRoute
+  '/api/mobile/admin/employees/$id/activity': typeof ApiMobileAdminEmployeesIdActivityRoute
+  '/api/mobile/admin/employees/$id/reset-password': typeof ApiMobileAdminEmployeesIdResetPasswordRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -627,7 +682,6 @@ export interface FileRouteTypes {
     | '/dashboard/staff'
     | '/dashboard/'
     | '/api/admin/users'
-    | '/api/desktop/left-behind'
     | '/api/mobile/analytics'
     | '/api/mobile/batches'
     | '/api/mobile/clients'
@@ -639,6 +693,7 @@ export interface FileRouteTypes {
     | '/api/mobile/payments'
     | '/api/mobile/quote'
     | '/api/mobile/rates'
+    | '/api/mobile/search'
     | '/api/mobile/settings'
     | '/api/mobile/staff'
     | '/api/mobile/stats'
@@ -649,27 +704,30 @@ export interface FileRouteTypes {
     | '/api/public/evolution-test-send'
     | '/api/public/evolution-webhook'
     | '/api/public/publish-scheduled'
-    | '/api/desktop/packages/bulk-sticker'
+    | '/api/mobile/admin/audit'
+    | '/api/mobile/admin/employees'
     | '/api/mobile/auth/me'
     | '/api/mobile/batches/$id'
     | '/api/mobile/clients/$id'
     | '/api/mobile/conversations/$id'
     | '/api/mobile/marketing/$id'
     | '/api/mobile/packages/$id'
+    | '/api/mobile/packages/cleared'
     | '/api/mobile/packages/extract-label'
+    | '/api/mobile/packages/intake'
     | '/api/mobile/packages/lookup'
     | '/api/mobile/packages/ready-for-pickup'
     | '/api/mobile/packages/scan'
     | '/api/mobile/payments/$id'
     | '/api/mobile/payments/cash'
+    | '/api/mobile/payments/manual'
     | '/api/mobile/push/register'
     | '/api/mobile/rates/$id'
     | '/api/mobile/rates/lookup'
+    | '/api/mobile/stats/dashboard'
     | '/api/public/evolution-webhook/$'
     | '/api/admin/users/$id/roles'
-    | '/api/desktop/left-behind/$id/hold'
-    | '/api/desktop/left-behind/$id/reassign'
-    | '/api/desktop/packages/$id/sticker'
+    | '/api/mobile/admin/employees/$id'
     | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
     | '/api/mobile/clients/$id/consent'
@@ -678,6 +736,9 @@ export interface FileRouteTypes {
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/deliver'
     | '/api/mobile/packages/$id/events'
+    | '/api/mobile/packages/$id/release'
+    | '/api/mobile/admin/employees/$id/activity'
+    | '/api/mobile/admin/employees/$id/reset-password'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -692,7 +753,6 @@ export interface FileRouteTypes {
     | '/dashboard/staff'
     | '/dashboard'
     | '/api/admin/users'
-    | '/api/desktop/left-behind'
     | '/api/mobile/analytics'
     | '/api/mobile/batches'
     | '/api/mobile/clients'
@@ -704,6 +764,7 @@ export interface FileRouteTypes {
     | '/api/mobile/payments'
     | '/api/mobile/quote'
     | '/api/mobile/rates'
+    | '/api/mobile/search'
     | '/api/mobile/settings'
     | '/api/mobile/staff'
     | '/api/mobile/stats'
@@ -714,27 +775,30 @@ export interface FileRouteTypes {
     | '/api/public/evolution-test-send'
     | '/api/public/evolution-webhook'
     | '/api/public/publish-scheduled'
-    | '/api/desktop/packages/bulk-sticker'
+    | '/api/mobile/admin/audit'
+    | '/api/mobile/admin/employees'
     | '/api/mobile/auth/me'
     | '/api/mobile/batches/$id'
     | '/api/mobile/clients/$id'
     | '/api/mobile/conversations/$id'
     | '/api/mobile/marketing/$id'
     | '/api/mobile/packages/$id'
+    | '/api/mobile/packages/cleared'
     | '/api/mobile/packages/extract-label'
+    | '/api/mobile/packages/intake'
     | '/api/mobile/packages/lookup'
     | '/api/mobile/packages/ready-for-pickup'
     | '/api/mobile/packages/scan'
     | '/api/mobile/payments/$id'
     | '/api/mobile/payments/cash'
+    | '/api/mobile/payments/manual'
     | '/api/mobile/push/register'
     | '/api/mobile/rates/$id'
     | '/api/mobile/rates/lookup'
+    | '/api/mobile/stats/dashboard'
     | '/api/public/evolution-webhook/$'
     | '/api/admin/users/$id/roles'
-    | '/api/desktop/left-behind/$id/hold'
-    | '/api/desktop/left-behind/$id/reassign'
-    | '/api/desktop/packages/$id/sticker'
+    | '/api/mobile/admin/employees/$id'
     | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
     | '/api/mobile/clients/$id/consent'
@@ -743,6 +807,9 @@ export interface FileRouteTypes {
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/deliver'
     | '/api/mobile/packages/$id/events'
+    | '/api/mobile/packages/$id/release'
+    | '/api/mobile/admin/employees/$id/activity'
+    | '/api/mobile/admin/employees/$id/reset-password'
   id:
     | '__root__'
     | '/'
@@ -758,7 +825,6 @@ export interface FileRouteTypes {
     | '/dashboard/staff'
     | '/dashboard/'
     | '/api/admin/users'
-    | '/api/desktop/left-behind'
     | '/api/mobile/analytics'
     | '/api/mobile/batches'
     | '/api/mobile/clients'
@@ -770,6 +836,7 @@ export interface FileRouteTypes {
     | '/api/mobile/payments'
     | '/api/mobile/quote'
     | '/api/mobile/rates'
+    | '/api/mobile/search'
     | '/api/mobile/settings'
     | '/api/mobile/staff'
     | '/api/mobile/stats'
@@ -780,27 +847,30 @@ export interface FileRouteTypes {
     | '/api/public/evolution-test-send'
     | '/api/public/evolution-webhook'
     | '/api/public/publish-scheduled'
-    | '/api/desktop/packages/bulk-sticker'
+    | '/api/mobile/admin/audit'
+    | '/api/mobile/admin/employees'
     | '/api/mobile/auth/me'
     | '/api/mobile/batches/$id'
     | '/api/mobile/clients/$id'
     | '/api/mobile/conversations/$id'
     | '/api/mobile/marketing/$id'
     | '/api/mobile/packages/$id'
+    | '/api/mobile/packages/cleared'
     | '/api/mobile/packages/extract-label'
+    | '/api/mobile/packages/intake'
     | '/api/mobile/packages/lookup'
     | '/api/mobile/packages/ready-for-pickup'
     | '/api/mobile/packages/scan'
     | '/api/mobile/payments/$id'
     | '/api/mobile/payments/cash'
+    | '/api/mobile/payments/manual'
     | '/api/mobile/push/register'
     | '/api/mobile/rates/$id'
     | '/api/mobile/rates/lookup'
+    | '/api/mobile/stats/dashboard'
     | '/api/public/evolution-webhook/$'
     | '/api/admin/users/$id/roles'
-    | '/api/desktop/left-behind/$id/hold'
-    | '/api/desktop/left-behind/$id/reassign'
-    | '/api/desktop/packages/$id/sticker'
+    | '/api/mobile/admin/employees/$id'
     | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
     | '/api/mobile/clients/$id/consent'
@@ -809,6 +879,9 @@ export interface FileRouteTypes {
     | '/api/mobile/conversations/$id/messages'
     | '/api/mobile/packages/$id/deliver'
     | '/api/mobile/packages/$id/events'
+    | '/api/mobile/packages/$id/release'
+    | '/api/mobile/admin/employees/$id/activity'
+    | '/api/mobile/admin/employees/$id/reset-password'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -817,7 +890,6 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRouteWithChildren
   QuoteRoute: typeof QuoteRoute
   ApiAdminUsersRoute: typeof ApiAdminUsersRouteWithChildren
-  ApiDesktopLeftBehindRoute: typeof ApiDesktopLeftBehindRouteWithChildren
   ApiMobileAnalyticsRoute: typeof ApiMobileAnalyticsRoute
   ApiMobileBatchesRoute: typeof ApiMobileBatchesRouteWithChildren
   ApiMobileClientsRoute: typeof ApiMobileClientsRouteWithChildren
@@ -829,9 +901,10 @@ export interface RootRouteChildren {
   ApiMobilePaymentsRoute: typeof ApiMobilePaymentsRouteWithChildren
   ApiMobileQuoteRoute: typeof ApiMobileQuoteRoute
   ApiMobileRatesRoute: typeof ApiMobileRatesRouteWithChildren
+  ApiMobileSearchRoute: typeof ApiMobileSearchRoute
   ApiMobileSettingsRoute: typeof ApiMobileSettingsRoute
   ApiMobileStaffRoute: typeof ApiMobileStaffRoute
-  ApiMobileStatsRoute: typeof ApiMobileStatsRoute
+  ApiMobileStatsRoute: typeof ApiMobileStatsRouteWithChildren
   ApiMobileUploadsRoute: typeof ApiMobileUploadsRoute
   ApiMobileWarehousesRoute: typeof ApiMobileWarehousesRoute
   ApiPublicArchiveExpiredRecordsRoute: typeof ApiPublicArchiveExpiredRecordsRoute
@@ -839,10 +912,10 @@ export interface RootRouteChildren {
   ApiPublicEvolutionTestSendRoute: typeof ApiPublicEvolutionTestSendRoute
   ApiPublicEvolutionWebhookRoute: typeof ApiPublicEvolutionWebhookRouteWithChildren
   ApiPublicPublishScheduledRoute: typeof ApiPublicPublishScheduledRoute
-  ApiDesktopPackagesBulkStickerRoute: typeof ApiDesktopPackagesBulkStickerRoute
+  ApiMobileAdminAuditRoute: typeof ApiMobileAdminAuditRoute
+  ApiMobileAdminEmployeesRoute: typeof ApiMobileAdminEmployeesRouteWithChildren
   ApiMobileAuthMeRoute: typeof ApiMobileAuthMeRoute
   ApiMobilePushRegisterRoute: typeof ApiMobilePushRegisterRoute
-  ApiDesktopPackagesIdStickerRoute: typeof ApiDesktopPackagesIdStickerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1001,6 +1074,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileSettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/mobile/search': {
+      id: '/api/mobile/search'
+      path: '/api/mobile/search'
+      fullPath: '/api/mobile/search'
+      preLoaderRoute: typeof ApiMobileSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/mobile/rates': {
       id: '/api/mobile/rates'
       path: '/api/mobile/rates'
@@ -1078,13 +1158,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileAnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/desktop/left-behind': {
-      id: '/api/desktop/left-behind'
-      path: '/api/desktop/left-behind'
-      fullPath: '/api/desktop/left-behind'
-      preLoaderRoute: typeof ApiDesktopLeftBehindRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/admin/users': {
       id: '/api/admin/users'
       path: '/api/admin/users'
@@ -1098,6 +1171,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/public/evolution-webhook/$'
       preLoaderRoute: typeof ApiPublicEvolutionWebhookSplatRouteImport
       parentRoute: typeof ApiPublicEvolutionWebhookRoute
+    }
+    '/api/mobile/stats/dashboard': {
+      id: '/api/mobile/stats/dashboard'
+      path: '/dashboard'
+      fullPath: '/api/mobile/stats/dashboard'
+      preLoaderRoute: typeof ApiMobileStatsDashboardRouteImport
+      parentRoute: typeof ApiMobileStatsRoute
     }
     '/api/mobile/rates/lookup': {
       id: '/api/mobile/rates/lookup'
@@ -1119,6 +1199,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/mobile/push/register'
       preLoaderRoute: typeof ApiMobilePushRegisterRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/api/mobile/payments/manual': {
+      id: '/api/mobile/payments/manual'
+      path: '/manual'
+      fullPath: '/api/mobile/payments/manual'
+      preLoaderRoute: typeof ApiMobilePaymentsManualRouteImport
+      parentRoute: typeof ApiMobilePaymentsRoute
     }
     '/api/mobile/payments/cash': {
       id: '/api/mobile/payments/cash'
@@ -1155,11 +1242,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobilePackagesLookupRouteImport
       parentRoute: typeof ApiMobilePackagesRoute
     }
+    '/api/mobile/packages/intake': {
+      id: '/api/mobile/packages/intake'
+      path: '/intake'
+      fullPath: '/api/mobile/packages/intake'
+      preLoaderRoute: typeof ApiMobilePackagesIntakeRouteImport
+      parentRoute: typeof ApiMobilePackagesRoute
+    }
     '/api/mobile/packages/extract-label': {
       id: '/api/mobile/packages/extract-label'
       path: '/extract-label'
       fullPath: '/api/mobile/packages/extract-label'
       preLoaderRoute: typeof ApiMobilePackagesExtractLabelRouteImport
+      parentRoute: typeof ApiMobilePackagesRoute
+    }
+    '/api/mobile/packages/cleared': {
+      id: '/api/mobile/packages/cleared'
+      path: '/cleared'
+      fullPath: '/api/mobile/packages/cleared'
+      preLoaderRoute: typeof ApiMobilePackagesClearedRouteImport
       parentRoute: typeof ApiMobilePackagesRoute
     }
     '/api/mobile/packages/$id': {
@@ -1204,12 +1305,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileAuthMeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/desktop/packages/bulk-sticker': {
-      id: '/api/desktop/packages/bulk-sticker'
-      path: '/api/desktop/packages/bulk-sticker'
-      fullPath: '/api/desktop/packages/bulk-sticker'
-      preLoaderRoute: typeof ApiDesktopPackagesBulkStickerRouteImport
+    '/api/mobile/admin/employees': {
+      id: '/api/mobile/admin/employees'
+      path: '/api/mobile/admin/employees'
+      fullPath: '/api/mobile/admin/employees'
+      preLoaderRoute: typeof ApiMobileAdminEmployeesRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/api/mobile/admin/audit': {
+      id: '/api/mobile/admin/audit'
+      path: '/api/mobile/admin/audit'
+      fullPath: '/api/mobile/admin/audit'
+      preLoaderRoute: typeof ApiMobileAdminAuditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/mobile/packages/$id/release': {
+      id: '/api/mobile/packages/$id/release'
+      path: '/release'
+      fullPath: '/api/mobile/packages/$id/release'
+      preLoaderRoute: typeof ApiMobilePackagesIdReleaseRouteImport
+      parentRoute: typeof ApiMobilePackagesIdRoute
     }
     '/api/mobile/packages/$id/events': {
       id: '/api/mobile/packages/$id/events'
@@ -1267,26 +1382,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileBatchesIdCloseRouteImport
       parentRoute: typeof ApiMobileBatchesIdRoute
     }
-    '/api/desktop/packages/$id/sticker': {
-      id: '/api/desktop/packages/$id/sticker'
-      path: '/api/desktop/packages/$id/sticker'
-      fullPath: '/api/desktop/packages/$id/sticker'
-      preLoaderRoute: typeof ApiDesktopPackagesIdStickerRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/desktop/left-behind/$id/reassign': {
-      id: '/api/desktop/left-behind/$id/reassign'
-      path: '/$id/reassign'
-      fullPath: '/api/desktop/left-behind/$id/reassign'
-      preLoaderRoute: typeof ApiDesktopLeftBehindIdReassignRouteImport
-      parentRoute: typeof ApiDesktopLeftBehindRoute
-    }
-    '/api/desktop/left-behind/$id/hold': {
-      id: '/api/desktop/left-behind/$id/hold'
-      path: '/$id/hold'
-      fullPath: '/api/desktop/left-behind/$id/hold'
-      preLoaderRoute: typeof ApiDesktopLeftBehindIdHoldRouteImport
-      parentRoute: typeof ApiDesktopLeftBehindRoute
+    '/api/mobile/admin/employees/$id': {
+      id: '/api/mobile/admin/employees/$id'
+      path: '/$id'
+      fullPath: '/api/mobile/admin/employees/$id'
+      preLoaderRoute: typeof ApiMobileAdminEmployeesIdRouteImport
+      parentRoute: typeof ApiMobileAdminEmployeesRoute
     }
     '/api/admin/users/$id/roles': {
       id: '/api/admin/users/$id/roles'
@@ -1294,6 +1395,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/admin/users/$id/roles'
       preLoaderRoute: typeof ApiAdminUsersIdRolesRouteImport
       parentRoute: typeof ApiAdminUsersRoute
+    }
+    '/api/mobile/admin/employees/$id/reset-password': {
+      id: '/api/mobile/admin/employees/$id/reset-password'
+      path: '/reset-password'
+      fullPath: '/api/mobile/admin/employees/$id/reset-password'
+      preLoaderRoute: typeof ApiMobileAdminEmployeesIdResetPasswordRouteImport
+      parentRoute: typeof ApiMobileAdminEmployeesIdRoute
+    }
+    '/api/mobile/admin/employees/$id/activity': {
+      id: '/api/mobile/admin/employees/$id/activity'
+      path: '/activity'
+      fullPath: '/api/mobile/admin/employees/$id/activity'
+      preLoaderRoute: typeof ApiMobileAdminEmployeesIdActivityRouteImport
+      parentRoute: typeof ApiMobileAdminEmployeesIdRoute
     }
   }
 }
@@ -1335,19 +1450,6 @@ const ApiAdminUsersRouteChildren: ApiAdminUsersRouteChildren = {
 const ApiAdminUsersRouteWithChildren = ApiAdminUsersRoute._addFileChildren(
   ApiAdminUsersRouteChildren,
 )
-
-interface ApiDesktopLeftBehindRouteChildren {
-  ApiDesktopLeftBehindIdHoldRoute: typeof ApiDesktopLeftBehindIdHoldRoute
-  ApiDesktopLeftBehindIdReassignRoute: typeof ApiDesktopLeftBehindIdReassignRoute
-}
-
-const ApiDesktopLeftBehindRouteChildren: ApiDesktopLeftBehindRouteChildren = {
-  ApiDesktopLeftBehindIdHoldRoute: ApiDesktopLeftBehindIdHoldRoute,
-  ApiDesktopLeftBehindIdReassignRoute: ApiDesktopLeftBehindIdReassignRoute,
-}
-
-const ApiDesktopLeftBehindRouteWithChildren =
-  ApiDesktopLeftBehindRoute._addFileChildren(ApiDesktopLeftBehindRouteChildren)
 
 interface ApiMobileBatchesIdRouteChildren {
   ApiMobileBatchesIdCloseRoute: typeof ApiMobileBatchesIdCloseRoute
@@ -1442,11 +1544,13 @@ const ApiMobileMarketingRouteWithChildren =
 interface ApiMobilePackagesIdRouteChildren {
   ApiMobilePackagesIdDeliverRoute: typeof ApiMobilePackagesIdDeliverRoute
   ApiMobilePackagesIdEventsRoute: typeof ApiMobilePackagesIdEventsRoute
+  ApiMobilePackagesIdReleaseRoute: typeof ApiMobilePackagesIdReleaseRoute
 }
 
 const ApiMobilePackagesIdRouteChildren: ApiMobilePackagesIdRouteChildren = {
   ApiMobilePackagesIdDeliverRoute: ApiMobilePackagesIdDeliverRoute,
   ApiMobilePackagesIdEventsRoute: ApiMobilePackagesIdEventsRoute,
+  ApiMobilePackagesIdReleaseRoute: ApiMobilePackagesIdReleaseRoute,
 }
 
 const ApiMobilePackagesIdRouteWithChildren =
@@ -1454,7 +1558,9 @@ const ApiMobilePackagesIdRouteWithChildren =
 
 interface ApiMobilePackagesRouteChildren {
   ApiMobilePackagesIdRoute: typeof ApiMobilePackagesIdRouteWithChildren
+  ApiMobilePackagesClearedRoute: typeof ApiMobilePackagesClearedRoute
   ApiMobilePackagesExtractLabelRoute: typeof ApiMobilePackagesExtractLabelRoute
+  ApiMobilePackagesIntakeRoute: typeof ApiMobilePackagesIntakeRoute
   ApiMobilePackagesLookupRoute: typeof ApiMobilePackagesLookupRoute
   ApiMobilePackagesReadyForPickupRoute: typeof ApiMobilePackagesReadyForPickupRoute
   ApiMobilePackagesScanRoute: typeof ApiMobilePackagesScanRoute
@@ -1462,7 +1568,9 @@ interface ApiMobilePackagesRouteChildren {
 
 const ApiMobilePackagesRouteChildren: ApiMobilePackagesRouteChildren = {
   ApiMobilePackagesIdRoute: ApiMobilePackagesIdRouteWithChildren,
+  ApiMobilePackagesClearedRoute: ApiMobilePackagesClearedRoute,
   ApiMobilePackagesExtractLabelRoute: ApiMobilePackagesExtractLabelRoute,
+  ApiMobilePackagesIntakeRoute: ApiMobilePackagesIntakeRoute,
   ApiMobilePackagesLookupRoute: ApiMobilePackagesLookupRoute,
   ApiMobilePackagesReadyForPickupRoute: ApiMobilePackagesReadyForPickupRoute,
   ApiMobilePackagesScanRoute: ApiMobilePackagesScanRoute,
@@ -1474,11 +1582,13 @@ const ApiMobilePackagesRouteWithChildren =
 interface ApiMobilePaymentsRouteChildren {
   ApiMobilePaymentsIdRoute: typeof ApiMobilePaymentsIdRoute
   ApiMobilePaymentsCashRoute: typeof ApiMobilePaymentsCashRoute
+  ApiMobilePaymentsManualRoute: typeof ApiMobilePaymentsManualRoute
 }
 
 const ApiMobilePaymentsRouteChildren: ApiMobilePaymentsRouteChildren = {
   ApiMobilePaymentsIdRoute: ApiMobilePaymentsIdRoute,
   ApiMobilePaymentsCashRoute: ApiMobilePaymentsCashRoute,
+  ApiMobilePaymentsManualRoute: ApiMobilePaymentsManualRoute,
 }
 
 const ApiMobilePaymentsRouteWithChildren =
@@ -1498,6 +1608,18 @@ const ApiMobileRatesRouteWithChildren = ApiMobileRatesRoute._addFileChildren(
   ApiMobileRatesRouteChildren,
 )
 
+interface ApiMobileStatsRouteChildren {
+  ApiMobileStatsDashboardRoute: typeof ApiMobileStatsDashboardRoute
+}
+
+const ApiMobileStatsRouteChildren: ApiMobileStatsRouteChildren = {
+  ApiMobileStatsDashboardRoute: ApiMobileStatsDashboardRoute,
+}
+
+const ApiMobileStatsRouteWithChildren = ApiMobileStatsRoute._addFileChildren(
+  ApiMobileStatsRouteChildren,
+)
+
 interface ApiPublicEvolutionWebhookRouteChildren {
   ApiPublicEvolutionWebhookSplatRoute: typeof ApiPublicEvolutionWebhookSplatRoute
 }
@@ -1512,13 +1634,44 @@ const ApiPublicEvolutionWebhookRouteWithChildren =
     ApiPublicEvolutionWebhookRouteChildren,
   )
 
+interface ApiMobileAdminEmployeesIdRouteChildren {
+  ApiMobileAdminEmployeesIdActivityRoute: typeof ApiMobileAdminEmployeesIdActivityRoute
+  ApiMobileAdminEmployeesIdResetPasswordRoute: typeof ApiMobileAdminEmployeesIdResetPasswordRoute
+}
+
+const ApiMobileAdminEmployeesIdRouteChildren: ApiMobileAdminEmployeesIdRouteChildren =
+  {
+    ApiMobileAdminEmployeesIdActivityRoute:
+      ApiMobileAdminEmployeesIdActivityRoute,
+    ApiMobileAdminEmployeesIdResetPasswordRoute:
+      ApiMobileAdminEmployeesIdResetPasswordRoute,
+  }
+
+const ApiMobileAdminEmployeesIdRouteWithChildren =
+  ApiMobileAdminEmployeesIdRoute._addFileChildren(
+    ApiMobileAdminEmployeesIdRouteChildren,
+  )
+
+interface ApiMobileAdminEmployeesRouteChildren {
+  ApiMobileAdminEmployeesIdRoute: typeof ApiMobileAdminEmployeesIdRouteWithChildren
+}
+
+const ApiMobileAdminEmployeesRouteChildren: ApiMobileAdminEmployeesRouteChildren =
+  {
+    ApiMobileAdminEmployeesIdRoute: ApiMobileAdminEmployeesIdRouteWithChildren,
+  }
+
+const ApiMobileAdminEmployeesRouteWithChildren =
+  ApiMobileAdminEmployeesRoute._addFileChildren(
+    ApiMobileAdminEmployeesRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   DashboardRoute: DashboardRouteWithChildren,
   QuoteRoute: QuoteRoute,
   ApiAdminUsersRoute: ApiAdminUsersRouteWithChildren,
-  ApiDesktopLeftBehindRoute: ApiDesktopLeftBehindRouteWithChildren,
   ApiMobileAnalyticsRoute: ApiMobileAnalyticsRoute,
   ApiMobileBatchesRoute: ApiMobileBatchesRouteWithChildren,
   ApiMobileClientsRoute: ApiMobileClientsRouteWithChildren,
@@ -1530,9 +1683,10 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMobilePaymentsRoute: ApiMobilePaymentsRouteWithChildren,
   ApiMobileQuoteRoute: ApiMobileQuoteRoute,
   ApiMobileRatesRoute: ApiMobileRatesRouteWithChildren,
+  ApiMobileSearchRoute: ApiMobileSearchRoute,
   ApiMobileSettingsRoute: ApiMobileSettingsRoute,
   ApiMobileStaffRoute: ApiMobileStaffRoute,
-  ApiMobileStatsRoute: ApiMobileStatsRoute,
+  ApiMobileStatsRoute: ApiMobileStatsRouteWithChildren,
   ApiMobileUploadsRoute: ApiMobileUploadsRoute,
   ApiMobileWarehousesRoute: ApiMobileWarehousesRoute,
   ApiPublicArchiveExpiredRecordsRoute: ApiPublicArchiveExpiredRecordsRoute,
@@ -1540,20 +1694,11 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicEvolutionTestSendRoute: ApiPublicEvolutionTestSendRoute,
   ApiPublicEvolutionWebhookRoute: ApiPublicEvolutionWebhookRouteWithChildren,
   ApiPublicPublishScheduledRoute: ApiPublicPublishScheduledRoute,
-  ApiDesktopPackagesBulkStickerRoute: ApiDesktopPackagesBulkStickerRoute,
+  ApiMobileAdminAuditRoute: ApiMobileAdminAuditRoute,
+  ApiMobileAdminEmployeesRoute: ApiMobileAdminEmployeesRouteWithChildren,
   ApiMobileAuthMeRoute: ApiMobileAuthMeRoute,
   ApiMobilePushRegisterRoute: ApiMobilePushRegisterRoute,
-  ApiDesktopPackagesIdStickerRoute: ApiDesktopPackagesIdStickerRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
