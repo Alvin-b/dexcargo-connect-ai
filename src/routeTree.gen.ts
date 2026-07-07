@@ -54,6 +54,7 @@ import { Route as ApiMobilePackagesReadyForPickupRouteImport } from './routes/ap
 import { Route as ApiMobilePackagesLookupRouteImport } from './routes/api/mobile/packages.lookup'
 import { Route as ApiMobilePackagesIntakeRouteImport } from './routes/api/mobile/packages.intake'
 import { Route as ApiMobilePackagesExtractLabelRouteImport } from './routes/api/mobile/packages.extract-label'
+import { Route as ApiMobilePackagesClearedRouteImport } from './routes/api/mobile/packages.cleared'
 import { Route as ApiMobilePackagesIdRouteImport } from './routes/api/mobile/packages.$id'
 import { Route as ApiMobileMarketingIdRouteImport } from './routes/api/mobile/marketing.$id'
 import { Route as ApiMobileConversationsIdRouteImport } from './routes/api/mobile/conversations.$id'
@@ -308,6 +309,12 @@ const ApiMobilePackagesExtractLabelRoute =
     path: '/extract-label',
     getParentRoute: () => ApiMobilePackagesRoute,
   } as any)
+const ApiMobilePackagesClearedRoute =
+  ApiMobilePackagesClearedRouteImport.update({
+    id: '/cleared',
+    path: '/cleared',
+    getParentRoute: () => ApiMobilePackagesRoute,
+  } as any)
 const ApiMobilePackagesIdRoute = ApiMobilePackagesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -468,6 +475,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/conversations/$id': typeof ApiMobileConversationsIdRouteWithChildren
   '/api/mobile/marketing/$id': typeof ApiMobileMarketingIdRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
+  '/api/mobile/packages/cleared': typeof ApiMobilePackagesClearedRoute
   '/api/mobile/packages/extract-label': typeof ApiMobilePackagesExtractLabelRoute
   '/api/mobile/packages/intake': typeof ApiMobilePackagesIntakeRoute
   '/api/mobile/packages/lookup': typeof ApiMobilePackagesLookupRoute
@@ -535,6 +543,7 @@ export interface FileRoutesByTo {
   '/api/mobile/conversations/$id': typeof ApiMobileConversationsIdRouteWithChildren
   '/api/mobile/marketing/$id': typeof ApiMobileMarketingIdRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
+  '/api/mobile/packages/cleared': typeof ApiMobilePackagesClearedRoute
   '/api/mobile/packages/extract-label': typeof ApiMobilePackagesExtractLabelRoute
   '/api/mobile/packages/intake': typeof ApiMobilePackagesIntakeRoute
   '/api/mobile/packages/lookup': typeof ApiMobilePackagesLookupRoute
@@ -604,6 +613,7 @@ export interface FileRoutesById {
   '/api/mobile/conversations/$id': typeof ApiMobileConversationsIdRouteWithChildren
   '/api/mobile/marketing/$id': typeof ApiMobileMarketingIdRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
+  '/api/mobile/packages/cleared': typeof ApiMobilePackagesClearedRoute
   '/api/mobile/packages/extract-label': typeof ApiMobilePackagesExtractLabelRoute
   '/api/mobile/packages/intake': typeof ApiMobilePackagesIntakeRoute
   '/api/mobile/packages/lookup': typeof ApiMobilePackagesLookupRoute
@@ -674,6 +684,7 @@ export interface FileRouteTypes {
     | '/api/mobile/conversations/$id'
     | '/api/mobile/marketing/$id'
     | '/api/mobile/packages/$id'
+    | '/api/mobile/packages/cleared'
     | '/api/mobile/packages/extract-label'
     | '/api/mobile/packages/intake'
     | '/api/mobile/packages/lookup'
@@ -741,6 +752,7 @@ export interface FileRouteTypes {
     | '/api/mobile/conversations/$id'
     | '/api/mobile/marketing/$id'
     | '/api/mobile/packages/$id'
+    | '/api/mobile/packages/cleared'
     | '/api/mobile/packages/extract-label'
     | '/api/mobile/packages/intake'
     | '/api/mobile/packages/lookup'
@@ -809,6 +821,7 @@ export interface FileRouteTypes {
     | '/api/mobile/conversations/$id'
     | '/api/mobile/marketing/$id'
     | '/api/mobile/packages/$id'
+    | '/api/mobile/packages/cleared'
     | '/api/mobile/packages/extract-label'
     | '/api/mobile/packages/intake'
     | '/api/mobile/packages/lookup'
@@ -1185,6 +1198,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobilePackagesExtractLabelRouteImport
       parentRoute: typeof ApiMobilePackagesRoute
     }
+    '/api/mobile/packages/cleared': {
+      id: '/api/mobile/packages/cleared'
+      path: '/cleared'
+      fullPath: '/api/mobile/packages/cleared'
+      preLoaderRoute: typeof ApiMobilePackagesClearedRouteImport
+      parentRoute: typeof ApiMobilePackagesRoute
+    }
     '/api/mobile/packages/$id': {
       id: '/api/mobile/packages/$id'
       path: '/$id'
@@ -1480,6 +1500,7 @@ const ApiMobilePackagesIdRouteWithChildren =
 
 interface ApiMobilePackagesRouteChildren {
   ApiMobilePackagesIdRoute: typeof ApiMobilePackagesIdRouteWithChildren
+  ApiMobilePackagesClearedRoute: typeof ApiMobilePackagesClearedRoute
   ApiMobilePackagesExtractLabelRoute: typeof ApiMobilePackagesExtractLabelRoute
   ApiMobilePackagesIntakeRoute: typeof ApiMobilePackagesIntakeRoute
   ApiMobilePackagesLookupRoute: typeof ApiMobilePackagesLookupRoute
@@ -1489,6 +1510,7 @@ interface ApiMobilePackagesRouteChildren {
 
 const ApiMobilePackagesRouteChildren: ApiMobilePackagesRouteChildren = {
   ApiMobilePackagesIdRoute: ApiMobilePackagesIdRouteWithChildren,
+  ApiMobilePackagesClearedRoute: ApiMobilePackagesClearedRoute,
   ApiMobilePackagesExtractLabelRoute: ApiMobilePackagesExtractLabelRoute,
   ApiMobilePackagesIntakeRoute: ApiMobilePackagesIntakeRoute,
   ApiMobilePackagesLookupRoute: ApiMobilePackagesLookupRoute,
