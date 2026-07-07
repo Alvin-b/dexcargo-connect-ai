@@ -47,6 +47,7 @@ import { Route as ApiPublicEvolutionWebhookSplatRouteImport } from './routes/api
 import { Route as ApiMobileRatesLookupRouteImport } from './routes/api/mobile/rates.lookup'
 import { Route as ApiMobileRatesIdRouteImport } from './routes/api/mobile/rates.$id'
 import { Route as ApiMobilePushRegisterRouteImport } from './routes/api/mobile/push.register'
+import { Route as ApiMobilePaymentsManualRouteImport } from './routes/api/mobile/payments.manual'
 import { Route as ApiMobilePaymentsCashRouteImport } from './routes/api/mobile/payments.cash'
 import { Route as ApiMobilePaymentsIdRouteImport } from './routes/api/mobile/payments.$id'
 import { Route as ApiMobilePackagesScanRouteImport } from './routes/api/mobile/packages.scan'
@@ -272,6 +273,11 @@ const ApiMobilePushRegisterRoute = ApiMobilePushRegisterRouteImport.update({
   path: '/api/mobile/push/register',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiMobilePaymentsManualRoute = ApiMobilePaymentsManualRouteImport.update({
+  id: '/manual',
+  path: '/manual',
+  getParentRoute: () => ApiMobilePaymentsRoute,
+} as any)
 const ApiMobilePaymentsCashRoute = ApiMobilePaymentsCashRouteImport.update({
   id: '/cash',
   path: '/cash',
@@ -483,6 +489,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
   '/api/mobile/payments/cash': typeof ApiMobilePaymentsCashRoute
+  '/api/mobile/payments/manual': typeof ApiMobilePaymentsManualRoute
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
@@ -551,6 +558,7 @@ export interface FileRoutesByTo {
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
   '/api/mobile/payments/cash': typeof ApiMobilePaymentsCashRoute
+  '/api/mobile/payments/manual': typeof ApiMobilePaymentsManualRoute
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
@@ -621,6 +629,7 @@ export interface FileRoutesById {
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
   '/api/mobile/payments/cash': typeof ApiMobilePaymentsCashRoute
+  '/api/mobile/payments/manual': typeof ApiMobilePaymentsManualRoute
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
   '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
@@ -692,6 +701,7 @@ export interface FileRouteTypes {
     | '/api/mobile/packages/scan'
     | '/api/mobile/payments/$id'
     | '/api/mobile/payments/cash'
+    | '/api/mobile/payments/manual'
     | '/api/mobile/push/register'
     | '/api/mobile/rates/$id'
     | '/api/mobile/rates/lookup'
@@ -760,6 +770,7 @@ export interface FileRouteTypes {
     | '/api/mobile/packages/scan'
     | '/api/mobile/payments/$id'
     | '/api/mobile/payments/cash'
+    | '/api/mobile/payments/manual'
     | '/api/mobile/push/register'
     | '/api/mobile/rates/$id'
     | '/api/mobile/rates/lookup'
@@ -829,6 +840,7 @@ export interface FileRouteTypes {
     | '/api/mobile/packages/scan'
     | '/api/mobile/payments/$id'
     | '/api/mobile/payments/cash'
+    | '/api/mobile/payments/manual'
     | '/api/mobile/push/register'
     | '/api/mobile/rates/$id'
     | '/api/mobile/rates/lookup'
@@ -1148,6 +1160,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/mobile/push/register'
       preLoaderRoute: typeof ApiMobilePushRegisterRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/api/mobile/payments/manual': {
+      id: '/api/mobile/payments/manual'
+      path: '/manual'
+      fullPath: '/api/mobile/payments/manual'
+      preLoaderRoute: typeof ApiMobilePaymentsManualRouteImport
+      parentRoute: typeof ApiMobilePaymentsRoute
     }
     '/api/mobile/payments/cash': {
       id: '/api/mobile/payments/cash'
@@ -1524,11 +1543,13 @@ const ApiMobilePackagesRouteWithChildren =
 interface ApiMobilePaymentsRouteChildren {
   ApiMobilePaymentsIdRoute: typeof ApiMobilePaymentsIdRoute
   ApiMobilePaymentsCashRoute: typeof ApiMobilePaymentsCashRoute
+  ApiMobilePaymentsManualRoute: typeof ApiMobilePaymentsManualRoute
 }
 
 const ApiMobilePaymentsRouteChildren: ApiMobilePaymentsRouteChildren = {
   ApiMobilePaymentsIdRoute: ApiMobilePaymentsIdRoute,
   ApiMobilePaymentsCashRoute: ApiMobilePaymentsCashRoute,
+  ApiMobilePaymentsManualRoute: ApiMobilePaymentsManualRoute,
 }
 
 const ApiMobilePaymentsRouteWithChildren =
