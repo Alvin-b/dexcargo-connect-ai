@@ -68,6 +68,7 @@ import { Route as ApiMobileConversationsIdClaimRouteImport } from './routes/api/
 import { Route as ApiMobileClientsIdConsentRouteImport } from './routes/api/mobile/clients.$id.consent'
 import { Route as ApiMobileBatchesIdScanRouteImport } from './routes/api/mobile/batches.$id.scan'
 import { Route as ApiMobileBatchesIdCloseRouteImport } from './routes/api/mobile/batches.$id.close'
+import { Route as ApiMobileAdminEmployeesIdRouteImport } from './routes/api/mobile/admin/employees.$id'
 import { Route as ApiAdminUsersIdRolesRouteImport } from './routes/api/admin/users.$id.roles'
 
 const QuoteRoute = QuoteRouteImport.update({
@@ -379,6 +380,12 @@ const ApiMobileBatchesIdCloseRoute = ApiMobileBatchesIdCloseRouteImport.update({
   path: '/close',
   getParentRoute: () => ApiMobileBatchesIdRoute,
 } as any)
+const ApiMobileAdminEmployeesIdRoute =
+  ApiMobileAdminEmployeesIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => ApiMobileAdminEmployeesRoute,
+  } as any)
 const ApiAdminUsersIdRolesRoute = ApiAdminUsersIdRolesRouteImport.update({
   id: '/$id/roles',
   path: '/$id/roles',
@@ -420,7 +427,7 @@ export interface FileRoutesByFullPath {
   '/api/public/evolution-test-send': typeof ApiPublicEvolutionTestSendRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
-  '/api/mobile/admin/employees': typeof ApiMobileAdminEmployeesRoute
+  '/api/mobile/admin/employees': typeof ApiMobileAdminEmployeesRouteWithChildren
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/batches/$id': typeof ApiMobileBatchesIdRouteWithChildren
   '/api/mobile/clients/$id': typeof ApiMobileClientsIdRouteWithChildren
@@ -438,6 +445,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
+  '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRoute
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
   '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
@@ -481,7 +489,7 @@ export interface FileRoutesByTo {
   '/api/public/evolution-test-send': typeof ApiPublicEvolutionTestSendRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
-  '/api/mobile/admin/employees': typeof ApiMobileAdminEmployeesRoute
+  '/api/mobile/admin/employees': typeof ApiMobileAdminEmployeesRouteWithChildren
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/batches/$id': typeof ApiMobileBatchesIdRouteWithChildren
   '/api/mobile/clients/$id': typeof ApiMobileClientsIdRouteWithChildren
@@ -499,6 +507,7 @@ export interface FileRoutesByTo {
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
+  '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRoute
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
   '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
@@ -544,7 +553,7 @@ export interface FileRoutesById {
   '/api/public/evolution-test-send': typeof ApiPublicEvolutionTestSendRoute
   '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
   '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
-  '/api/mobile/admin/employees': typeof ApiMobileAdminEmployeesRoute
+  '/api/mobile/admin/employees': typeof ApiMobileAdminEmployeesRouteWithChildren
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/batches/$id': typeof ApiMobileBatchesIdRouteWithChildren
   '/api/mobile/clients/$id': typeof ApiMobileClientsIdRouteWithChildren
@@ -562,6 +571,7 @@ export interface FileRoutesById {
   '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
+  '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRoute
   '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
   '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
   '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
@@ -626,6 +636,7 @@ export interface FileRouteTypes {
     | '/api/mobile/rates/lookup'
     | '/api/public/evolution-webhook/$'
     | '/api/admin/users/$id/roles'
+    | '/api/mobile/admin/employees/$id'
     | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
     | '/api/mobile/clients/$id/consent'
@@ -687,6 +698,7 @@ export interface FileRouteTypes {
     | '/api/mobile/rates/lookup'
     | '/api/public/evolution-webhook/$'
     | '/api/admin/users/$id/roles'
+    | '/api/mobile/admin/employees/$id'
     | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
     | '/api/mobile/clients/$id/consent'
@@ -749,6 +761,7 @@ export interface FileRouteTypes {
     | '/api/mobile/rates/lookup'
     | '/api/public/evolution-webhook/$'
     | '/api/admin/users/$id/roles'
+    | '/api/mobile/admin/employees/$id'
     | '/api/mobile/batches/$id/close'
     | '/api/mobile/batches/$id/scan'
     | '/api/mobile/clients/$id/consent'
@@ -786,7 +799,7 @@ export interface RootRouteChildren {
   ApiPublicEvolutionTestSendRoute: typeof ApiPublicEvolutionTestSendRoute
   ApiPublicEvolutionWebhookRoute: typeof ApiPublicEvolutionWebhookRouteWithChildren
   ApiPublicPublishScheduledRoute: typeof ApiPublicPublishScheduledRoute
-  ApiMobileAdminEmployeesRoute: typeof ApiMobileAdminEmployeesRoute
+  ApiMobileAdminEmployeesRoute: typeof ApiMobileAdminEmployeesRouteWithChildren
   ApiMobileAuthMeRoute: typeof ApiMobileAuthMeRoute
   ApiMobilePushRegisterRoute: typeof ApiMobilePushRegisterRoute
 }
@@ -1206,6 +1219,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileBatchesIdCloseRouteImport
       parentRoute: typeof ApiMobileBatchesIdRoute
     }
+    '/api/mobile/admin/employees/$id': {
+      id: '/api/mobile/admin/employees/$id'
+      path: '/$id'
+      fullPath: '/api/mobile/admin/employees/$id'
+      preLoaderRoute: typeof ApiMobileAdminEmployeesIdRouteImport
+      parentRoute: typeof ApiMobileAdminEmployeesRoute
+    }
     '/api/admin/users/$id/roles': {
       id: '/api/admin/users/$id/roles'
       path: '/$id/roles'
@@ -1417,6 +1437,20 @@ const ApiPublicEvolutionWebhookRouteWithChildren =
     ApiPublicEvolutionWebhookRouteChildren,
   )
 
+interface ApiMobileAdminEmployeesRouteChildren {
+  ApiMobileAdminEmployeesIdRoute: typeof ApiMobileAdminEmployeesIdRoute
+}
+
+const ApiMobileAdminEmployeesRouteChildren: ApiMobileAdminEmployeesRouteChildren =
+  {
+    ApiMobileAdminEmployeesIdRoute: ApiMobileAdminEmployeesIdRoute,
+  }
+
+const ApiMobileAdminEmployeesRouteWithChildren =
+  ApiMobileAdminEmployeesRoute._addFileChildren(
+    ApiMobileAdminEmployeesRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
@@ -1444,7 +1478,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicEvolutionTestSendRoute: ApiPublicEvolutionTestSendRoute,
   ApiPublicEvolutionWebhookRoute: ApiPublicEvolutionWebhookRouteWithChildren,
   ApiPublicPublishScheduledRoute: ApiPublicPublishScheduledRoute,
-  ApiMobileAdminEmployeesRoute: ApiMobileAdminEmployeesRoute,
+  ApiMobileAdminEmployeesRoute: ApiMobileAdminEmployeesRouteWithChildren,
   ApiMobileAuthMeRoute: ApiMobileAuthMeRoute,
   ApiMobilePushRegisterRoute: ApiMobilePushRegisterRoute,
 }
