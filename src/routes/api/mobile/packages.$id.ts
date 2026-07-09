@@ -10,11 +10,15 @@ export const Route = createFileRoute("/api/mobile/packages/$id")({
         try {
           const auth = await authenticate(request);
           if (!auth.ok) return auth.response;
-          const { data, error } = await supabaseAdmin.from("packages").select("*, clients(*)").eq("id", params.id).maybeSingle();
-          if (error) throw error;
+          const { data } = await (supabaseAdmin.from("packages") as any)
+            .select("*, customers(*)").eq("id", params.id).maybeSingle();
           if (!data) return notFound("package not found");
-          const { data: events } = await supabaseAdmin.from("package_events").select("*").eq("package_id", params.id).order("created_at", { ascending: true });
-          return apiJson({ ...data, events: events ?? [] });
+          const [{ data: history }, { data: images }, { data: delivery }] = await Promise.all([
+            (supabaseAdmin.from("package_status_history") as any).select("*").eq("package_id", params.id).order("created_at", { ascending: true }),
+            (supabaseAdmin.from("package_images") as any).select("*").eq("package_id", params.id),
+            (supabaseAdmin.from("deliveries") as any).select("*").eq("package_id", params.id).maybeSingle(),
+          ]);
+          return apiJson({ ...data, history: history ?? [], images: images ?? [], delivery: delivery ?? null });
         } catch (e) { return serverError(e); }
       },
       PATCH: async ({ request, params }) => {
@@ -22,7 +26,7 @@ export const Route = createFileRoute("/api/mobile/packages/$id")({
           const auth = await authenticate(request);
           if (!auth.ok) return auth.response;
           const body = await readJson<any>(request);
-          const { data, error } = await supabaseAdmin.from("packages").update(body ?? {}).eq("id", params.id).select().maybeSingle();
+          const { data, error } = await (supabaseAdmin.from("packages") as any).update(body ?? {}).eq("id", params.id).select().maybeSingle();
           if (error) throw error;
           if (!data) return notFound("package not found");
           return apiJson(data);
@@ -32,7 +36,7 @@ export const Route = createFileRoute("/api/mobile/packages/$id")({
         try {
           const auth = await authenticate(request, { requireAdmin: true });
           if (!auth.ok) return auth.response;
-          const { error } = await supabaseAdmin.from("packages").delete().eq("id", params.id);
+          const { error } = await (supabaseAdmin.from("packages") as any).delete().eq("id", params.id);
           if (error) throw error;
           return apiJson({ ok: true });
         } catch (e) { return serverError(e); }

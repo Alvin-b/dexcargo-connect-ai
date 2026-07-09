@@ -9,87 +9,36 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as QuoteRouteImport } from './routes/quote'
-import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
-import { Route as DashboardStaffRouteImport } from './routes/dashboard.staff'
-import { Route as DashboardRatesRouteImport } from './routes/dashboard.rates'
-import { Route as DashboardPackagesRouteImport } from './routes/dashboard.packages'
-import { Route as DashboardMarketingRouteImport } from './routes/dashboard.marketing'
-import { Route as DashboardConversationsRouteImport } from './routes/dashboard.conversations'
-import { Route as DashboardClientsRouteImport } from './routes/dashboard.clients'
-import { Route as DashboardApiKeysRouteImport } from './routes/dashboard.api-keys'
-import { Route as ApiPublicPublishScheduledRouteImport } from './routes/api/public/publish-scheduled'
-import { Route as ApiPublicEvolutionWebhookRouteImport } from './routes/api/public/evolution-webhook'
-import { Route as ApiPublicEvolutionTestSendRouteImport } from './routes/api/public/evolution-test-send'
 import { Route as ApiPublicDarajaCallbackRouteImport } from './routes/api/public/daraja-callback'
 import { Route as ApiPublicArchiveExpiredRecordsRouteImport } from './routes/api/public/archive-expired-records'
-import { Route as ApiMobileWarehousesRouteImport } from './routes/api/mobile/warehouses'
 import { Route as ApiMobileUploadsRouteImport } from './routes/api/mobile/uploads'
-import { Route as ApiMobileStatsRouteImport } from './routes/api/mobile/stats'
-import { Route as ApiMobileStaffRouteImport } from './routes/api/mobile/staff'
 import { Route as ApiMobileSettingsRouteImport } from './routes/api/mobile/settings'
 import { Route as ApiMobileSearchRouteImport } from './routes/api/mobile/search'
-import { Route as ApiMobileRatesRouteImport } from './routes/api/mobile/rates'
-import { Route as ApiMobileQuoteRouteImport } from './routes/api/mobile/quote'
 import { Route as ApiMobilePaymentsRouteImport } from './routes/api/mobile/payments'
 import { Route as ApiMobilePackagesRouteImport } from './routes/api/mobile/packages'
 import { Route as ApiMobileNotificationsRouteImport } from './routes/api/mobile/notifications'
-import { Route as ApiMobileMarketingRouteImport } from './routes/api/mobile/marketing'
-import { Route as ApiMobileCountriesRouteImport } from './routes/api/mobile/countries'
-import { Route as ApiMobileConversationsRouteImport } from './routes/api/mobile/conversations'
-import { Route as ApiMobileClientsRouteImport } from './routes/api/mobile/clients'
-import { Route as ApiMobileBatchesRouteImport } from './routes/api/mobile/batches'
-import { Route as ApiMobileAnalyticsRouteImport } from './routes/api/mobile/analytics'
+import { Route as ApiMobileCustomersRouteImport } from './routes/api/mobile/customers'
 import { Route as ApiAdminUsersRouteImport } from './routes/api/admin/users'
-import { Route as ApiPublicEvolutionWebhookSplatRouteImport } from './routes/api/public/evolution-webhook.$'
 import { Route as ApiMobileStatsDashboardRouteImport } from './routes/api/mobile/stats.dashboard'
-import { Route as ApiMobileRatesLookupRouteImport } from './routes/api/mobile/rates.lookup'
-import { Route as ApiMobileRatesIdRouteImport } from './routes/api/mobile/rates.$id'
 import { Route as ApiMobilePushRegisterRouteImport } from './routes/api/mobile/push.register'
 import { Route as ApiMobilePaymentsManualRouteImport } from './routes/api/mobile/payments.manual'
-import { Route as ApiMobilePaymentsCashRouteImport } from './routes/api/mobile/payments.cash'
 import { Route as ApiMobilePaymentsIdRouteImport } from './routes/api/mobile/payments.$id'
 import { Route as ApiMobilePackagesScanRouteImport } from './routes/api/mobile/packages.scan'
-import { Route as ApiMobilePackagesReadyForPickupRouteImport } from './routes/api/mobile/packages.ready-for-pickup'
-import { Route as ApiMobilePackagesLookupRouteImport } from './routes/api/mobile/packages.lookup'
-import { Route as ApiMobilePackagesIntakeRouteImport } from './routes/api/mobile/packages.intake'
-import { Route as ApiMobilePackagesExtractLabelRouteImport } from './routes/api/mobile/packages.extract-label'
 import { Route as ApiMobilePackagesClearedRouteImport } from './routes/api/mobile/packages.cleared'
 import { Route as ApiMobilePackagesIdRouteImport } from './routes/api/mobile/packages.$id'
-import { Route as ApiMobileMarketingIdRouteImport } from './routes/api/mobile/marketing.$id'
-import { Route as ApiMobileConversationsIdRouteImport } from './routes/api/mobile/conversations.$id'
-import { Route as ApiMobileClientsIdRouteImport } from './routes/api/mobile/clients.$id'
-import { Route as ApiMobileBatchesIdRouteImport } from './routes/api/mobile/batches.$id'
+import { Route as ApiMobileCustomersIdRouteImport } from './routes/api/mobile/customers.$id'
 import { Route as ApiMobileAuthMeRouteImport } from './routes/api/mobile/auth.me'
 import { Route as ApiMobileAdminEmployeesRouteImport } from './routes/api/mobile/admin/employees'
 import { Route as ApiMobileAdminAuditRouteImport } from './routes/api/mobile/admin/audit'
-import { Route as ApiMobilePackagesIdReleaseRouteImport } from './routes/api/mobile/packages.$id.release'
-import { Route as ApiMobilePackagesIdEventsRouteImport } from './routes/api/mobile/packages.$id.events'
-import { Route as ApiMobilePackagesIdDeliverRouteImport } from './routes/api/mobile/packages.$id.deliver'
-import { Route as ApiMobileConversationsIdMessagesRouteImport } from './routes/api/mobile/conversations.$id.messages'
-import { Route as ApiMobileConversationsIdEventsRouteImport } from './routes/api/mobile/conversations.$id.events'
-import { Route as ApiMobileConversationsIdClaimRouteImport } from './routes/api/mobile/conversations.$id.claim'
-import { Route as ApiMobileClientsIdConsentRouteImport } from './routes/api/mobile/clients.$id.consent'
-import { Route as ApiMobileBatchesIdScanRouteImport } from './routes/api/mobile/batches.$id.scan'
-import { Route as ApiMobileBatchesIdCloseRouteImport } from './routes/api/mobile/batches.$id.close'
+import { Route as ApiMobilePackagesIdTransitionRouteImport } from './routes/api/mobile/packages.$id.transition'
+import { Route as ApiMobilePackagesIdCollectRouteImport } from './routes/api/mobile/packages.$id.collect'
 import { Route as ApiMobileAdminEmployeesIdRouteImport } from './routes/api/mobile/admin/employees.$id'
 import { Route as ApiAdminUsersIdRolesRouteImport } from './routes/api/admin/users.$id.roles'
 import { Route as ApiMobileAdminEmployeesIdResetPasswordRouteImport } from './routes/api/mobile/admin/employees.$id.reset-password'
 import { Route as ApiMobileAdminEmployeesIdActivityRouteImport } from './routes/api/mobile/admin/employees.$id.activity'
 
-const QuoteRoute = QuoteRouteImport.update({
-  id: '/quote',
-  path: '/quote',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -100,64 +49,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardIndexRoute = DashboardIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardStaffRoute = DashboardStaffRouteImport.update({
-  id: '/staff',
-  path: '/staff',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardRatesRoute = DashboardRatesRouteImport.update({
-  id: '/rates',
-  path: '/rates',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardPackagesRoute = DashboardPackagesRouteImport.update({
-  id: '/packages',
-  path: '/packages',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardMarketingRoute = DashboardMarketingRouteImport.update({
-  id: '/marketing',
-  path: '/marketing',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardConversationsRoute = DashboardConversationsRouteImport.update({
-  id: '/conversations',
-  path: '/conversations',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardClientsRoute = DashboardClientsRouteImport.update({
-  id: '/clients',
-  path: '/clients',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardApiKeysRoute = DashboardApiKeysRouteImport.update({
-  id: '/api-keys',
-  path: '/api-keys',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const ApiPublicPublishScheduledRoute =
-  ApiPublicPublishScheduledRouteImport.update({
-    id: '/api/public/publish-scheduled',
-    path: '/api/public/publish-scheduled',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ApiPublicEvolutionWebhookRoute =
-  ApiPublicEvolutionWebhookRouteImport.update({
-    id: '/api/public/evolution-webhook',
-    path: '/api/public/evolution-webhook',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ApiPublicEvolutionTestSendRoute =
-  ApiPublicEvolutionTestSendRouteImport.update({
-    id: '/api/public/evolution-test-send',
-    path: '/api/public/evolution-test-send',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const ApiPublicDarajaCallbackRoute = ApiPublicDarajaCallbackRouteImport.update({
   id: '/api/public/daraja-callback',
   path: '/api/public/daraja-callback',
@@ -169,24 +60,9 @@ const ApiPublicArchiveExpiredRecordsRoute =
     path: '/api/public/archive-expired-records',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiMobileWarehousesRoute = ApiMobileWarehousesRouteImport.update({
-  id: '/api/mobile/warehouses',
-  path: '/api/mobile/warehouses',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiMobileUploadsRoute = ApiMobileUploadsRouteImport.update({
   id: '/api/mobile/uploads',
   path: '/api/mobile/uploads',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiMobileStatsRoute = ApiMobileStatsRouteImport.update({
-  id: '/api/mobile/stats',
-  path: '/api/mobile/stats',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiMobileStaffRoute = ApiMobileStaffRouteImport.update({
-  id: '/api/mobile/staff',
-  path: '/api/mobile/staff',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiMobileSettingsRoute = ApiMobileSettingsRouteImport.update({
@@ -197,16 +73,6 @@ const ApiMobileSettingsRoute = ApiMobileSettingsRouteImport.update({
 const ApiMobileSearchRoute = ApiMobileSearchRouteImport.update({
   id: '/api/mobile/search',
   path: '/api/mobile/search',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiMobileRatesRoute = ApiMobileRatesRouteImport.update({
-  id: '/api/mobile/rates',
-  path: '/api/mobile/rates',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiMobileQuoteRoute = ApiMobileQuoteRouteImport.update({
-  id: '/api/mobile/quote',
-  path: '/api/mobile/quote',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiMobilePaymentsRoute = ApiMobilePaymentsRouteImport.update({
@@ -224,34 +90,9 @@ const ApiMobileNotificationsRoute = ApiMobileNotificationsRouteImport.update({
   path: '/api/mobile/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiMobileMarketingRoute = ApiMobileMarketingRouteImport.update({
-  id: '/api/mobile/marketing',
-  path: '/api/mobile/marketing',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiMobileCountriesRoute = ApiMobileCountriesRouteImport.update({
-  id: '/api/mobile/countries',
-  path: '/api/mobile/countries',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiMobileConversationsRoute = ApiMobileConversationsRouteImport.update({
-  id: '/api/mobile/conversations',
-  path: '/api/mobile/conversations',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiMobileClientsRoute = ApiMobileClientsRouteImport.update({
-  id: '/api/mobile/clients',
-  path: '/api/mobile/clients',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiMobileBatchesRoute = ApiMobileBatchesRouteImport.update({
-  id: '/api/mobile/batches',
-  path: '/api/mobile/batches',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiMobileAnalyticsRoute = ApiMobileAnalyticsRouteImport.update({
-  id: '/api/mobile/analytics',
-  path: '/api/mobile/analytics',
+const ApiMobileCustomersRoute = ApiMobileCustomersRouteImport.update({
+  id: '/api/mobile/customers',
+  path: '/api/mobile/customers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAdminUsersRoute = ApiAdminUsersRouteImport.update({
@@ -259,26 +100,10 @@ const ApiAdminUsersRoute = ApiAdminUsersRouteImport.update({
   path: '/api/admin/users',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicEvolutionWebhookSplatRoute =
-  ApiPublicEvolutionWebhookSplatRouteImport.update({
-    id: '/$',
-    path: '/$',
-    getParentRoute: () => ApiPublicEvolutionWebhookRoute,
-  } as any)
 const ApiMobileStatsDashboardRoute = ApiMobileStatsDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => ApiMobileStatsRoute,
-} as any)
-const ApiMobileRatesLookupRoute = ApiMobileRatesLookupRouteImport.update({
-  id: '/lookup',
-  path: '/lookup',
-  getParentRoute: () => ApiMobileRatesRoute,
-} as any)
-const ApiMobileRatesIdRoute = ApiMobileRatesIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => ApiMobileRatesRoute,
+  id: '/api/mobile/stats/dashboard',
+  path: '/api/mobile/stats/dashboard',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiMobilePushRegisterRoute = ApiMobilePushRegisterRouteImport.update({
   id: '/api/mobile/push/register',
@@ -288,11 +113,6 @@ const ApiMobilePushRegisterRoute = ApiMobilePushRegisterRouteImport.update({
 const ApiMobilePaymentsManualRoute = ApiMobilePaymentsManualRouteImport.update({
   id: '/manual',
   path: '/manual',
-  getParentRoute: () => ApiMobilePaymentsRoute,
-} as any)
-const ApiMobilePaymentsCashRoute = ApiMobilePaymentsCashRouteImport.update({
-  id: '/cash',
-  path: '/cash',
   getParentRoute: () => ApiMobilePaymentsRoute,
 } as any)
 const ApiMobilePaymentsIdRoute = ApiMobilePaymentsIdRouteImport.update({
@@ -305,28 +125,6 @@ const ApiMobilePackagesScanRoute = ApiMobilePackagesScanRouteImport.update({
   path: '/scan',
   getParentRoute: () => ApiMobilePackagesRoute,
 } as any)
-const ApiMobilePackagesReadyForPickupRoute =
-  ApiMobilePackagesReadyForPickupRouteImport.update({
-    id: '/ready-for-pickup',
-    path: '/ready-for-pickup',
-    getParentRoute: () => ApiMobilePackagesRoute,
-  } as any)
-const ApiMobilePackagesLookupRoute = ApiMobilePackagesLookupRouteImport.update({
-  id: '/lookup',
-  path: '/lookup',
-  getParentRoute: () => ApiMobilePackagesRoute,
-} as any)
-const ApiMobilePackagesIntakeRoute = ApiMobilePackagesIntakeRouteImport.update({
-  id: '/intake',
-  path: '/intake',
-  getParentRoute: () => ApiMobilePackagesRoute,
-} as any)
-const ApiMobilePackagesExtractLabelRoute =
-  ApiMobilePackagesExtractLabelRouteImport.update({
-    id: '/extract-label',
-    path: '/extract-label',
-    getParentRoute: () => ApiMobilePackagesRoute,
-  } as any)
 const ApiMobilePackagesClearedRoute =
   ApiMobilePackagesClearedRouteImport.update({
     id: '/cleared',
@@ -338,26 +136,10 @@ const ApiMobilePackagesIdRoute = ApiMobilePackagesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => ApiMobilePackagesRoute,
 } as any)
-const ApiMobileMarketingIdRoute = ApiMobileMarketingIdRouteImport.update({
+const ApiMobileCustomersIdRoute = ApiMobileCustomersIdRouteImport.update({
   id: '/$id',
   path: '/$id',
-  getParentRoute: () => ApiMobileMarketingRoute,
-} as any)
-const ApiMobileConversationsIdRoute =
-  ApiMobileConversationsIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => ApiMobileConversationsRoute,
-  } as any)
-const ApiMobileClientsIdRoute = ApiMobileClientsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => ApiMobileClientsRoute,
-} as any)
-const ApiMobileBatchesIdRoute = ApiMobileBatchesIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => ApiMobileBatchesRoute,
+  getParentRoute: () => ApiMobileCustomersRoute,
 } as any)
 const ApiMobileAuthMeRoute = ApiMobileAuthMeRouteImport.update({
   id: '/api/mobile/auth/me',
@@ -374,58 +156,18 @@ const ApiMobileAdminAuditRoute = ApiMobileAdminAuditRouteImport.update({
   path: '/api/mobile/admin/audit',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiMobilePackagesIdReleaseRoute =
-  ApiMobilePackagesIdReleaseRouteImport.update({
-    id: '/release',
-    path: '/release',
+const ApiMobilePackagesIdTransitionRoute =
+  ApiMobilePackagesIdTransitionRouteImport.update({
+    id: '/transition',
+    path: '/transition',
     getParentRoute: () => ApiMobilePackagesIdRoute,
   } as any)
-const ApiMobilePackagesIdEventsRoute =
-  ApiMobilePackagesIdEventsRouteImport.update({
-    id: '/events',
-    path: '/events',
+const ApiMobilePackagesIdCollectRoute =
+  ApiMobilePackagesIdCollectRouteImport.update({
+    id: '/collect',
+    path: '/collect',
     getParentRoute: () => ApiMobilePackagesIdRoute,
   } as any)
-const ApiMobilePackagesIdDeliverRoute =
-  ApiMobilePackagesIdDeliverRouteImport.update({
-    id: '/deliver',
-    path: '/deliver',
-    getParentRoute: () => ApiMobilePackagesIdRoute,
-  } as any)
-const ApiMobileConversationsIdMessagesRoute =
-  ApiMobileConversationsIdMessagesRouteImport.update({
-    id: '/messages',
-    path: '/messages',
-    getParentRoute: () => ApiMobileConversationsIdRoute,
-  } as any)
-const ApiMobileConversationsIdEventsRoute =
-  ApiMobileConversationsIdEventsRouteImport.update({
-    id: '/events',
-    path: '/events',
-    getParentRoute: () => ApiMobileConversationsIdRoute,
-  } as any)
-const ApiMobileConversationsIdClaimRoute =
-  ApiMobileConversationsIdClaimRouteImport.update({
-    id: '/claim',
-    path: '/claim',
-    getParentRoute: () => ApiMobileConversationsIdRoute,
-  } as any)
-const ApiMobileClientsIdConsentRoute =
-  ApiMobileClientsIdConsentRouteImport.update({
-    id: '/consent',
-    path: '/consent',
-    getParentRoute: () => ApiMobileClientsIdRoute,
-  } as any)
-const ApiMobileBatchesIdScanRoute = ApiMobileBatchesIdScanRouteImport.update({
-  id: '/scan',
-  path: '/scan',
-  getParentRoute: () => ApiMobileBatchesIdRoute,
-} as any)
-const ApiMobileBatchesIdCloseRoute = ApiMobileBatchesIdCloseRouteImport.update({
-  id: '/close',
-  path: '/close',
-  getParentRoute: () => ApiMobileBatchesIdRoute,
-} as any)
 const ApiMobileAdminEmployeesIdRoute =
   ApiMobileAdminEmployeesIdRouteImport.update({
     id: '/$id',
@@ -453,143 +195,62 @@ const ApiMobileAdminEmployeesIdActivityRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/dashboard': typeof DashboardRouteWithChildren
-  '/quote': typeof QuoteRoute
-  '/dashboard/api-keys': typeof DashboardApiKeysRoute
-  '/dashboard/clients': typeof DashboardClientsRoute
-  '/dashboard/conversations': typeof DashboardConversationsRoute
-  '/dashboard/marketing': typeof DashboardMarketingRoute
-  '/dashboard/packages': typeof DashboardPackagesRoute
-  '/dashboard/rates': typeof DashboardRatesRoute
-  '/dashboard/staff': typeof DashboardStaffRoute
-  '/dashboard/': typeof DashboardIndexRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
-  '/api/mobile/analytics': typeof ApiMobileAnalyticsRoute
-  '/api/mobile/batches': typeof ApiMobileBatchesRouteWithChildren
-  '/api/mobile/clients': typeof ApiMobileClientsRouteWithChildren
-  '/api/mobile/conversations': typeof ApiMobileConversationsRouteWithChildren
-  '/api/mobile/countries': typeof ApiMobileCountriesRoute
-  '/api/mobile/marketing': typeof ApiMobileMarketingRouteWithChildren
+  '/api/mobile/customers': typeof ApiMobileCustomersRouteWithChildren
   '/api/mobile/notifications': typeof ApiMobileNotificationsRoute
   '/api/mobile/packages': typeof ApiMobilePackagesRouteWithChildren
   '/api/mobile/payments': typeof ApiMobilePaymentsRouteWithChildren
-  '/api/mobile/quote': typeof ApiMobileQuoteRoute
-  '/api/mobile/rates': typeof ApiMobileRatesRouteWithChildren
   '/api/mobile/search': typeof ApiMobileSearchRoute
   '/api/mobile/settings': typeof ApiMobileSettingsRoute
-  '/api/mobile/staff': typeof ApiMobileStaffRoute
-  '/api/mobile/stats': typeof ApiMobileStatsRouteWithChildren
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
-  '/api/mobile/warehouses': typeof ApiMobileWarehousesRoute
   '/api/public/archive-expired-records': typeof ApiPublicArchiveExpiredRecordsRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
-  '/api/public/evolution-test-send': typeof ApiPublicEvolutionTestSendRoute
-  '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
-  '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
   '/api/mobile/admin/audit': typeof ApiMobileAdminAuditRoute
   '/api/mobile/admin/employees': typeof ApiMobileAdminEmployeesRouteWithChildren
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
-  '/api/mobile/batches/$id': typeof ApiMobileBatchesIdRouteWithChildren
-  '/api/mobile/clients/$id': typeof ApiMobileClientsIdRouteWithChildren
-  '/api/mobile/conversations/$id': typeof ApiMobileConversationsIdRouteWithChildren
-  '/api/mobile/marketing/$id': typeof ApiMobileMarketingIdRoute
+  '/api/mobile/customers/$id': typeof ApiMobileCustomersIdRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
   '/api/mobile/packages/cleared': typeof ApiMobilePackagesClearedRoute
-  '/api/mobile/packages/extract-label': typeof ApiMobilePackagesExtractLabelRoute
-  '/api/mobile/packages/intake': typeof ApiMobilePackagesIntakeRoute
-  '/api/mobile/packages/lookup': typeof ApiMobilePackagesLookupRoute
-  '/api/mobile/packages/ready-for-pickup': typeof ApiMobilePackagesReadyForPickupRoute
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
-  '/api/mobile/payments/cash': typeof ApiMobilePaymentsCashRoute
   '/api/mobile/payments/manual': typeof ApiMobilePaymentsManualRoute
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
-  '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
-  '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/mobile/stats/dashboard': typeof ApiMobileStatsDashboardRoute
-  '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
   '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRouteWithChildren
-  '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
-  '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
-  '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
-  '/api/mobile/conversations/$id/claim': typeof ApiMobileConversationsIdClaimRoute
-  '/api/mobile/conversations/$id/events': typeof ApiMobileConversationsIdEventsRoute
-  '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
-  '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
-  '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
-  '/api/mobile/packages/$id/release': typeof ApiMobilePackagesIdReleaseRoute
+  '/api/mobile/packages/$id/collect': typeof ApiMobilePackagesIdCollectRoute
+  '/api/mobile/packages/$id/transition': typeof ApiMobilePackagesIdTransitionRoute
   '/api/mobile/admin/employees/$id/activity': typeof ApiMobileAdminEmployeesIdActivityRoute
   '/api/mobile/admin/employees/$id/reset-password': typeof ApiMobileAdminEmployeesIdResetPasswordRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/quote': typeof QuoteRoute
-  '/dashboard/api-keys': typeof DashboardApiKeysRoute
-  '/dashboard/clients': typeof DashboardClientsRoute
-  '/dashboard/conversations': typeof DashboardConversationsRoute
-  '/dashboard/marketing': typeof DashboardMarketingRoute
-  '/dashboard/packages': typeof DashboardPackagesRoute
-  '/dashboard/rates': typeof DashboardRatesRoute
-  '/dashboard/staff': typeof DashboardStaffRoute
-  '/dashboard': typeof DashboardIndexRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
-  '/api/mobile/analytics': typeof ApiMobileAnalyticsRoute
-  '/api/mobile/batches': typeof ApiMobileBatchesRouteWithChildren
-  '/api/mobile/clients': typeof ApiMobileClientsRouteWithChildren
-  '/api/mobile/conversations': typeof ApiMobileConversationsRouteWithChildren
-  '/api/mobile/countries': typeof ApiMobileCountriesRoute
-  '/api/mobile/marketing': typeof ApiMobileMarketingRouteWithChildren
+  '/api/mobile/customers': typeof ApiMobileCustomersRouteWithChildren
   '/api/mobile/notifications': typeof ApiMobileNotificationsRoute
   '/api/mobile/packages': typeof ApiMobilePackagesRouteWithChildren
   '/api/mobile/payments': typeof ApiMobilePaymentsRouteWithChildren
-  '/api/mobile/quote': typeof ApiMobileQuoteRoute
-  '/api/mobile/rates': typeof ApiMobileRatesRouteWithChildren
   '/api/mobile/search': typeof ApiMobileSearchRoute
   '/api/mobile/settings': typeof ApiMobileSettingsRoute
-  '/api/mobile/staff': typeof ApiMobileStaffRoute
-  '/api/mobile/stats': typeof ApiMobileStatsRouteWithChildren
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
-  '/api/mobile/warehouses': typeof ApiMobileWarehousesRoute
   '/api/public/archive-expired-records': typeof ApiPublicArchiveExpiredRecordsRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
-  '/api/public/evolution-test-send': typeof ApiPublicEvolutionTestSendRoute
-  '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
-  '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
   '/api/mobile/admin/audit': typeof ApiMobileAdminAuditRoute
   '/api/mobile/admin/employees': typeof ApiMobileAdminEmployeesRouteWithChildren
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
-  '/api/mobile/batches/$id': typeof ApiMobileBatchesIdRouteWithChildren
-  '/api/mobile/clients/$id': typeof ApiMobileClientsIdRouteWithChildren
-  '/api/mobile/conversations/$id': typeof ApiMobileConversationsIdRouteWithChildren
-  '/api/mobile/marketing/$id': typeof ApiMobileMarketingIdRoute
+  '/api/mobile/customers/$id': typeof ApiMobileCustomersIdRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
   '/api/mobile/packages/cleared': typeof ApiMobilePackagesClearedRoute
-  '/api/mobile/packages/extract-label': typeof ApiMobilePackagesExtractLabelRoute
-  '/api/mobile/packages/intake': typeof ApiMobilePackagesIntakeRoute
-  '/api/mobile/packages/lookup': typeof ApiMobilePackagesLookupRoute
-  '/api/mobile/packages/ready-for-pickup': typeof ApiMobilePackagesReadyForPickupRoute
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
-  '/api/mobile/payments/cash': typeof ApiMobilePaymentsCashRoute
   '/api/mobile/payments/manual': typeof ApiMobilePaymentsManualRoute
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
-  '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
-  '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/mobile/stats/dashboard': typeof ApiMobileStatsDashboardRoute
-  '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
   '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRouteWithChildren
-  '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
-  '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
-  '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
-  '/api/mobile/conversations/$id/claim': typeof ApiMobileConversationsIdClaimRoute
-  '/api/mobile/conversations/$id/events': typeof ApiMobileConversationsIdEventsRoute
-  '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
-  '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
-  '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
-  '/api/mobile/packages/$id/release': typeof ApiMobilePackagesIdReleaseRoute
+  '/api/mobile/packages/$id/collect': typeof ApiMobilePackagesIdCollectRoute
+  '/api/mobile/packages/$id/transition': typeof ApiMobilePackagesIdTransitionRoute
   '/api/mobile/admin/employees/$id/activity': typeof ApiMobileAdminEmployeesIdActivityRoute
   '/api/mobile/admin/employees/$id/reset-password': typeof ApiMobileAdminEmployeesIdResetPasswordRoute
 }
@@ -597,72 +258,31 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/dashboard': typeof DashboardRouteWithChildren
-  '/quote': typeof QuoteRoute
-  '/dashboard/api-keys': typeof DashboardApiKeysRoute
-  '/dashboard/clients': typeof DashboardClientsRoute
-  '/dashboard/conversations': typeof DashboardConversationsRoute
-  '/dashboard/marketing': typeof DashboardMarketingRoute
-  '/dashboard/packages': typeof DashboardPackagesRoute
-  '/dashboard/rates': typeof DashboardRatesRoute
-  '/dashboard/staff': typeof DashboardStaffRoute
-  '/dashboard/': typeof DashboardIndexRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
-  '/api/mobile/analytics': typeof ApiMobileAnalyticsRoute
-  '/api/mobile/batches': typeof ApiMobileBatchesRouteWithChildren
-  '/api/mobile/clients': typeof ApiMobileClientsRouteWithChildren
-  '/api/mobile/conversations': typeof ApiMobileConversationsRouteWithChildren
-  '/api/mobile/countries': typeof ApiMobileCountriesRoute
-  '/api/mobile/marketing': typeof ApiMobileMarketingRouteWithChildren
+  '/api/mobile/customers': typeof ApiMobileCustomersRouteWithChildren
   '/api/mobile/notifications': typeof ApiMobileNotificationsRoute
   '/api/mobile/packages': typeof ApiMobilePackagesRouteWithChildren
   '/api/mobile/payments': typeof ApiMobilePaymentsRouteWithChildren
-  '/api/mobile/quote': typeof ApiMobileQuoteRoute
-  '/api/mobile/rates': typeof ApiMobileRatesRouteWithChildren
   '/api/mobile/search': typeof ApiMobileSearchRoute
   '/api/mobile/settings': typeof ApiMobileSettingsRoute
-  '/api/mobile/staff': typeof ApiMobileStaffRoute
-  '/api/mobile/stats': typeof ApiMobileStatsRouteWithChildren
   '/api/mobile/uploads': typeof ApiMobileUploadsRoute
-  '/api/mobile/warehouses': typeof ApiMobileWarehousesRoute
   '/api/public/archive-expired-records': typeof ApiPublicArchiveExpiredRecordsRoute
   '/api/public/daraja-callback': typeof ApiPublicDarajaCallbackRoute
-  '/api/public/evolution-test-send': typeof ApiPublicEvolutionTestSendRoute
-  '/api/public/evolution-webhook': typeof ApiPublicEvolutionWebhookRouteWithChildren
-  '/api/public/publish-scheduled': typeof ApiPublicPublishScheduledRoute
   '/api/mobile/admin/audit': typeof ApiMobileAdminAuditRoute
   '/api/mobile/admin/employees': typeof ApiMobileAdminEmployeesRouteWithChildren
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
-  '/api/mobile/batches/$id': typeof ApiMobileBatchesIdRouteWithChildren
-  '/api/mobile/clients/$id': typeof ApiMobileClientsIdRouteWithChildren
-  '/api/mobile/conversations/$id': typeof ApiMobileConversationsIdRouteWithChildren
-  '/api/mobile/marketing/$id': typeof ApiMobileMarketingIdRoute
+  '/api/mobile/customers/$id': typeof ApiMobileCustomersIdRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
   '/api/mobile/packages/cleared': typeof ApiMobilePackagesClearedRoute
-  '/api/mobile/packages/extract-label': typeof ApiMobilePackagesExtractLabelRoute
-  '/api/mobile/packages/intake': typeof ApiMobilePackagesIntakeRoute
-  '/api/mobile/packages/lookup': typeof ApiMobilePackagesLookupRoute
-  '/api/mobile/packages/ready-for-pickup': typeof ApiMobilePackagesReadyForPickupRoute
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
-  '/api/mobile/payments/cash': typeof ApiMobilePaymentsCashRoute
   '/api/mobile/payments/manual': typeof ApiMobilePaymentsManualRoute
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
-  '/api/mobile/rates/$id': typeof ApiMobileRatesIdRoute
-  '/api/mobile/rates/lookup': typeof ApiMobileRatesLookupRoute
   '/api/mobile/stats/dashboard': typeof ApiMobileStatsDashboardRoute
-  '/api/public/evolution-webhook/$': typeof ApiPublicEvolutionWebhookSplatRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
   '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRouteWithChildren
-  '/api/mobile/batches/$id/close': typeof ApiMobileBatchesIdCloseRoute
-  '/api/mobile/batches/$id/scan': typeof ApiMobileBatchesIdScanRoute
-  '/api/mobile/clients/$id/consent': typeof ApiMobileClientsIdConsentRoute
-  '/api/mobile/conversations/$id/claim': typeof ApiMobileConversationsIdClaimRoute
-  '/api/mobile/conversations/$id/events': typeof ApiMobileConversationsIdEventsRoute
-  '/api/mobile/conversations/$id/messages': typeof ApiMobileConversationsIdMessagesRoute
-  '/api/mobile/packages/$id/deliver': typeof ApiMobilePackagesIdDeliverRoute
-  '/api/mobile/packages/$id/events': typeof ApiMobilePackagesIdEventsRoute
-  '/api/mobile/packages/$id/release': typeof ApiMobilePackagesIdReleaseRoute
+  '/api/mobile/packages/$id/collect': typeof ApiMobilePackagesIdCollectRoute
+  '/api/mobile/packages/$id/transition': typeof ApiMobilePackagesIdTransitionRoute
   '/api/mobile/admin/employees/$id/activity': typeof ApiMobileAdminEmployeesIdActivityRoute
   '/api/mobile/admin/employees/$id/reset-password': typeof ApiMobileAdminEmployeesIdResetPasswordRoute
 }
@@ -671,215 +291,93 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
-    | '/dashboard'
-    | '/quote'
-    | '/dashboard/api-keys'
-    | '/dashboard/clients'
-    | '/dashboard/conversations'
-    | '/dashboard/marketing'
-    | '/dashboard/packages'
-    | '/dashboard/rates'
-    | '/dashboard/staff'
-    | '/dashboard/'
     | '/api/admin/users'
-    | '/api/mobile/analytics'
-    | '/api/mobile/batches'
-    | '/api/mobile/clients'
-    | '/api/mobile/conversations'
-    | '/api/mobile/countries'
-    | '/api/mobile/marketing'
+    | '/api/mobile/customers'
     | '/api/mobile/notifications'
     | '/api/mobile/packages'
     | '/api/mobile/payments'
-    | '/api/mobile/quote'
-    | '/api/mobile/rates'
     | '/api/mobile/search'
     | '/api/mobile/settings'
-    | '/api/mobile/staff'
-    | '/api/mobile/stats'
     | '/api/mobile/uploads'
-    | '/api/mobile/warehouses'
     | '/api/public/archive-expired-records'
     | '/api/public/daraja-callback'
-    | '/api/public/evolution-test-send'
-    | '/api/public/evolution-webhook'
-    | '/api/public/publish-scheduled'
     | '/api/mobile/admin/audit'
     | '/api/mobile/admin/employees'
     | '/api/mobile/auth/me'
-    | '/api/mobile/batches/$id'
-    | '/api/mobile/clients/$id'
-    | '/api/mobile/conversations/$id'
-    | '/api/mobile/marketing/$id'
+    | '/api/mobile/customers/$id'
     | '/api/mobile/packages/$id'
     | '/api/mobile/packages/cleared'
-    | '/api/mobile/packages/extract-label'
-    | '/api/mobile/packages/intake'
-    | '/api/mobile/packages/lookup'
-    | '/api/mobile/packages/ready-for-pickup'
     | '/api/mobile/packages/scan'
     | '/api/mobile/payments/$id'
-    | '/api/mobile/payments/cash'
     | '/api/mobile/payments/manual'
     | '/api/mobile/push/register'
-    | '/api/mobile/rates/$id'
-    | '/api/mobile/rates/lookup'
     | '/api/mobile/stats/dashboard'
-    | '/api/public/evolution-webhook/$'
     | '/api/admin/users/$id/roles'
     | '/api/mobile/admin/employees/$id'
-    | '/api/mobile/batches/$id/close'
-    | '/api/mobile/batches/$id/scan'
-    | '/api/mobile/clients/$id/consent'
-    | '/api/mobile/conversations/$id/claim'
-    | '/api/mobile/conversations/$id/events'
-    | '/api/mobile/conversations/$id/messages'
-    | '/api/mobile/packages/$id/deliver'
-    | '/api/mobile/packages/$id/events'
-    | '/api/mobile/packages/$id/release'
+    | '/api/mobile/packages/$id/collect'
+    | '/api/mobile/packages/$id/transition'
     | '/api/mobile/admin/employees/$id/activity'
     | '/api/mobile/admin/employees/$id/reset-password'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
-    | '/quote'
-    | '/dashboard/api-keys'
-    | '/dashboard/clients'
-    | '/dashboard/conversations'
-    | '/dashboard/marketing'
-    | '/dashboard/packages'
-    | '/dashboard/rates'
-    | '/dashboard/staff'
-    | '/dashboard'
     | '/api/admin/users'
-    | '/api/mobile/analytics'
-    | '/api/mobile/batches'
-    | '/api/mobile/clients'
-    | '/api/mobile/conversations'
-    | '/api/mobile/countries'
-    | '/api/mobile/marketing'
+    | '/api/mobile/customers'
     | '/api/mobile/notifications'
     | '/api/mobile/packages'
     | '/api/mobile/payments'
-    | '/api/mobile/quote'
-    | '/api/mobile/rates'
     | '/api/mobile/search'
     | '/api/mobile/settings'
-    | '/api/mobile/staff'
-    | '/api/mobile/stats'
     | '/api/mobile/uploads'
-    | '/api/mobile/warehouses'
     | '/api/public/archive-expired-records'
     | '/api/public/daraja-callback'
-    | '/api/public/evolution-test-send'
-    | '/api/public/evolution-webhook'
-    | '/api/public/publish-scheduled'
     | '/api/mobile/admin/audit'
     | '/api/mobile/admin/employees'
     | '/api/mobile/auth/me'
-    | '/api/mobile/batches/$id'
-    | '/api/mobile/clients/$id'
-    | '/api/mobile/conversations/$id'
-    | '/api/mobile/marketing/$id'
+    | '/api/mobile/customers/$id'
     | '/api/mobile/packages/$id'
     | '/api/mobile/packages/cleared'
-    | '/api/mobile/packages/extract-label'
-    | '/api/mobile/packages/intake'
-    | '/api/mobile/packages/lookup'
-    | '/api/mobile/packages/ready-for-pickup'
     | '/api/mobile/packages/scan'
     | '/api/mobile/payments/$id'
-    | '/api/mobile/payments/cash'
     | '/api/mobile/payments/manual'
     | '/api/mobile/push/register'
-    | '/api/mobile/rates/$id'
-    | '/api/mobile/rates/lookup'
     | '/api/mobile/stats/dashboard'
-    | '/api/public/evolution-webhook/$'
     | '/api/admin/users/$id/roles'
     | '/api/mobile/admin/employees/$id'
-    | '/api/mobile/batches/$id/close'
-    | '/api/mobile/batches/$id/scan'
-    | '/api/mobile/clients/$id/consent'
-    | '/api/mobile/conversations/$id/claim'
-    | '/api/mobile/conversations/$id/events'
-    | '/api/mobile/conversations/$id/messages'
-    | '/api/mobile/packages/$id/deliver'
-    | '/api/mobile/packages/$id/events'
-    | '/api/mobile/packages/$id/release'
+    | '/api/mobile/packages/$id/collect'
+    | '/api/mobile/packages/$id/transition'
     | '/api/mobile/admin/employees/$id/activity'
     | '/api/mobile/admin/employees/$id/reset-password'
   id:
     | '__root__'
     | '/'
     | '/auth'
-    | '/dashboard'
-    | '/quote'
-    | '/dashboard/api-keys'
-    | '/dashboard/clients'
-    | '/dashboard/conversations'
-    | '/dashboard/marketing'
-    | '/dashboard/packages'
-    | '/dashboard/rates'
-    | '/dashboard/staff'
-    | '/dashboard/'
     | '/api/admin/users'
-    | '/api/mobile/analytics'
-    | '/api/mobile/batches'
-    | '/api/mobile/clients'
-    | '/api/mobile/conversations'
-    | '/api/mobile/countries'
-    | '/api/mobile/marketing'
+    | '/api/mobile/customers'
     | '/api/mobile/notifications'
     | '/api/mobile/packages'
     | '/api/mobile/payments'
-    | '/api/mobile/quote'
-    | '/api/mobile/rates'
     | '/api/mobile/search'
     | '/api/mobile/settings'
-    | '/api/mobile/staff'
-    | '/api/mobile/stats'
     | '/api/mobile/uploads'
-    | '/api/mobile/warehouses'
     | '/api/public/archive-expired-records'
     | '/api/public/daraja-callback'
-    | '/api/public/evolution-test-send'
-    | '/api/public/evolution-webhook'
-    | '/api/public/publish-scheduled'
     | '/api/mobile/admin/audit'
     | '/api/mobile/admin/employees'
     | '/api/mobile/auth/me'
-    | '/api/mobile/batches/$id'
-    | '/api/mobile/clients/$id'
-    | '/api/mobile/conversations/$id'
-    | '/api/mobile/marketing/$id'
+    | '/api/mobile/customers/$id'
     | '/api/mobile/packages/$id'
     | '/api/mobile/packages/cleared'
-    | '/api/mobile/packages/extract-label'
-    | '/api/mobile/packages/intake'
-    | '/api/mobile/packages/lookup'
-    | '/api/mobile/packages/ready-for-pickup'
     | '/api/mobile/packages/scan'
     | '/api/mobile/payments/$id'
-    | '/api/mobile/payments/cash'
     | '/api/mobile/payments/manual'
     | '/api/mobile/push/register'
-    | '/api/mobile/rates/$id'
-    | '/api/mobile/rates/lookup'
     | '/api/mobile/stats/dashboard'
-    | '/api/public/evolution-webhook/$'
     | '/api/admin/users/$id/roles'
     | '/api/mobile/admin/employees/$id'
-    | '/api/mobile/batches/$id/close'
-    | '/api/mobile/batches/$id/scan'
-    | '/api/mobile/clients/$id/consent'
-    | '/api/mobile/conversations/$id/claim'
-    | '/api/mobile/conversations/$id/events'
-    | '/api/mobile/conversations/$id/messages'
-    | '/api/mobile/packages/$id/deliver'
-    | '/api/mobile/packages/$id/events'
-    | '/api/mobile/packages/$id/release'
+    | '/api/mobile/packages/$id/collect'
+    | '/api/mobile/packages/$id/transition'
     | '/api/mobile/admin/employees/$id/activity'
     | '/api/mobile/admin/employees/$id/reset-password'
   fileRoutesById: FileRoutesById
@@ -887,53 +385,25 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
-  DashboardRoute: typeof DashboardRouteWithChildren
-  QuoteRoute: typeof QuoteRoute
   ApiAdminUsersRoute: typeof ApiAdminUsersRouteWithChildren
-  ApiMobileAnalyticsRoute: typeof ApiMobileAnalyticsRoute
-  ApiMobileBatchesRoute: typeof ApiMobileBatchesRouteWithChildren
-  ApiMobileClientsRoute: typeof ApiMobileClientsRouteWithChildren
-  ApiMobileConversationsRoute: typeof ApiMobileConversationsRouteWithChildren
-  ApiMobileCountriesRoute: typeof ApiMobileCountriesRoute
-  ApiMobileMarketingRoute: typeof ApiMobileMarketingRouteWithChildren
+  ApiMobileCustomersRoute: typeof ApiMobileCustomersRouteWithChildren
   ApiMobileNotificationsRoute: typeof ApiMobileNotificationsRoute
   ApiMobilePackagesRoute: typeof ApiMobilePackagesRouteWithChildren
   ApiMobilePaymentsRoute: typeof ApiMobilePaymentsRouteWithChildren
-  ApiMobileQuoteRoute: typeof ApiMobileQuoteRoute
-  ApiMobileRatesRoute: typeof ApiMobileRatesRouteWithChildren
   ApiMobileSearchRoute: typeof ApiMobileSearchRoute
   ApiMobileSettingsRoute: typeof ApiMobileSettingsRoute
-  ApiMobileStaffRoute: typeof ApiMobileStaffRoute
-  ApiMobileStatsRoute: typeof ApiMobileStatsRouteWithChildren
   ApiMobileUploadsRoute: typeof ApiMobileUploadsRoute
-  ApiMobileWarehousesRoute: typeof ApiMobileWarehousesRoute
   ApiPublicArchiveExpiredRecordsRoute: typeof ApiPublicArchiveExpiredRecordsRoute
   ApiPublicDarajaCallbackRoute: typeof ApiPublicDarajaCallbackRoute
-  ApiPublicEvolutionTestSendRoute: typeof ApiPublicEvolutionTestSendRoute
-  ApiPublicEvolutionWebhookRoute: typeof ApiPublicEvolutionWebhookRouteWithChildren
-  ApiPublicPublishScheduledRoute: typeof ApiPublicPublishScheduledRoute
   ApiMobileAdminAuditRoute: typeof ApiMobileAdminAuditRoute
   ApiMobileAdminEmployeesRoute: typeof ApiMobileAdminEmployeesRouteWithChildren
   ApiMobileAuthMeRoute: typeof ApiMobileAuthMeRoute
   ApiMobilePushRegisterRoute: typeof ApiMobilePushRegisterRoute
+  ApiMobileStatsDashboardRoute: typeof ApiMobileStatsDashboardRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/quote': {
-      id: '/quote'
-      path: '/quote'
-      fullPath: '/quote'
-      preLoaderRoute: typeof QuoteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -946,83 +416,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard/': {
-      id: '/dashboard/'
-      path: '/'
-      fullPath: '/dashboard/'
-      preLoaderRoute: typeof DashboardIndexRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/staff': {
-      id: '/dashboard/staff'
-      path: '/staff'
-      fullPath: '/dashboard/staff'
-      preLoaderRoute: typeof DashboardStaffRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/rates': {
-      id: '/dashboard/rates'
-      path: '/rates'
-      fullPath: '/dashboard/rates'
-      preLoaderRoute: typeof DashboardRatesRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/packages': {
-      id: '/dashboard/packages'
-      path: '/packages'
-      fullPath: '/dashboard/packages'
-      preLoaderRoute: typeof DashboardPackagesRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/marketing': {
-      id: '/dashboard/marketing'
-      path: '/marketing'
-      fullPath: '/dashboard/marketing'
-      preLoaderRoute: typeof DashboardMarketingRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/conversations': {
-      id: '/dashboard/conversations'
-      path: '/conversations'
-      fullPath: '/dashboard/conversations'
-      preLoaderRoute: typeof DashboardConversationsRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/clients': {
-      id: '/dashboard/clients'
-      path: '/clients'
-      fullPath: '/dashboard/clients'
-      preLoaderRoute: typeof DashboardClientsRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/api-keys': {
-      id: '/dashboard/api-keys'
-      path: '/api-keys'
-      fullPath: '/dashboard/api-keys'
-      preLoaderRoute: typeof DashboardApiKeysRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/api/public/publish-scheduled': {
-      id: '/api/public/publish-scheduled'
-      path: '/api/public/publish-scheduled'
-      fullPath: '/api/public/publish-scheduled'
-      preLoaderRoute: typeof ApiPublicPublishScheduledRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/evolution-webhook': {
-      id: '/api/public/evolution-webhook'
-      path: '/api/public/evolution-webhook'
-      fullPath: '/api/public/evolution-webhook'
-      preLoaderRoute: typeof ApiPublicEvolutionWebhookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/evolution-test-send': {
-      id: '/api/public/evolution-test-send'
-      path: '/api/public/evolution-test-send'
-      fullPath: '/api/public/evolution-test-send'
-      preLoaderRoute: typeof ApiPublicEvolutionTestSendRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/daraja-callback': {
@@ -1039,32 +432,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicArchiveExpiredRecordsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/mobile/warehouses': {
-      id: '/api/mobile/warehouses'
-      path: '/api/mobile/warehouses'
-      fullPath: '/api/mobile/warehouses'
-      preLoaderRoute: typeof ApiMobileWarehousesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/mobile/uploads': {
       id: '/api/mobile/uploads'
       path: '/api/mobile/uploads'
       fullPath: '/api/mobile/uploads'
       preLoaderRoute: typeof ApiMobileUploadsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/mobile/stats': {
-      id: '/api/mobile/stats'
-      path: '/api/mobile/stats'
-      fullPath: '/api/mobile/stats'
-      preLoaderRoute: typeof ApiMobileStatsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/mobile/staff': {
-      id: '/api/mobile/staff'
-      path: '/api/mobile/staff'
-      fullPath: '/api/mobile/staff'
-      preLoaderRoute: typeof ApiMobileStaffRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/mobile/settings': {
@@ -1079,20 +451,6 @@ declare module '@tanstack/react-router' {
       path: '/api/mobile/search'
       fullPath: '/api/mobile/search'
       preLoaderRoute: typeof ApiMobileSearchRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/mobile/rates': {
-      id: '/api/mobile/rates'
-      path: '/api/mobile/rates'
-      fullPath: '/api/mobile/rates'
-      preLoaderRoute: typeof ApiMobileRatesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/mobile/quote': {
-      id: '/api/mobile/quote'
-      path: '/api/mobile/quote'
-      fullPath: '/api/mobile/quote'
-      preLoaderRoute: typeof ApiMobileQuoteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/mobile/payments': {
@@ -1116,46 +474,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileNotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/mobile/marketing': {
-      id: '/api/mobile/marketing'
-      path: '/api/mobile/marketing'
-      fullPath: '/api/mobile/marketing'
-      preLoaderRoute: typeof ApiMobileMarketingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/mobile/countries': {
-      id: '/api/mobile/countries'
-      path: '/api/mobile/countries'
-      fullPath: '/api/mobile/countries'
-      preLoaderRoute: typeof ApiMobileCountriesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/mobile/conversations': {
-      id: '/api/mobile/conversations'
-      path: '/api/mobile/conversations'
-      fullPath: '/api/mobile/conversations'
-      preLoaderRoute: typeof ApiMobileConversationsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/mobile/clients': {
-      id: '/api/mobile/clients'
-      path: '/api/mobile/clients'
-      fullPath: '/api/mobile/clients'
-      preLoaderRoute: typeof ApiMobileClientsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/mobile/batches': {
-      id: '/api/mobile/batches'
-      path: '/api/mobile/batches'
-      fullPath: '/api/mobile/batches'
-      preLoaderRoute: typeof ApiMobileBatchesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/mobile/analytics': {
-      id: '/api/mobile/analytics'
-      path: '/api/mobile/analytics'
-      fullPath: '/api/mobile/analytics'
-      preLoaderRoute: typeof ApiMobileAnalyticsRouteImport
+    '/api/mobile/customers': {
+      id: '/api/mobile/customers'
+      path: '/api/mobile/customers'
+      fullPath: '/api/mobile/customers'
+      preLoaderRoute: typeof ApiMobileCustomersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/admin/users': {
@@ -1165,33 +488,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAdminUsersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/evolution-webhook/$': {
-      id: '/api/public/evolution-webhook/$'
-      path: '/$'
-      fullPath: '/api/public/evolution-webhook/$'
-      preLoaderRoute: typeof ApiPublicEvolutionWebhookSplatRouteImport
-      parentRoute: typeof ApiPublicEvolutionWebhookRoute
-    }
     '/api/mobile/stats/dashboard': {
       id: '/api/mobile/stats/dashboard'
-      path: '/dashboard'
+      path: '/api/mobile/stats/dashboard'
       fullPath: '/api/mobile/stats/dashboard'
       preLoaderRoute: typeof ApiMobileStatsDashboardRouteImport
-      parentRoute: typeof ApiMobileStatsRoute
-    }
-    '/api/mobile/rates/lookup': {
-      id: '/api/mobile/rates/lookup'
-      path: '/lookup'
-      fullPath: '/api/mobile/rates/lookup'
-      preLoaderRoute: typeof ApiMobileRatesLookupRouteImport
-      parentRoute: typeof ApiMobileRatesRoute
-    }
-    '/api/mobile/rates/$id': {
-      id: '/api/mobile/rates/$id'
-      path: '/$id'
-      fullPath: '/api/mobile/rates/$id'
-      preLoaderRoute: typeof ApiMobileRatesIdRouteImport
-      parentRoute: typeof ApiMobileRatesRoute
+      parentRoute: typeof rootRouteImport
     }
     '/api/mobile/push/register': {
       id: '/api/mobile/push/register'
@@ -1205,13 +507,6 @@ declare module '@tanstack/react-router' {
       path: '/manual'
       fullPath: '/api/mobile/payments/manual'
       preLoaderRoute: typeof ApiMobilePaymentsManualRouteImport
-      parentRoute: typeof ApiMobilePaymentsRoute
-    }
-    '/api/mobile/payments/cash': {
-      id: '/api/mobile/payments/cash'
-      path: '/cash'
-      fullPath: '/api/mobile/payments/cash'
-      preLoaderRoute: typeof ApiMobilePaymentsCashRouteImport
       parentRoute: typeof ApiMobilePaymentsRoute
     }
     '/api/mobile/payments/$id': {
@@ -1228,34 +523,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobilePackagesScanRouteImport
       parentRoute: typeof ApiMobilePackagesRoute
     }
-    '/api/mobile/packages/ready-for-pickup': {
-      id: '/api/mobile/packages/ready-for-pickup'
-      path: '/ready-for-pickup'
-      fullPath: '/api/mobile/packages/ready-for-pickup'
-      preLoaderRoute: typeof ApiMobilePackagesReadyForPickupRouteImport
-      parentRoute: typeof ApiMobilePackagesRoute
-    }
-    '/api/mobile/packages/lookup': {
-      id: '/api/mobile/packages/lookup'
-      path: '/lookup'
-      fullPath: '/api/mobile/packages/lookup'
-      preLoaderRoute: typeof ApiMobilePackagesLookupRouteImport
-      parentRoute: typeof ApiMobilePackagesRoute
-    }
-    '/api/mobile/packages/intake': {
-      id: '/api/mobile/packages/intake'
-      path: '/intake'
-      fullPath: '/api/mobile/packages/intake'
-      preLoaderRoute: typeof ApiMobilePackagesIntakeRouteImport
-      parentRoute: typeof ApiMobilePackagesRoute
-    }
-    '/api/mobile/packages/extract-label': {
-      id: '/api/mobile/packages/extract-label'
-      path: '/extract-label'
-      fullPath: '/api/mobile/packages/extract-label'
-      preLoaderRoute: typeof ApiMobilePackagesExtractLabelRouteImport
-      parentRoute: typeof ApiMobilePackagesRoute
-    }
     '/api/mobile/packages/cleared': {
       id: '/api/mobile/packages/cleared'
       path: '/cleared'
@@ -1270,33 +537,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobilePackagesIdRouteImport
       parentRoute: typeof ApiMobilePackagesRoute
     }
-    '/api/mobile/marketing/$id': {
-      id: '/api/mobile/marketing/$id'
+    '/api/mobile/customers/$id': {
+      id: '/api/mobile/customers/$id'
       path: '/$id'
-      fullPath: '/api/mobile/marketing/$id'
-      preLoaderRoute: typeof ApiMobileMarketingIdRouteImport
-      parentRoute: typeof ApiMobileMarketingRoute
-    }
-    '/api/mobile/conversations/$id': {
-      id: '/api/mobile/conversations/$id'
-      path: '/$id'
-      fullPath: '/api/mobile/conversations/$id'
-      preLoaderRoute: typeof ApiMobileConversationsIdRouteImport
-      parentRoute: typeof ApiMobileConversationsRoute
-    }
-    '/api/mobile/clients/$id': {
-      id: '/api/mobile/clients/$id'
-      path: '/$id'
-      fullPath: '/api/mobile/clients/$id'
-      preLoaderRoute: typeof ApiMobileClientsIdRouteImport
-      parentRoute: typeof ApiMobileClientsRoute
-    }
-    '/api/mobile/batches/$id': {
-      id: '/api/mobile/batches/$id'
-      path: '/$id'
-      fullPath: '/api/mobile/batches/$id'
-      preLoaderRoute: typeof ApiMobileBatchesIdRouteImport
-      parentRoute: typeof ApiMobileBatchesRoute
+      fullPath: '/api/mobile/customers/$id'
+      preLoaderRoute: typeof ApiMobileCustomersIdRouteImport
+      parentRoute: typeof ApiMobileCustomersRoute
     }
     '/api/mobile/auth/me': {
       id: '/api/mobile/auth/me'
@@ -1319,68 +565,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileAdminAuditRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/mobile/packages/$id/release': {
-      id: '/api/mobile/packages/$id/release'
-      path: '/release'
-      fullPath: '/api/mobile/packages/$id/release'
-      preLoaderRoute: typeof ApiMobilePackagesIdReleaseRouteImport
+    '/api/mobile/packages/$id/transition': {
+      id: '/api/mobile/packages/$id/transition'
+      path: '/transition'
+      fullPath: '/api/mobile/packages/$id/transition'
+      preLoaderRoute: typeof ApiMobilePackagesIdTransitionRouteImport
       parentRoute: typeof ApiMobilePackagesIdRoute
     }
-    '/api/mobile/packages/$id/events': {
-      id: '/api/mobile/packages/$id/events'
-      path: '/events'
-      fullPath: '/api/mobile/packages/$id/events'
-      preLoaderRoute: typeof ApiMobilePackagesIdEventsRouteImport
+    '/api/mobile/packages/$id/collect': {
+      id: '/api/mobile/packages/$id/collect'
+      path: '/collect'
+      fullPath: '/api/mobile/packages/$id/collect'
+      preLoaderRoute: typeof ApiMobilePackagesIdCollectRouteImport
       parentRoute: typeof ApiMobilePackagesIdRoute
-    }
-    '/api/mobile/packages/$id/deliver': {
-      id: '/api/mobile/packages/$id/deliver'
-      path: '/deliver'
-      fullPath: '/api/mobile/packages/$id/deliver'
-      preLoaderRoute: typeof ApiMobilePackagesIdDeliverRouteImport
-      parentRoute: typeof ApiMobilePackagesIdRoute
-    }
-    '/api/mobile/conversations/$id/messages': {
-      id: '/api/mobile/conversations/$id/messages'
-      path: '/messages'
-      fullPath: '/api/mobile/conversations/$id/messages'
-      preLoaderRoute: typeof ApiMobileConversationsIdMessagesRouteImport
-      parentRoute: typeof ApiMobileConversationsIdRoute
-    }
-    '/api/mobile/conversations/$id/events': {
-      id: '/api/mobile/conversations/$id/events'
-      path: '/events'
-      fullPath: '/api/mobile/conversations/$id/events'
-      preLoaderRoute: typeof ApiMobileConversationsIdEventsRouteImport
-      parentRoute: typeof ApiMobileConversationsIdRoute
-    }
-    '/api/mobile/conversations/$id/claim': {
-      id: '/api/mobile/conversations/$id/claim'
-      path: '/claim'
-      fullPath: '/api/mobile/conversations/$id/claim'
-      preLoaderRoute: typeof ApiMobileConversationsIdClaimRouteImport
-      parentRoute: typeof ApiMobileConversationsIdRoute
-    }
-    '/api/mobile/clients/$id/consent': {
-      id: '/api/mobile/clients/$id/consent'
-      path: '/consent'
-      fullPath: '/api/mobile/clients/$id/consent'
-      preLoaderRoute: typeof ApiMobileClientsIdConsentRouteImport
-      parentRoute: typeof ApiMobileClientsIdRoute
-    }
-    '/api/mobile/batches/$id/scan': {
-      id: '/api/mobile/batches/$id/scan'
-      path: '/scan'
-      fullPath: '/api/mobile/batches/$id/scan'
-      preLoaderRoute: typeof ApiMobileBatchesIdScanRouteImport
-      parentRoute: typeof ApiMobileBatchesIdRoute
-    }
-    '/api/mobile/batches/$id/close': {
-      id: '/api/mobile/batches/$id/close'
-      path: '/close'
-      fullPath: '/api/mobile/batches/$id/close'
-      preLoaderRoute: typeof ApiMobileBatchesIdCloseRouteImport
-      parentRoute: typeof ApiMobileBatchesIdRoute
     }
     '/api/mobile/admin/employees/$id': {
       id: '/api/mobile/admin/employees/$id'
@@ -1413,32 +610,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface DashboardRouteChildren {
-  DashboardApiKeysRoute: typeof DashboardApiKeysRoute
-  DashboardClientsRoute: typeof DashboardClientsRoute
-  DashboardConversationsRoute: typeof DashboardConversationsRoute
-  DashboardMarketingRoute: typeof DashboardMarketingRoute
-  DashboardPackagesRoute: typeof DashboardPackagesRoute
-  DashboardRatesRoute: typeof DashboardRatesRoute
-  DashboardStaffRoute: typeof DashboardStaffRoute
-  DashboardIndexRoute: typeof DashboardIndexRoute
-}
-
-const DashboardRouteChildren: DashboardRouteChildren = {
-  DashboardApiKeysRoute: DashboardApiKeysRoute,
-  DashboardClientsRoute: DashboardClientsRoute,
-  DashboardConversationsRoute: DashboardConversationsRoute,
-  DashboardMarketingRoute: DashboardMarketingRoute,
-  DashboardPackagesRoute: DashboardPackagesRoute,
-  DashboardRatesRoute: DashboardRatesRoute,
-  DashboardStaffRoute: DashboardStaffRoute,
-  DashboardIndexRoute: DashboardIndexRoute,
-}
-
-const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
-  DashboardRouteChildren,
-)
-
 interface ApiAdminUsersRouteChildren {
   ApiAdminUsersIdRolesRoute: typeof ApiAdminUsersIdRolesRoute
 }
@@ -1451,106 +622,25 @@ const ApiAdminUsersRouteWithChildren = ApiAdminUsersRoute._addFileChildren(
   ApiAdminUsersRouteChildren,
 )
 
-interface ApiMobileBatchesIdRouteChildren {
-  ApiMobileBatchesIdCloseRoute: typeof ApiMobileBatchesIdCloseRoute
-  ApiMobileBatchesIdScanRoute: typeof ApiMobileBatchesIdScanRoute
+interface ApiMobileCustomersRouteChildren {
+  ApiMobileCustomersIdRoute: typeof ApiMobileCustomersIdRoute
 }
 
-const ApiMobileBatchesIdRouteChildren: ApiMobileBatchesIdRouteChildren = {
-  ApiMobileBatchesIdCloseRoute: ApiMobileBatchesIdCloseRoute,
-  ApiMobileBatchesIdScanRoute: ApiMobileBatchesIdScanRoute,
+const ApiMobileCustomersRouteChildren: ApiMobileCustomersRouteChildren = {
+  ApiMobileCustomersIdRoute: ApiMobileCustomersIdRoute,
 }
 
-const ApiMobileBatchesIdRouteWithChildren =
-  ApiMobileBatchesIdRoute._addFileChildren(ApiMobileBatchesIdRouteChildren)
-
-interface ApiMobileBatchesRouteChildren {
-  ApiMobileBatchesIdRoute: typeof ApiMobileBatchesIdRouteWithChildren
-}
-
-const ApiMobileBatchesRouteChildren: ApiMobileBatchesRouteChildren = {
-  ApiMobileBatchesIdRoute: ApiMobileBatchesIdRouteWithChildren,
-}
-
-const ApiMobileBatchesRouteWithChildren =
-  ApiMobileBatchesRoute._addFileChildren(ApiMobileBatchesRouteChildren)
-
-interface ApiMobileClientsIdRouteChildren {
-  ApiMobileClientsIdConsentRoute: typeof ApiMobileClientsIdConsentRoute
-}
-
-const ApiMobileClientsIdRouteChildren: ApiMobileClientsIdRouteChildren = {
-  ApiMobileClientsIdConsentRoute: ApiMobileClientsIdConsentRoute,
-}
-
-const ApiMobileClientsIdRouteWithChildren =
-  ApiMobileClientsIdRoute._addFileChildren(ApiMobileClientsIdRouteChildren)
-
-interface ApiMobileClientsRouteChildren {
-  ApiMobileClientsIdRoute: typeof ApiMobileClientsIdRouteWithChildren
-}
-
-const ApiMobileClientsRouteChildren: ApiMobileClientsRouteChildren = {
-  ApiMobileClientsIdRoute: ApiMobileClientsIdRouteWithChildren,
-}
-
-const ApiMobileClientsRouteWithChildren =
-  ApiMobileClientsRoute._addFileChildren(ApiMobileClientsRouteChildren)
-
-interface ApiMobileConversationsIdRouteChildren {
-  ApiMobileConversationsIdClaimRoute: typeof ApiMobileConversationsIdClaimRoute
-  ApiMobileConversationsIdEventsRoute: typeof ApiMobileConversationsIdEventsRoute
-  ApiMobileConversationsIdMessagesRoute: typeof ApiMobileConversationsIdMessagesRoute
-}
-
-const ApiMobileConversationsIdRouteChildren: ApiMobileConversationsIdRouteChildren =
-  {
-    ApiMobileConversationsIdClaimRoute: ApiMobileConversationsIdClaimRoute,
-    ApiMobileConversationsIdEventsRoute: ApiMobileConversationsIdEventsRoute,
-    ApiMobileConversationsIdMessagesRoute:
-      ApiMobileConversationsIdMessagesRoute,
-  }
-
-const ApiMobileConversationsIdRouteWithChildren =
-  ApiMobileConversationsIdRoute._addFileChildren(
-    ApiMobileConversationsIdRouteChildren,
-  )
-
-interface ApiMobileConversationsRouteChildren {
-  ApiMobileConversationsIdRoute: typeof ApiMobileConversationsIdRouteWithChildren
-}
-
-const ApiMobileConversationsRouteChildren: ApiMobileConversationsRouteChildren =
-  {
-    ApiMobileConversationsIdRoute: ApiMobileConversationsIdRouteWithChildren,
-  }
-
-const ApiMobileConversationsRouteWithChildren =
-  ApiMobileConversationsRoute._addFileChildren(
-    ApiMobileConversationsRouteChildren,
-  )
-
-interface ApiMobileMarketingRouteChildren {
-  ApiMobileMarketingIdRoute: typeof ApiMobileMarketingIdRoute
-}
-
-const ApiMobileMarketingRouteChildren: ApiMobileMarketingRouteChildren = {
-  ApiMobileMarketingIdRoute: ApiMobileMarketingIdRoute,
-}
-
-const ApiMobileMarketingRouteWithChildren =
-  ApiMobileMarketingRoute._addFileChildren(ApiMobileMarketingRouteChildren)
+const ApiMobileCustomersRouteWithChildren =
+  ApiMobileCustomersRoute._addFileChildren(ApiMobileCustomersRouteChildren)
 
 interface ApiMobilePackagesIdRouteChildren {
-  ApiMobilePackagesIdDeliverRoute: typeof ApiMobilePackagesIdDeliverRoute
-  ApiMobilePackagesIdEventsRoute: typeof ApiMobilePackagesIdEventsRoute
-  ApiMobilePackagesIdReleaseRoute: typeof ApiMobilePackagesIdReleaseRoute
+  ApiMobilePackagesIdCollectRoute: typeof ApiMobilePackagesIdCollectRoute
+  ApiMobilePackagesIdTransitionRoute: typeof ApiMobilePackagesIdTransitionRoute
 }
 
 const ApiMobilePackagesIdRouteChildren: ApiMobilePackagesIdRouteChildren = {
-  ApiMobilePackagesIdDeliverRoute: ApiMobilePackagesIdDeliverRoute,
-  ApiMobilePackagesIdEventsRoute: ApiMobilePackagesIdEventsRoute,
-  ApiMobilePackagesIdReleaseRoute: ApiMobilePackagesIdReleaseRoute,
+  ApiMobilePackagesIdCollectRoute: ApiMobilePackagesIdCollectRoute,
+  ApiMobilePackagesIdTransitionRoute: ApiMobilePackagesIdTransitionRoute,
 }
 
 const ApiMobilePackagesIdRouteWithChildren =
@@ -1559,20 +649,12 @@ const ApiMobilePackagesIdRouteWithChildren =
 interface ApiMobilePackagesRouteChildren {
   ApiMobilePackagesIdRoute: typeof ApiMobilePackagesIdRouteWithChildren
   ApiMobilePackagesClearedRoute: typeof ApiMobilePackagesClearedRoute
-  ApiMobilePackagesExtractLabelRoute: typeof ApiMobilePackagesExtractLabelRoute
-  ApiMobilePackagesIntakeRoute: typeof ApiMobilePackagesIntakeRoute
-  ApiMobilePackagesLookupRoute: typeof ApiMobilePackagesLookupRoute
-  ApiMobilePackagesReadyForPickupRoute: typeof ApiMobilePackagesReadyForPickupRoute
   ApiMobilePackagesScanRoute: typeof ApiMobilePackagesScanRoute
 }
 
 const ApiMobilePackagesRouteChildren: ApiMobilePackagesRouteChildren = {
   ApiMobilePackagesIdRoute: ApiMobilePackagesIdRouteWithChildren,
   ApiMobilePackagesClearedRoute: ApiMobilePackagesClearedRoute,
-  ApiMobilePackagesExtractLabelRoute: ApiMobilePackagesExtractLabelRoute,
-  ApiMobilePackagesIntakeRoute: ApiMobilePackagesIntakeRoute,
-  ApiMobilePackagesLookupRoute: ApiMobilePackagesLookupRoute,
-  ApiMobilePackagesReadyForPickupRoute: ApiMobilePackagesReadyForPickupRoute,
   ApiMobilePackagesScanRoute: ApiMobilePackagesScanRoute,
 }
 
@@ -1581,58 +663,16 @@ const ApiMobilePackagesRouteWithChildren =
 
 interface ApiMobilePaymentsRouteChildren {
   ApiMobilePaymentsIdRoute: typeof ApiMobilePaymentsIdRoute
-  ApiMobilePaymentsCashRoute: typeof ApiMobilePaymentsCashRoute
   ApiMobilePaymentsManualRoute: typeof ApiMobilePaymentsManualRoute
 }
 
 const ApiMobilePaymentsRouteChildren: ApiMobilePaymentsRouteChildren = {
   ApiMobilePaymentsIdRoute: ApiMobilePaymentsIdRoute,
-  ApiMobilePaymentsCashRoute: ApiMobilePaymentsCashRoute,
   ApiMobilePaymentsManualRoute: ApiMobilePaymentsManualRoute,
 }
 
 const ApiMobilePaymentsRouteWithChildren =
   ApiMobilePaymentsRoute._addFileChildren(ApiMobilePaymentsRouteChildren)
-
-interface ApiMobileRatesRouteChildren {
-  ApiMobileRatesIdRoute: typeof ApiMobileRatesIdRoute
-  ApiMobileRatesLookupRoute: typeof ApiMobileRatesLookupRoute
-}
-
-const ApiMobileRatesRouteChildren: ApiMobileRatesRouteChildren = {
-  ApiMobileRatesIdRoute: ApiMobileRatesIdRoute,
-  ApiMobileRatesLookupRoute: ApiMobileRatesLookupRoute,
-}
-
-const ApiMobileRatesRouteWithChildren = ApiMobileRatesRoute._addFileChildren(
-  ApiMobileRatesRouteChildren,
-)
-
-interface ApiMobileStatsRouteChildren {
-  ApiMobileStatsDashboardRoute: typeof ApiMobileStatsDashboardRoute
-}
-
-const ApiMobileStatsRouteChildren: ApiMobileStatsRouteChildren = {
-  ApiMobileStatsDashboardRoute: ApiMobileStatsDashboardRoute,
-}
-
-const ApiMobileStatsRouteWithChildren = ApiMobileStatsRoute._addFileChildren(
-  ApiMobileStatsRouteChildren,
-)
-
-interface ApiPublicEvolutionWebhookRouteChildren {
-  ApiPublicEvolutionWebhookSplatRoute: typeof ApiPublicEvolutionWebhookSplatRoute
-}
-
-const ApiPublicEvolutionWebhookRouteChildren: ApiPublicEvolutionWebhookRouteChildren =
-  {
-    ApiPublicEvolutionWebhookSplatRoute: ApiPublicEvolutionWebhookSplatRoute,
-  }
-
-const ApiPublicEvolutionWebhookRouteWithChildren =
-  ApiPublicEvolutionWebhookRoute._addFileChildren(
-    ApiPublicEvolutionWebhookRouteChildren,
-  )
 
 interface ApiMobileAdminEmployeesIdRouteChildren {
   ApiMobileAdminEmployeesIdActivityRoute: typeof ApiMobileAdminEmployeesIdActivityRoute
@@ -1669,45 +709,22 @@ const ApiMobileAdminEmployeesRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
-  DashboardRoute: DashboardRouteWithChildren,
-  QuoteRoute: QuoteRoute,
   ApiAdminUsersRoute: ApiAdminUsersRouteWithChildren,
-  ApiMobileAnalyticsRoute: ApiMobileAnalyticsRoute,
-  ApiMobileBatchesRoute: ApiMobileBatchesRouteWithChildren,
-  ApiMobileClientsRoute: ApiMobileClientsRouteWithChildren,
-  ApiMobileConversationsRoute: ApiMobileConversationsRouteWithChildren,
-  ApiMobileCountriesRoute: ApiMobileCountriesRoute,
-  ApiMobileMarketingRoute: ApiMobileMarketingRouteWithChildren,
+  ApiMobileCustomersRoute: ApiMobileCustomersRouteWithChildren,
   ApiMobileNotificationsRoute: ApiMobileNotificationsRoute,
   ApiMobilePackagesRoute: ApiMobilePackagesRouteWithChildren,
   ApiMobilePaymentsRoute: ApiMobilePaymentsRouteWithChildren,
-  ApiMobileQuoteRoute: ApiMobileQuoteRoute,
-  ApiMobileRatesRoute: ApiMobileRatesRouteWithChildren,
   ApiMobileSearchRoute: ApiMobileSearchRoute,
   ApiMobileSettingsRoute: ApiMobileSettingsRoute,
-  ApiMobileStaffRoute: ApiMobileStaffRoute,
-  ApiMobileStatsRoute: ApiMobileStatsRouteWithChildren,
   ApiMobileUploadsRoute: ApiMobileUploadsRoute,
-  ApiMobileWarehousesRoute: ApiMobileWarehousesRoute,
   ApiPublicArchiveExpiredRecordsRoute: ApiPublicArchiveExpiredRecordsRoute,
   ApiPublicDarajaCallbackRoute: ApiPublicDarajaCallbackRoute,
-  ApiPublicEvolutionTestSendRoute: ApiPublicEvolutionTestSendRoute,
-  ApiPublicEvolutionWebhookRoute: ApiPublicEvolutionWebhookRouteWithChildren,
-  ApiPublicPublishScheduledRoute: ApiPublicPublishScheduledRoute,
   ApiMobileAdminAuditRoute: ApiMobileAdminAuditRoute,
   ApiMobileAdminEmployeesRoute: ApiMobileAdminEmployeesRouteWithChildren,
   ApiMobileAuthMeRoute: ApiMobileAuthMeRoute,
   ApiMobilePushRegisterRoute: ApiMobilePushRegisterRoute,
+  ApiMobileStatsDashboardRoute: ApiMobileStatsDashboardRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}

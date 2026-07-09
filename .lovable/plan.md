@@ -1,103 +1,163 @@
-# Dex Cargo v2 — Kenya Warehouse & Release Management
+# Kenya Logistics Backend — Full Rebuild Plan
 
-We are pivoting the backend from a China↔Kenya consolidation platform to a **Kenya-only warehouse, payment, and release management system**. The China-side desktop app and its endpoints are removed. Package intake now starts with an **AI OCR photo of the sticker**, and every touch is tied to an **Employee ID** for a full audit trail.
+Rebuild the backend as a Kenya-only, mobile-first API. OCR runs on the phone (Google ML Kit); the backend receives structured JSON + the original sticker photo. All China-side sync, batching, containers, and loading logic are removed.
 
-## What changes
+Stack stays TanStack Start server routes + Lovable Cloud (Postgres, Auth, Storage) + M-Pesa Daraja + Evolution WhatsApp + Lovable AI Gateway (optional server-side re-validation only). No frontend work — API endpoints only.
 
-### Removed
-- All `/api/desktop/*` routes (China-side sticker printing, left-behind, bulk sticker).
-- `left_behind_total`, China-warehouse batching flows, and the "loaded into batch" arrival check.
-- Public client self sign-up: only admins create employee accounts.
+## 1. Remove (China-era surface)
 
-### Kept (still useful)
-- Supabase auth + `user_roles` + `has_role`.
-- M-Pesa STK push via KCB Paybill 522522 + `daraja-callback`.
-- `packages`, `package_events`, `payments`, `clients` tables (extended, not rebuilt).
-- `warehouses` / `countries` (kept for future multi-branch — Kenya-only rows for now).
-- Evolution WhatsApp notifier (status updates to customer).
+Delete routes:
+- `batches.ts`, `batches.$id.ts`, `batches.$id.close.ts`, `batches.$id.scan.ts`
+- `packages.scan.ts` (auto-create from China scan), `packages.extract-label.ts` (server OCR — OCR is now on-device)
+- `packages.ready-for-pickup.ts`, `packages.$id.deliver.ts` (replaced by unified release), `packages.lookup.ts` (folded into `/search`)
+- `countries.ts`, `warehouses.ts` (Kenya-only; single warehouse table stays for shelf/bin)
+- `quote.ts`, `rates.ts`, `rates.$id.ts`, `rates.lookup.ts` (no quoting — charges come from package)
+- `clients.ts`, `clients.$id.ts`, `clients.$id.consent.ts` → replaced by `customers.*`
+- `staff.ts` → replaced by `admin/employees.*` (already exists)
+- Server helpers: `quote.ts`
 
-### New / Reworked
+Drop tables (in migration): `loading_batches`, `batch_packages`, `rates`, `countries`, `clients` (data migrated into `customers` if needed).
 
-**1. Employee identity (`employees` table, one row per staff auth user)**
-- `employee_code` (auto: `DEX-0001`, immutable, shown on receipts/audit).
-- `full_name`, `email`, `phone`, `role` (`admin` | `warehouse` | `cashier` | `releaser`), `branch_id` (→ `warehouses`), `status` (`active` | `suspended`), `created_by`.
-- Populated by admin via `POST /api/mobile/admin/employees` (creates auth user with password, `user_roles` row, `employees` row).
-- `PATCH` to edit / suspend / change role. `POST .../reset-password` triggers admin password reset.
+## 2. Database rebuild (single migration)
 
-**2. OCR intake (`POST /api/mobile/packages/extract-label` already exists)**
-- Extend to also return suggested `customer_name`, `phone`, `courier`, `weight`, `destination_city`, `reference_numbers[]`, `raw_text`.
-- New `POST /api/mobile/packages` (manual save after OCR review) — replaces auto-create in `scan.ts`. Stores `intake_photo_url`, `ocr_payload` (jsonb), `ocr_confidence`, and links `received_by_employee_id`.
-- `packages.scan.ts` becomes status-transition only (no auto-create).
+New / restructured tables:
+- **customers** — replaces `clients`. Fields: full_name, phone (unique, normalized 2547…), whatsapp_number, national_id, email, default_address, city, notes, is_active. Backfill from `clients`.
+- **packages** — slim schema focused on Kenya intake:
+  tracking_number (unique), external_barcode, customer_id → customers, supplier, description, category, weight_kg, length_cm/width_cm/height_cm, courier, destination_city, special_notes,
+  status (`received`|`verified`|`awaiting_payment`|`paid`|`ready_for_collection`|`collected`|`cleared`),
+  amount_due, currency (KES),
+  qr_code_token (uuid, unique), barcode,
+  warehouse_id, shelf_id, bin_code,
+  intake_photo_url, ocr_payload (jsonb, from phone), ocr_confidence,
+  received_by_employee_id, received_at, verified_at, ready_at, collected_at, cleared_at.
+- **package_images** — package_id, kind (`sticker`|`extra`|`proof_of_collection`|`qr`), url, uploaded_by, created_at.
+- **package_status_history** — package_id, from_status, to_status, notes, changed_by_employee_id, created_at.
+- **warehouse_shelves** — warehouse_id, code, section, capacity.
+- **warehouse_bins** — shelf_id, code, is_occupied.
+- **payments** — kept; extend with `receipt_url`, ensure `method` in (`mpesa_stk`,`mpesa_manual`,`cash`,`bank`), `status` in (`pending`,`paid`,`failed`,`refunded`,`cancelled`).
+- **commissions** — employee_id, package_id, payment_id, trigger (`received`|`payment`|`delivery`), amount, percentage, status (`pending`|`approved`|`paid`), approved_by, approved_at.
+- **commission_rules** — role or employee_id, trigger, percentage, flat_amount, active.
+- **deliveries** — package_id, collected_by_name, collected_by_id_number, collected_by_phone, relationship_to_customer, signature_url, proof_photo_url, released_by_employee_id, collected_at.
+- **whatsapp_logs** — customer_id, package_id, template, payload, status, provider_message_id, error, created_at.
+- **notifications** — kept (internal alerts, extend audience enum for `employee`).
+- **audit_logs** — kept; ensure `logAudit()` called from every mutation.
+- **settings** — key/value jsonb for tunables (commission defaults, WhatsApp templates, working hours).
 
-**3. Package lifecycle (new enum `package_status_v2`)**
-`received` → `awaiting_payment` → `paid` → `ready_for_collection` → `released` → `cleared`.
-Each transition writes a `package_events` row with `employee_id`, `at`, `notes`, and optional `payment_id`.
+Keep: `employees`, `user_roles`, `profiles`, `audit_logs`, `idempotency_keys`, `rate_limit_hits`, `push_tokens`, `delivery_signatures` (merge into `deliveries`).
 
-**4. Release flow (`POST /api/mobile/packages/:id/release`)**
-- Requires: package is `paid` or cash-on-collection recorded now.
-- Captures: `released_by_employee_id`, `recipient_name`, `recipient_id_number`, `recipient_phone`, `signature_url` (optional), `notes`.
-- Auto-inserts payment row if cash paid at counter.
-- Moves status to `released`, then a nightly job (or immediate flag) marks `cleared`.
+Every new public table: GRANT to authenticated + service_role, ENABLE RLS, staff-only policies via `is_staff(auth.uid())` plus admin-only for destructive ops.
 
-**5. Cleared packages view (`GET /api/mobile/packages/cleared`)**
-Returns full archive record per spec: tracking, customer, amount, mpesa code, received/released timestamps + employee codes, dwell time, image URL, ocr payload.
+DB helpers:
+- `generate_qr_token()` — SECURITY DEFINER, returns unique token.
+- `transition_package_status(_id, _to, _by, _notes)` — validates transition + writes history row.
+- `award_commission(_package_id, _trigger)` — reads `commission_rules`, inserts commission.
+- Trigger on `packages` insert → auto-generate qr_code_token + `received` history row + `received` commission.
 
-**6. Payments**
-- `POST /api/mobile/payments` already supports mpesa STK.
-- New `POST /api/mobile/payments/manual` for cash / bank / manual-mpesa-code entry by cashier (records `recorded_by_employee_id`, `mpesa_code`, `method`).
-- Existing daraja callback links transaction back to package.
+## 3. New API surface (all under `/api/mobile/`, staff-authenticated)
 
-**7. Audit-first (`audit_logs` already exists — extend usage)**
-- Add DB trigger on `packages`, `payments`, `employees` capturing `actor_employee_id`, `action`, `old`, `new`, `at`.
-- New `GET /api/mobile/admin/audit` (admin only) filterable by employee, package, date.
-- New `GET /api/mobile/admin/employees/:id/activity` — packages received, released, payments handled, logins.
+### Auth (unchanged)
+- `POST /auth/login`, `POST /auth/logout`, `POST /auth/refresh`, `GET /auth/me`, `POST /auth/reset-password`
 
-**8. Search (`GET /api/mobile/search?q=...`)**
-Single endpoint that fans out over tracking_number, internal package_id, customer name/phone, mpesa code, employee_code. Uses existing `pg_trgm`.
+### Employees (admin) — keep existing `admin/employees.*`, add:
+- `GET /admin/employees/:id/commission-summary`
+- `PATCH /admin/employees/:id/commission-percentage`
 
-**9. Dashboard (`GET /api/mobile/stats/dashboard`)**
-Today: received, awaiting_payment, ready_for_collection, cleared, revenue (KES), active employees, recent activity feed, 30-day trend.
+### Customers (replaces clients)
+- `GET /customers` (search q, is_active, page)
+- `POST /customers`
+- `GET /customers/:id` (with packages + outstanding balance)
+- `PATCH /customers/:id`
+- `POST /customers/:id/deactivate`
+- `GET /customers/:id/history`
 
-**10. Reports (`GET /api/mobile/reports/*`)**
-`daily`, `weekly`, `monthly`, `revenue`, `employee-performance`, `mpesa-reconciliation`, `turnaround-time`. All CSV + JSON.
+### Packages (core)
+- `POST /packages/intake` — body: structured OCR JSON + intake_photo_url (already uploaded via `/uploads`). Creates package in `received`. Auto QR + history + commission.
+- `GET /packages` — filter by status, employee, customer, date, q.
+- `GET /packages/:id` — full detail incl. images, history, payments, deliveries.
+- `PATCH /packages/:id` — edit extracted fields (audit-logged).
+- `POST /packages/:id/verify` → `verified`, sets amount_due if provided.
+- `POST /packages/:id/set-charges` — amount_due, currency; transitions to `awaiting_payment`; triggers WhatsApp "payment required".
+- `POST /packages/:id/assign-location` — warehouse_id, shelf_id, bin_code.
+- `POST /packages/:id/images` — attach extra photo.
+- `GET /packages/:id/qr` — return QR PNG/SVG data URL.
+- `POST /packages/scan` — body: `{ qr_token | barcode | tracking_number }` → returns package. (Replaces old scan endpoint semantics.)
+- `POST /packages/:id/mark-ready` → `ready_for_collection` (guard: paid or cash-on-collection allowed). WhatsApp "ready".
+- `POST /packages/:id/collect` — body: recipient details, signature_url, proof_photo_url, cash payment if any → creates `deliveries` row, transitions `collected`. WhatsApp "collected". Awards delivery commission.
+- Nightly job: `collected` older than N days → `cleared`.
+- `GET /packages/cleared` — archive view (kept, filters expanded).
 
-## Migrations (single migration)
+### Payments
+- `POST /payments/stk-push` — package_id, phone → Daraja STK.
+- `POST /payments/manual` — cash / bank / manual mpesa code (kept).
+- `GET /payments`, `GET /payments/:id`
+- `GET /payments/:id/receipt` — signed receipt HTML/PDF URL.
+- `POST /payments/:id/verify` — re-query Daraja by CheckoutRequestID.
+- `POST /public/daraja-callback` — kept; on success transitions package to `paid` + awards payment commission + WhatsApp "payment confirmed".
 
-```text
-- create type employee_role, package_status_v2, payment_method
-- create table employees (+ auto employee_code sequence)
-- alter packages: add intake_photo_url, ocr_payload jsonb, ocr_confidence,
-  received_by_employee_id, released_by_employee_id, released_at,
-  recipient_name, recipient_id_number, recipient_phone,
-  status_v2 (backfilled from status), cleared_at
-- alter payments: add method, recorded_by_employee_id, mpesa_code (unique nullable)
-- audit trigger function + triggers
-- GRANTs + RLS on employees (admin all, self read)
-- drop unused: left_behind_total column
-```
+### Warehouse
+- `GET /warehouses`, `POST /warehouses` (admin)
+- `GET /warehouses/:id/shelves`, `POST /warehouses/:id/shelves`
+- `GET /shelves/:id/bins`, `POST /shelves/:id/bins`
+- `GET /warehouses/:id/occupancy`
 
-## Files
+### Commissions
+- `GET /commissions` — filter by employee, status, period.
+- `GET /commissions/summary?employee_id=&from=&to=`
+- `POST /commissions/:id/approve` (admin)
+- `POST /commissions/bulk-approve` (admin)
+- `GET /commission-rules`, `POST /commission-rules`, `PATCH /commission-rules/:id` (admin)
 
-**Delete:** `src/routes/api/desktop/*`, `src/server/sticker.ts`.
+### Notifications & WhatsApp
+- `GET /notifications`, `POST /notifications/:id/read` (kept)
+- `POST /whatsapp/send` — package_id + template; internal wrapper over Evolution.
+- `GET /whatsapp/logs?customer_id=&package_id=`
 
-**Add:**
-- `src/routes/api/mobile/admin/employees.ts` (+ `.$id.ts`, `.$id.reset-password.ts`)
-- `src/routes/api/mobile/packages/index.ts` rewrite (POST = create after OCR)
-- `src/routes/api/mobile/packages.$id.release.ts`
-- `src/routes/api/mobile/packages.cleared.ts`
-- `src/routes/api/mobile/payments.manual.ts`
-- `src/routes/api/mobile/search.ts`
-- `src/routes/api/mobile/admin/audit.ts`
-- `src/routes/api/mobile/admin/employees.$id.activity.ts`
-- `src/routes/api/mobile/reports.$kind.ts`
-- `src/server/employees.ts` (code generator, resolver from auth user)
-- `src/server/audit.ts` (extend with `logPackageChange` etc.)
+### Search
+- `GET /search?q=` — unified across tracking, barcode, qr_token, customer name/phone, mpesa code, employee_code (kept, expand fields).
 
-**Edit:** `packages.scan.ts` → status-transition only. `stats.ts` → dashboard shape. `auth.me.ts` → include `employee_code`, `branch_id`.
+### Dashboard & Reports
+- `GET /stats/dashboard` — today's packages, collections, revenue, pending payments, ready-for-collection, working employees, monthly trend.
+- `GET /reports/revenue?from=&to=&format=json|csv`
+- `GET /reports/packages`
+- `GET /reports/payments`
+- `GET /reports/commissions`
+- `GET /reports/employee-performance`
+- `GET /reports/outstanding-balances`
 
-## Not in scope this pass
-- Rebuilding the web dashboard UI (backend-only, per project scope).
-- Rewriting the Android spec doc — will update in a follow-up once endpoints are live.
-- Multi-branch UI (schema ready via `warehouses.branch_id`, but only one Kenya branch seeded).
+### Uploads
+- `POST /uploads` — kept; used for sticker photo, signature, proof of collection, extra images.
 
-Approve and I'll ship the migration + routes + deletions in one pass.
+### Audit (admin)
+- `GET /admin/audit` — kept.
+
+## 4. Cross-cutting
+
+- **Auth guard**: all `/api/mobile/*` require `requireSupabaseAuth` + `getEmployeeByUserId` active check (helper `requireActiveEmployee`).
+- **Audit**: every mutation calls `logAudit()` with resource_type + before/after diff (via a small `withAudit()` wrapper).
+- **Idempotency**: intake, collect, stk-push, manual payment use `withIdempotency`.
+- **Rate limits**: intake 120/min, stk-push 10/min per user, whatsapp/send 30/min.
+- **Validation**: Zod schemas per endpoint; reject unknown fields.
+- **Status machine**: all transitions go through `transition_package_status` — no direct `UPDATE status`.
+- **Commission engine**: fired from status transitions (`received`, payment `paid`, delivery `collected`) via `award_commission`.
+
+## 5. Deliverables (this pass)
+
+1. One migration: drop old tables, add new tables + enums + functions + triggers + RLS + GRANTs.
+2. Delete removed routes and helpers.
+3. Create ~35 new/rewritten route files listed above.
+4. Add helpers: `src/server/packages.ts` (transitions, QR), `src/server/commissions.ts`, `src/server/whatsapp.ts` (wraps `evolution.ts` with templates), `src/server/customers.ts`, `src/server/warehouse.ts`, `src/server/reports.ts`.
+5. Keep `daraja.ts`, `evolution.ts`, `api-auth.ts`, `audit.ts`, `idempotency.ts`, `rate-limit.ts`, `employees.ts`.
+
+## Out of scope
+- Mobile app code (frontend is Flutter, separate repo).
+- Web admin dashboard rebuild (existing dashboard.* routes untouched this pass; may break — mark for future cleanup).
+- AI-agent WhatsApp bot (future).
+- PDF receipt generation library selection (return HTML for now; PDF later).
+
+## Technical notes
+- QR: server stores `qr_code_token` (uuid). Endpoint returns `qrserver.com`-style URL OR generates SVG with `qrcode` npm package — will `bun add qrcode` in implementation.
+- Commission calc: percentage of `amount_due` on payment trigger; flat per package on received/delivery; configurable via `commission_rules`.
+- Status transitions enforced in DB — invalid transitions raise, caught and returned as 409.
+- Existing `dashboard.*` UI routes will reference dropped tables; they'll break but user confirmed backend-only focus. Will note in final message.
+
+Approve to execute.
