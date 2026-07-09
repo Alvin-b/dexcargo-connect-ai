@@ -225,7 +225,7 @@ export async function initiateStkPush(opts: {
     .from("payments")
     .insert({
       package_id: opts.packageId ?? null,
-      client_id: opts.clientId ?? null,
+      customer_id: opts.clientId ?? null,
       amount,
       phone,
       checkout_request_id: j.CheckoutRequestID,
