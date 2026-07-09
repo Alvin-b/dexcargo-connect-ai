@@ -9,17 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as QuoteRouteImport } from './routes/quote'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardStaffRouteImport } from './routes/dashboard.staff'
-import { Route as DashboardRatesRouteImport } from './routes/dashboard.rates'
 import { Route as DashboardPackagesRouteImport } from './routes/dashboard.packages'
 import { Route as DashboardMarketingRouteImport } from './routes/dashboard.marketing'
 import { Route as DashboardConversationsRouteImport } from './routes/dashboard.conversations'
-import { Route as DashboardClientsRouteImport } from './routes/dashboard.clients'
 import { Route as DashboardApiKeysRouteImport } from './routes/dashboard.api-keys'
 import { Route as ApiPublicPublishScheduledRouteImport } from './routes/api/public/publish-scheduled'
 import { Route as ApiPublicEvolutionWebhookRouteImport } from './routes/api/public/evolution-webhook'
@@ -58,11 +55,6 @@ import { Route as ApiAdminUsersIdRolesRouteImport } from './routes/api/admin/use
 import { Route as ApiMobileAdminEmployeesIdResetPasswordRouteImport } from './routes/api/mobile/admin/employees.$id.reset-password'
 import { Route as ApiMobileAdminEmployeesIdActivityRouteImport } from './routes/api/mobile/admin/employees.$id.activity'
 
-const QuoteRoute = QuoteRouteImport.update({
-  id: '/quote',
-  path: '/quote',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -88,11 +80,6 @@ const DashboardStaffRoute = DashboardStaffRouteImport.update({
   path: '/staff',
   getParentRoute: () => DashboardRoute,
 } as any)
-const DashboardRatesRoute = DashboardRatesRouteImport.update({
-  id: '/rates',
-  path: '/rates',
-  getParentRoute: () => DashboardRoute,
-} as any)
 const DashboardPackagesRoute = DashboardPackagesRouteImport.update({
   id: '/packages',
   path: '/packages',
@@ -106,11 +93,6 @@ const DashboardMarketingRoute = DashboardMarketingRouteImport.update({
 const DashboardConversationsRoute = DashboardConversationsRouteImport.update({
   id: '/conversations',
   path: '/conversations',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardClientsRoute = DashboardClientsRouteImport.update({
-  id: '/clients',
-  path: '/clients',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardApiKeysRoute = DashboardApiKeysRouteImport.update({
@@ -317,13 +299,10 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
-  '/quote': typeof QuoteRoute
   '/dashboard/api-keys': typeof DashboardApiKeysRoute
-  '/dashboard/clients': typeof DashboardClientsRoute
   '/dashboard/conversations': typeof DashboardConversationsRoute
   '/dashboard/marketing': typeof DashboardMarketingRoute
   '/dashboard/packages': typeof DashboardPackagesRoute
-  '/dashboard/rates': typeof DashboardRatesRoute
   '/dashboard/staff': typeof DashboardStaffRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
@@ -366,13 +345,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/quote': typeof QuoteRoute
   '/dashboard/api-keys': typeof DashboardApiKeysRoute
-  '/dashboard/clients': typeof DashboardClientsRoute
   '/dashboard/conversations': typeof DashboardConversationsRoute
   '/dashboard/marketing': typeof DashboardMarketingRoute
   '/dashboard/packages': typeof DashboardPackagesRoute
-  '/dashboard/rates': typeof DashboardRatesRoute
   '/dashboard/staff': typeof DashboardStaffRoute
   '/dashboard': typeof DashboardIndexRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
@@ -417,13 +393,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
-  '/quote': typeof QuoteRoute
   '/dashboard/api-keys': typeof DashboardApiKeysRoute
-  '/dashboard/clients': typeof DashboardClientsRoute
   '/dashboard/conversations': typeof DashboardConversationsRoute
   '/dashboard/marketing': typeof DashboardMarketingRoute
   '/dashboard/packages': typeof DashboardPackagesRoute
-  '/dashboard/rates': typeof DashboardRatesRoute
   '/dashboard/staff': typeof DashboardStaffRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
@@ -469,13 +442,10 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard'
-    | '/quote'
     | '/dashboard/api-keys'
-    | '/dashboard/clients'
     | '/dashboard/conversations'
     | '/dashboard/marketing'
     | '/dashboard/packages'
-    | '/dashboard/rates'
     | '/dashboard/staff'
     | '/dashboard/'
     | '/api/admin/users'
@@ -518,13 +488,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
-    | '/quote'
     | '/dashboard/api-keys'
-    | '/dashboard/clients'
     | '/dashboard/conversations'
     | '/dashboard/marketing'
     | '/dashboard/packages'
-    | '/dashboard/rates'
     | '/dashboard/staff'
     | '/dashboard'
     | '/api/admin/users'
@@ -568,13 +535,10 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard'
-    | '/quote'
     | '/dashboard/api-keys'
-    | '/dashboard/clients'
     | '/dashboard/conversations'
     | '/dashboard/marketing'
     | '/dashboard/packages'
-    | '/dashboard/rates'
     | '/dashboard/staff'
     | '/dashboard/'
     | '/api/admin/users'
@@ -619,7 +583,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   DashboardRoute: typeof DashboardRouteWithChildren
-  QuoteRoute: typeof QuoteRoute
   ApiAdminUsersRoute: typeof ApiAdminUsersRouteWithChildren
   ApiMobileConversationsRoute: typeof ApiMobileConversationsRouteWithChildren
   ApiMobileMarketingRoute: typeof ApiMobileMarketingRouteWithChildren
@@ -643,13 +606,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/quote': {
-      id: '/quote'
-      path: '/quote'
-      fullPath: '/quote'
-      preLoaderRoute: typeof QuoteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -685,13 +641,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardStaffRouteImport
       parentRoute: typeof DashboardRoute
     }
-    '/dashboard/rates': {
-      id: '/dashboard/rates'
-      path: '/rates'
-      fullPath: '/dashboard/rates'
-      preLoaderRoute: typeof DashboardRatesRouteImport
-      parentRoute: typeof DashboardRoute
-    }
     '/dashboard/packages': {
       id: '/dashboard/packages'
       path: '/packages'
@@ -711,13 +660,6 @@ declare module '@tanstack/react-router' {
       path: '/conversations'
       fullPath: '/dashboard/conversations'
       preLoaderRoute: typeof DashboardConversationsRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/clients': {
-      id: '/dashboard/clients'
-      path: '/clients'
-      fullPath: '/dashboard/clients'
-      preLoaderRoute: typeof DashboardClientsRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/api-keys': {
@@ -984,22 +926,18 @@ declare module '@tanstack/react-router' {
 
 interface DashboardRouteChildren {
   DashboardApiKeysRoute: typeof DashboardApiKeysRoute
-  DashboardClientsRoute: typeof DashboardClientsRoute
   DashboardConversationsRoute: typeof DashboardConversationsRoute
   DashboardMarketingRoute: typeof DashboardMarketingRoute
   DashboardPackagesRoute: typeof DashboardPackagesRoute
-  DashboardRatesRoute: typeof DashboardRatesRoute
   DashboardStaffRoute: typeof DashboardStaffRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardApiKeysRoute: DashboardApiKeysRoute,
-  DashboardClientsRoute: DashboardClientsRoute,
   DashboardConversationsRoute: DashboardConversationsRoute,
   DashboardMarketingRoute: DashboardMarketingRoute,
   DashboardPackagesRoute: DashboardPackagesRoute,
-  DashboardRatesRoute: DashboardRatesRoute,
   DashboardStaffRoute: DashboardStaffRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
@@ -1165,7 +1103,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   DashboardRoute: DashboardRouteWithChildren,
-  QuoteRoute: QuoteRoute,
   ApiAdminUsersRoute: ApiAdminUsersRouteWithChildren,
   ApiMobileConversationsRoute: ApiMobileConversationsRouteWithChildren,
   ApiMobileMarketingRoute: ApiMobileMarketingRouteWithChildren,
