@@ -730,7 +730,11 @@ export type Database = {
       }
       package_images: {
         Row: {
+          captured_at: string
+          captured_by: string | null
           created_at: string
+          gps_lat: number | null
+          gps_lng: number | null
           id: string
           kind: Database["public"]["Enums"]["package_image_kind"]
           package_id: string
@@ -738,7 +742,11 @@ export type Database = {
           url: string
         }
         Insert: {
+          captured_at?: string
+          captured_by?: string | null
           created_at?: string
+          gps_lat?: number | null
+          gps_lng?: number | null
           id?: string
           kind?: Database["public"]["Enums"]["package_image_kind"]
           package_id: string
@@ -746,7 +754,11 @@ export type Database = {
           url: string
         }
         Update: {
+          captured_at?: string
+          captured_by?: string | null
           created_at?: string
+          gps_lat?: number | null
+          gps_lng?: number | null
           id?: string
           kind?: Database["public"]["Enums"]["package_image_kind"]
           package_id?: string
@@ -817,13 +829,17 @@ export type Database = {
           amount_paid: number
           barcode: string | null
           bin_code: string | null
+          cargo_type: Database["public"]["Enums"]["cargo_type"] | null
           category: string | null
+          chargeable_weight_kg: number | null
           cleared_at: string | null
           collected_at: string | null
           courier: string | null
           created_at: string
           currency: string
           customer_id: string | null
+          declared_currency: string | null
+          declared_value: number | null
           description: string | null
           destination_city: string | null
           external_barcode: string | null
@@ -831,35 +847,53 @@ export type Database = {
           id: string
           intake_photo_url: string | null
           length_cm: number | null
+          nature_of_goods: string | null
           ocr_confidence: number | null
           ocr_payload: Json | null
+          origin: string | null
+          payment_type: string | null
+          pieces: number | null
           qr_code_token: string
+          rack: string | null
           ready_at: string | null
           received_at: string
           received_by_employee_id: string | null
+          remark: string | null
+          route_code: string | null
+          sales_manager_employee_id: string | null
+          sales_rep_employee_id: string | null
+          second_tracking_number: string | null
           shelf_id: string | null
+          shipping_cost: number | null
+          shipping_method: string | null
           special_notes: string | null
           status: Database["public"]["Enums"]["pkg_status"]
           supplier: string | null
           tracking_number: string
           updated_at: string
           verified_at: string | null
+          volume_m3: number | null
           warehouse_id: string | null
           weight_kg: number | null
           width_cm: number | null
+          zone: string | null
         }
         Insert: {
           amount_due?: number
           amount_paid?: number
           barcode?: string | null
           bin_code?: string | null
+          cargo_type?: Database["public"]["Enums"]["cargo_type"] | null
           category?: string | null
+          chargeable_weight_kg?: number | null
           cleared_at?: string | null
           collected_at?: string | null
           courier?: string | null
           created_at?: string
           currency?: string
           customer_id?: string | null
+          declared_currency?: string | null
+          declared_value?: number | null
           description?: string | null
           destination_city?: string | null
           external_barcode?: string | null
@@ -867,35 +901,53 @@ export type Database = {
           id?: string
           intake_photo_url?: string | null
           length_cm?: number | null
+          nature_of_goods?: string | null
           ocr_confidence?: number | null
           ocr_payload?: Json | null
+          origin?: string | null
+          payment_type?: string | null
+          pieces?: number | null
           qr_code_token?: string
+          rack?: string | null
           ready_at?: string | null
           received_at?: string
           received_by_employee_id?: string | null
+          remark?: string | null
+          route_code?: string | null
+          sales_manager_employee_id?: string | null
+          sales_rep_employee_id?: string | null
+          second_tracking_number?: string | null
           shelf_id?: string | null
+          shipping_cost?: number | null
+          shipping_method?: string | null
           special_notes?: string | null
           status?: Database["public"]["Enums"]["pkg_status"]
           supplier?: string | null
           tracking_number: string
           updated_at?: string
           verified_at?: string | null
+          volume_m3?: number | null
           warehouse_id?: string | null
           weight_kg?: number | null
           width_cm?: number | null
+          zone?: string | null
         }
         Update: {
           amount_due?: number
           amount_paid?: number
           barcode?: string | null
           bin_code?: string | null
+          cargo_type?: Database["public"]["Enums"]["cargo_type"] | null
           category?: string | null
+          chargeable_weight_kg?: number | null
           cleared_at?: string | null
           collected_at?: string | null
           courier?: string | null
           created_at?: string
           currency?: string
           customer_id?: string | null
+          declared_currency?: string | null
+          declared_value?: number | null
           description?: string | null
           destination_city?: string | null
           external_barcode?: string | null
@@ -903,22 +955,36 @@ export type Database = {
           id?: string
           intake_photo_url?: string | null
           length_cm?: number | null
+          nature_of_goods?: string | null
           ocr_confidence?: number | null
           ocr_payload?: Json | null
+          origin?: string | null
+          payment_type?: string | null
+          pieces?: number | null
           qr_code_token?: string
+          rack?: string | null
           ready_at?: string | null
           received_at?: string
           received_by_employee_id?: string | null
+          remark?: string | null
+          route_code?: string | null
+          sales_manager_employee_id?: string | null
+          sales_rep_employee_id?: string | null
+          second_tracking_number?: string | null
           shelf_id?: string | null
+          shipping_cost?: number | null
+          shipping_method?: string | null
           special_notes?: string | null
           status?: Database["public"]["Enums"]["pkg_status"]
           supplier?: string | null
           tracking_number?: string
           updated_at?: string
           verified_at?: string | null
+          volume_m3?: number | null
           warehouse_id?: string | null
           weight_kg?: number | null
           width_cm?: number | null
+          zone?: string | null
         }
         Relationships: [
           {
@@ -931,6 +997,20 @@ export type Database = {
           {
             foreignKeyName: "packages_received_by_employee_id_fkey"
             columns: ["received_by_employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "packages_sales_manager_employee_id_fkey"
+            columns: ["sales_manager_employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "packages_sales_rep_employee_id_fkey"
+            columns: ["sales_rep_employee_id"]
             isOneToOne: false
             referencedRelation: "employees"
             referencedColumns: ["id"]
@@ -1506,13 +1586,17 @@ export type Database = {
           amount_paid: number
           barcode: string | null
           bin_code: string | null
+          cargo_type: Database["public"]["Enums"]["cargo_type"] | null
           category: string | null
+          chargeable_weight_kg: number | null
           cleared_at: string | null
           collected_at: string | null
           courier: string | null
           created_at: string
           currency: string
           customer_id: string | null
+          declared_currency: string | null
+          declared_value: number | null
           description: string | null
           destination_city: string | null
           external_barcode: string | null
@@ -1520,22 +1604,36 @@ export type Database = {
           id: string
           intake_photo_url: string | null
           length_cm: number | null
+          nature_of_goods: string | null
           ocr_confidence: number | null
           ocr_payload: Json | null
+          origin: string | null
+          payment_type: string | null
+          pieces: number | null
           qr_code_token: string
+          rack: string | null
           ready_at: string | null
           received_at: string
           received_by_employee_id: string | null
+          remark: string | null
+          route_code: string | null
+          sales_manager_employee_id: string | null
+          sales_rep_employee_id: string | null
+          second_tracking_number: string | null
           shelf_id: string | null
+          shipping_cost: number | null
+          shipping_method: string | null
           special_notes: string | null
           status: Database["public"]["Enums"]["pkg_status"]
           supplier: string | null
           tracking_number: string
           updated_at: string
           verified_at: string | null
+          volume_m3: number | null
           warehouse_id: string | null
           weight_kg: number | null
           width_cm: number | null
+          zone: string | null
         }
         SetofOptions: {
           from: "*"
@@ -1547,11 +1645,29 @@ export type Database = {
       verify_api_key: { Args: { _raw_key: string }; Returns: string }
     }
     Enums: {
-      app_role: "admin" | "staff" | "client" | "china_staff" | "kenya_staff"
+      app_role:
+        | "admin"
+        | "staff"
+        | "client"
+        | "china_staff"
+        | "kenya_staff"
+        | "logistics_manager"
+        | "sales_manager"
+        | "sales_rep"
+      cargo_type: "general" | "special"
       commission_status: "pending" | "approved" | "paid" | "void"
       commission_trigger: "received" | "payment" | "delivery"
       message_role: "user" | "assistant" | "system" | "staff"
-      package_image_kind: "sticker" | "extra" | "proof_of_collection" | "qr"
+      package_image_kind:
+        | "sticker"
+        | "extra"
+        | "proof_of_collection"
+        | "qr"
+        | "package"
+        | "damage"
+        | "pickup"
+        | "delivery"
+        | "signature"
       package_status:
         | "pending"
         | "received_in_china"
@@ -1579,6 +1695,13 @@ export type Database = {
         | "collected"
         | "cleared"
         | "cancelled"
+        | "registered"
+        | "arrived"
+        | "awaiting_pickup"
+        | "reserved"
+        | "picked_up"
+        | "returned"
+        | "lost"
       post_status: "draft" | "approved" | "scheduled" | "published" | "failed"
       shipping_mode: "air" | "sea" | "express" | "special"
       social_platform: "facebook" | "instagram" | "tiktok" | "x"
@@ -1709,11 +1832,31 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "staff", "client", "china_staff", "kenya_staff"],
+      app_role: [
+        "admin",
+        "staff",
+        "client",
+        "china_staff",
+        "kenya_staff",
+        "logistics_manager",
+        "sales_manager",
+        "sales_rep",
+      ],
+      cargo_type: ["general", "special"],
       commission_status: ["pending", "approved", "paid", "void"],
       commission_trigger: ["received", "payment", "delivery"],
       message_role: ["user", "assistant", "system", "staff"],
-      package_image_kind: ["sticker", "extra", "proof_of_collection", "qr"],
+      package_image_kind: [
+        "sticker",
+        "extra",
+        "proof_of_collection",
+        "qr",
+        "package",
+        "damage",
+        "pickup",
+        "delivery",
+        "signature",
+      ],
       package_status: [
         "pending",
         "received_in_china",
@@ -1742,6 +1885,13 @@ export const Constants = {
         "collected",
         "cleared",
         "cancelled",
+        "registered",
+        "arrived",
+        "awaiting_pickup",
+        "reserved",
+        "picked_up",
+        "returned",
+        "lost",
       ],
       post_status: ["draft", "approved", "scheduled", "published", "failed"],
       shipping_mode: ["air", "sea", "express", "special"],

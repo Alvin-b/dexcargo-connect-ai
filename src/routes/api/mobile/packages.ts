@@ -68,11 +68,32 @@ export const Route = createFileRoute("/api/mobile/packages")({
               const { data: pkg, error } = await (supabaseAdmin.from("packages") as any).insert({
                 tracking_number: tracking,
                 external_barcode: body.external_barcode ?? null,
+                second_tracking_number: body.second_tracking_number ?? null,
                 customer_id: customerId,
                 supplier: body.supplier ?? null,
                 description: body.description ?? null,
                 category: body.category ?? null,
                 weight_kg: body.weight_kg ?? null,
+                chargeable_weight_kg: body.chargeable_weight_kg ?? null,
+                volume_m3: body.volume_m3 ?? null,
+                pieces: body.pieces ?? null,
+                nature_of_goods: body.nature_of_goods ?? null,
+                payment_type: body.payment_type ?? null,
+                declared_value: body.declared_value ?? null,
+                declared_currency: body.declared_currency ?? null,
+                shipping_method: body.shipping_method ?? null,
+                shipping_cost: body.shipping_cost ?? null,
+                remark: body.remark ?? null,
+                origin: body.origin ?? null,
+                route_code: body.route_code ?? null,
+                cargo_type: body.cargo_type ?? null,
+                zone: body.zone ?? null,
+                rack: body.rack ?? null,
+                warehouse_id: body.warehouse_id ?? null,
+                shelf_id: body.shelf_id ?? null,
+                bin_code: body.bin_code ?? null,
+                sales_rep_employee_id: body.sales_rep_employee_id ?? null,
+                sales_manager_employee_id: body.sales_manager_employee_id ?? null,
                 length_cm: body.length_cm ?? null,
                 width_cm: body.width_cm ?? null,
                 height_cm: body.height_cm ?? null,
@@ -84,12 +105,22 @@ export const Route = createFileRoute("/api/mobile/packages")({
                 ocr_payload: body.ocr_payload ?? null,
                 ocr_confidence: body.ocr_confidence ?? null,
                 received_by_employee_id: emp.id,
+                status: body.status ?? 'registered',
               }).select("*, customers(full_name, phone, whatsapp_number)").single();
               if (error) throw error;
 
               await (supabaseAdmin.from("package_images") as any).insert({
-                package_id: pkg.id, kind: "sticker", url: body.intake_photo_url, uploaded_by: auth.userId,
+                package_id: pkg.id, kind: "sticker", url: body.intake_photo_url,
+                uploaded_by: auth.userId, captured_by: auth.userId,
               });
+              // Optional package photo captured after OCR review
+              if (body.package_photo_url) {
+                await (supabaseAdmin.from("package_images") as any).insert({
+                  package_id: pkg.id, kind: "package", url: body.package_photo_url,
+                  uploaded_by: auth.userId, captured_by: auth.userId,
+                  gps_lat: body.gps_lat ?? null, gps_lng: body.gps_lng ?? null,
+                });
+              }
               return apiJson({ ok: true, package: pkg }, 201);
             },
           });
