@@ -1547,11 +1547,29 @@ export type Database = {
       verify_api_key: { Args: { _raw_key: string }; Returns: string }
     }
     Enums: {
-      app_role: "admin" | "staff" | "client" | "china_staff" | "kenya_staff"
+      app_role:
+        | "admin"
+        | "staff"
+        | "client"
+        | "china_staff"
+        | "kenya_staff"
+        | "logistics_manager"
+        | "sales_manager"
+        | "sales_rep"
+      cargo_type: "general" | "special"
       commission_status: "pending" | "approved" | "paid" | "void"
       commission_trigger: "received" | "payment" | "delivery"
       message_role: "user" | "assistant" | "system" | "staff"
-      package_image_kind: "sticker" | "extra" | "proof_of_collection" | "qr"
+      package_image_kind:
+        | "sticker"
+        | "extra"
+        | "proof_of_collection"
+        | "qr"
+        | "package"
+        | "damage"
+        | "pickup"
+        | "delivery"
+        | "signature"
       package_status:
         | "pending"
         | "received_in_china"
@@ -1579,6 +1597,13 @@ export type Database = {
         | "collected"
         | "cleared"
         | "cancelled"
+        | "registered"
+        | "arrived"
+        | "awaiting_pickup"
+        | "reserved"
+        | "picked_up"
+        | "returned"
+        | "lost"
       post_status: "draft" | "approved" | "scheduled" | "published" | "failed"
       shipping_mode: "air" | "sea" | "express" | "special"
       social_platform: "facebook" | "instagram" | "tiktok" | "x"
@@ -1709,11 +1734,31 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "staff", "client", "china_staff", "kenya_staff"],
+      app_role: [
+        "admin",
+        "staff",
+        "client",
+        "china_staff",
+        "kenya_staff",
+        "logistics_manager",
+        "sales_manager",
+        "sales_rep",
+      ],
+      cargo_type: ["general", "special"],
       commission_status: ["pending", "approved", "paid", "void"],
       commission_trigger: ["received", "payment", "delivery"],
       message_role: ["user", "assistant", "system", "staff"],
-      package_image_kind: ["sticker", "extra", "proof_of_collection", "qr"],
+      package_image_kind: [
+        "sticker",
+        "extra",
+        "proof_of_collection",
+        "qr",
+        "package",
+        "damage",
+        "pickup",
+        "delivery",
+        "signature",
+      ],
       package_status: [
         "pending",
         "received_in_china",
@@ -1742,6 +1787,13 @@ export const Constants = {
         "collected",
         "cleared",
         "cancelled",
+        "registered",
+        "arrived",
+        "awaiting_pickup",
+        "reserved",
+        "picked_up",
+        "returned",
+        "lost",
       ],
       post_status: ["draft", "approved", "scheduled", "published", "failed"],
       shipping_mode: ["air", "sea", "express", "special"],
