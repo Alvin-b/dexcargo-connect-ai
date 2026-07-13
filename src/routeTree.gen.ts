@@ -20,7 +20,9 @@ import { Route as ApiMobilePaymentsRouteImport } from './routes/api/mobile/payme
 import { Route as ApiMobilePackagesRouteImport } from './routes/api/mobile/packages'
 import { Route as ApiMobileNotificationsRouteImport } from './routes/api/mobile/notifications'
 import { Route as ApiMobileCustomersRouteImport } from './routes/api/mobile/customers'
+import { Route as ApiMobileCommissionsRouteImport } from './routes/api/mobile/commissions'
 import { Route as ApiAdminUsersRouteImport } from './routes/api/admin/users'
+import { Route as ApiMobileStatsHomeRouteImport } from './routes/api/mobile/stats.home'
 import { Route as ApiMobileStatsDashboardRouteImport } from './routes/api/mobile/stats.dashboard'
 import { Route as ApiMobilePushRegisterRouteImport } from './routes/api/mobile/push.register'
 import { Route as ApiMobilePaymentsManualRouteImport } from './routes/api/mobile/payments.manual'
@@ -28,7 +30,9 @@ import { Route as ApiMobilePaymentsIdRouteImport } from './routes/api/mobile/pay
 import { Route as ApiMobilePackagesScanRouteImport } from './routes/api/mobile/packages.scan'
 import { Route as ApiMobilePackagesClearedRouteImport } from './routes/api/mobile/packages.cleared'
 import { Route as ApiMobilePackagesIdRouteImport } from './routes/api/mobile/packages.$id'
+import { Route as ApiMobileCustomersVerifyRouteImport } from './routes/api/mobile/customers.verify'
 import { Route as ApiMobileCustomersIdRouteImport } from './routes/api/mobile/customers.$id'
+import { Route as ApiMobileCommissionsIdRouteImport } from './routes/api/mobile/commissions.$id'
 import { Route as ApiMobileAuthMeRouteImport } from './routes/api/mobile/auth.me'
 import { Route as ApiMobileAdminEmployeesRouteImport } from './routes/api/mobile/admin/employees'
 import { Route as ApiMobileAdminAuditRouteImport } from './routes/api/mobile/admin/audit'
@@ -95,9 +99,19 @@ const ApiMobileCustomersRoute = ApiMobileCustomersRouteImport.update({
   path: '/api/mobile/customers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiMobileCommissionsRoute = ApiMobileCommissionsRouteImport.update({
+  id: '/api/mobile/commissions',
+  path: '/api/mobile/commissions',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAdminUsersRoute = ApiAdminUsersRouteImport.update({
   id: '/api/admin/users',
   path: '/api/admin/users',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMobileStatsHomeRoute = ApiMobileStatsHomeRouteImport.update({
+  id: '/api/mobile/stats/home',
+  path: '/api/mobile/stats/home',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiMobileStatsDashboardRoute = ApiMobileStatsDashboardRouteImport.update({
@@ -136,10 +150,21 @@ const ApiMobilePackagesIdRoute = ApiMobilePackagesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => ApiMobilePackagesRoute,
 } as any)
+const ApiMobileCustomersVerifyRoute =
+  ApiMobileCustomersVerifyRouteImport.update({
+    id: '/verify',
+    path: '/verify',
+    getParentRoute: () => ApiMobileCustomersRoute,
+  } as any)
 const ApiMobileCustomersIdRoute = ApiMobileCustomersIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => ApiMobileCustomersRoute,
+} as any)
+const ApiMobileCommissionsIdRoute = ApiMobileCommissionsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiMobileCommissionsRoute,
 } as any)
 const ApiMobileAuthMeRoute = ApiMobileAuthMeRouteImport.update({
   id: '/api/mobile/auth/me',
@@ -196,6 +221,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
+  '/api/mobile/commissions': typeof ApiMobileCommissionsRouteWithChildren
   '/api/mobile/customers': typeof ApiMobileCustomersRouteWithChildren
   '/api/mobile/notifications': typeof ApiMobileNotificationsRoute
   '/api/mobile/packages': typeof ApiMobilePackagesRouteWithChildren
@@ -208,7 +234,9 @@ export interface FileRoutesByFullPath {
   '/api/mobile/admin/audit': typeof ApiMobileAdminAuditRoute
   '/api/mobile/admin/employees': typeof ApiMobileAdminEmployeesRouteWithChildren
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
+  '/api/mobile/commissions/$id': typeof ApiMobileCommissionsIdRoute
   '/api/mobile/customers/$id': typeof ApiMobileCustomersIdRoute
+  '/api/mobile/customers/verify': typeof ApiMobileCustomersVerifyRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
   '/api/mobile/packages/cleared': typeof ApiMobilePackagesClearedRoute
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
@@ -216,6 +244,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/payments/manual': typeof ApiMobilePaymentsManualRoute
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
   '/api/mobile/stats/dashboard': typeof ApiMobileStatsDashboardRoute
+  '/api/mobile/stats/home': typeof ApiMobileStatsHomeRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
   '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRouteWithChildren
   '/api/mobile/packages/$id/collect': typeof ApiMobilePackagesIdCollectRoute
@@ -227,6 +256,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
+  '/api/mobile/commissions': typeof ApiMobileCommissionsRouteWithChildren
   '/api/mobile/customers': typeof ApiMobileCustomersRouteWithChildren
   '/api/mobile/notifications': typeof ApiMobileNotificationsRoute
   '/api/mobile/packages': typeof ApiMobilePackagesRouteWithChildren
@@ -239,7 +269,9 @@ export interface FileRoutesByTo {
   '/api/mobile/admin/audit': typeof ApiMobileAdminAuditRoute
   '/api/mobile/admin/employees': typeof ApiMobileAdminEmployeesRouteWithChildren
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
+  '/api/mobile/commissions/$id': typeof ApiMobileCommissionsIdRoute
   '/api/mobile/customers/$id': typeof ApiMobileCustomersIdRoute
+  '/api/mobile/customers/verify': typeof ApiMobileCustomersVerifyRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
   '/api/mobile/packages/cleared': typeof ApiMobilePackagesClearedRoute
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
@@ -247,6 +279,7 @@ export interface FileRoutesByTo {
   '/api/mobile/payments/manual': typeof ApiMobilePaymentsManualRoute
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
   '/api/mobile/stats/dashboard': typeof ApiMobileStatsDashboardRoute
+  '/api/mobile/stats/home': typeof ApiMobileStatsHomeRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
   '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRouteWithChildren
   '/api/mobile/packages/$id/collect': typeof ApiMobilePackagesIdCollectRoute
@@ -259,6 +292,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
+  '/api/mobile/commissions': typeof ApiMobileCommissionsRouteWithChildren
   '/api/mobile/customers': typeof ApiMobileCustomersRouteWithChildren
   '/api/mobile/notifications': typeof ApiMobileNotificationsRoute
   '/api/mobile/packages': typeof ApiMobilePackagesRouteWithChildren
@@ -271,7 +305,9 @@ export interface FileRoutesById {
   '/api/mobile/admin/audit': typeof ApiMobileAdminAuditRoute
   '/api/mobile/admin/employees': typeof ApiMobileAdminEmployeesRouteWithChildren
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
+  '/api/mobile/commissions/$id': typeof ApiMobileCommissionsIdRoute
   '/api/mobile/customers/$id': typeof ApiMobileCustomersIdRoute
+  '/api/mobile/customers/verify': typeof ApiMobileCustomersVerifyRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
   '/api/mobile/packages/cleared': typeof ApiMobilePackagesClearedRoute
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
@@ -279,6 +315,7 @@ export interface FileRoutesById {
   '/api/mobile/payments/manual': typeof ApiMobilePaymentsManualRoute
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
   '/api/mobile/stats/dashboard': typeof ApiMobileStatsDashboardRoute
+  '/api/mobile/stats/home': typeof ApiMobileStatsHomeRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
   '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRouteWithChildren
   '/api/mobile/packages/$id/collect': typeof ApiMobilePackagesIdCollectRoute
@@ -292,6 +329,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/api/admin/users'
+    | '/api/mobile/commissions'
     | '/api/mobile/customers'
     | '/api/mobile/notifications'
     | '/api/mobile/packages'
@@ -304,7 +342,9 @@ export interface FileRouteTypes {
     | '/api/mobile/admin/audit'
     | '/api/mobile/admin/employees'
     | '/api/mobile/auth/me'
+    | '/api/mobile/commissions/$id'
     | '/api/mobile/customers/$id'
+    | '/api/mobile/customers/verify'
     | '/api/mobile/packages/$id'
     | '/api/mobile/packages/cleared'
     | '/api/mobile/packages/scan'
@@ -312,6 +352,7 @@ export interface FileRouteTypes {
     | '/api/mobile/payments/manual'
     | '/api/mobile/push/register'
     | '/api/mobile/stats/dashboard'
+    | '/api/mobile/stats/home'
     | '/api/admin/users/$id/roles'
     | '/api/mobile/admin/employees/$id'
     | '/api/mobile/packages/$id/collect'
@@ -323,6 +364,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/api/admin/users'
+    | '/api/mobile/commissions'
     | '/api/mobile/customers'
     | '/api/mobile/notifications'
     | '/api/mobile/packages'
@@ -335,7 +377,9 @@ export interface FileRouteTypes {
     | '/api/mobile/admin/audit'
     | '/api/mobile/admin/employees'
     | '/api/mobile/auth/me'
+    | '/api/mobile/commissions/$id'
     | '/api/mobile/customers/$id'
+    | '/api/mobile/customers/verify'
     | '/api/mobile/packages/$id'
     | '/api/mobile/packages/cleared'
     | '/api/mobile/packages/scan'
@@ -343,6 +387,7 @@ export interface FileRouteTypes {
     | '/api/mobile/payments/manual'
     | '/api/mobile/push/register'
     | '/api/mobile/stats/dashboard'
+    | '/api/mobile/stats/home'
     | '/api/admin/users/$id/roles'
     | '/api/mobile/admin/employees/$id'
     | '/api/mobile/packages/$id/collect'
@@ -354,6 +399,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/api/admin/users'
+    | '/api/mobile/commissions'
     | '/api/mobile/customers'
     | '/api/mobile/notifications'
     | '/api/mobile/packages'
@@ -366,7 +412,9 @@ export interface FileRouteTypes {
     | '/api/mobile/admin/audit'
     | '/api/mobile/admin/employees'
     | '/api/mobile/auth/me'
+    | '/api/mobile/commissions/$id'
     | '/api/mobile/customers/$id'
+    | '/api/mobile/customers/verify'
     | '/api/mobile/packages/$id'
     | '/api/mobile/packages/cleared'
     | '/api/mobile/packages/scan'
@@ -374,6 +422,7 @@ export interface FileRouteTypes {
     | '/api/mobile/payments/manual'
     | '/api/mobile/push/register'
     | '/api/mobile/stats/dashboard'
+    | '/api/mobile/stats/home'
     | '/api/admin/users/$id/roles'
     | '/api/mobile/admin/employees/$id'
     | '/api/mobile/packages/$id/collect'
@@ -386,6 +435,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   ApiAdminUsersRoute: typeof ApiAdminUsersRouteWithChildren
+  ApiMobileCommissionsRoute: typeof ApiMobileCommissionsRouteWithChildren
   ApiMobileCustomersRoute: typeof ApiMobileCustomersRouteWithChildren
   ApiMobileNotificationsRoute: typeof ApiMobileNotificationsRoute
   ApiMobilePackagesRoute: typeof ApiMobilePackagesRouteWithChildren
@@ -400,6 +450,7 @@ export interface RootRouteChildren {
   ApiMobileAuthMeRoute: typeof ApiMobileAuthMeRoute
   ApiMobilePushRegisterRoute: typeof ApiMobilePushRegisterRoute
   ApiMobileStatsDashboardRoute: typeof ApiMobileStatsDashboardRoute
+  ApiMobileStatsHomeRoute: typeof ApiMobileStatsHomeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -481,11 +532,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileCustomersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/mobile/commissions': {
+      id: '/api/mobile/commissions'
+      path: '/api/mobile/commissions'
+      fullPath: '/api/mobile/commissions'
+      preLoaderRoute: typeof ApiMobileCommissionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/admin/users': {
       id: '/api/admin/users'
       path: '/api/admin/users'
       fullPath: '/api/admin/users'
       preLoaderRoute: typeof ApiAdminUsersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/mobile/stats/home': {
+      id: '/api/mobile/stats/home'
+      path: '/api/mobile/stats/home'
+      fullPath: '/api/mobile/stats/home'
+      preLoaderRoute: typeof ApiMobileStatsHomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/mobile/stats/dashboard': {
@@ -537,12 +602,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobilePackagesIdRouteImport
       parentRoute: typeof ApiMobilePackagesRoute
     }
+    '/api/mobile/customers/verify': {
+      id: '/api/mobile/customers/verify'
+      path: '/verify'
+      fullPath: '/api/mobile/customers/verify'
+      preLoaderRoute: typeof ApiMobileCustomersVerifyRouteImport
+      parentRoute: typeof ApiMobileCustomersRoute
+    }
     '/api/mobile/customers/$id': {
       id: '/api/mobile/customers/$id'
       path: '/$id'
       fullPath: '/api/mobile/customers/$id'
       preLoaderRoute: typeof ApiMobileCustomersIdRouteImport
       parentRoute: typeof ApiMobileCustomersRoute
+    }
+    '/api/mobile/commissions/$id': {
+      id: '/api/mobile/commissions/$id'
+      path: '/$id'
+      fullPath: '/api/mobile/commissions/$id'
+      preLoaderRoute: typeof ApiMobileCommissionsIdRouteImport
+      parentRoute: typeof ApiMobileCommissionsRoute
     }
     '/api/mobile/auth/me': {
       id: '/api/mobile/auth/me'
@@ -622,12 +701,25 @@ const ApiAdminUsersRouteWithChildren = ApiAdminUsersRoute._addFileChildren(
   ApiAdminUsersRouteChildren,
 )
 
+interface ApiMobileCommissionsRouteChildren {
+  ApiMobileCommissionsIdRoute: typeof ApiMobileCommissionsIdRoute
+}
+
+const ApiMobileCommissionsRouteChildren: ApiMobileCommissionsRouteChildren = {
+  ApiMobileCommissionsIdRoute: ApiMobileCommissionsIdRoute,
+}
+
+const ApiMobileCommissionsRouteWithChildren =
+  ApiMobileCommissionsRoute._addFileChildren(ApiMobileCommissionsRouteChildren)
+
 interface ApiMobileCustomersRouteChildren {
   ApiMobileCustomersIdRoute: typeof ApiMobileCustomersIdRoute
+  ApiMobileCustomersVerifyRoute: typeof ApiMobileCustomersVerifyRoute
 }
 
 const ApiMobileCustomersRouteChildren: ApiMobileCustomersRouteChildren = {
   ApiMobileCustomersIdRoute: ApiMobileCustomersIdRoute,
+  ApiMobileCustomersVerifyRoute: ApiMobileCustomersVerifyRoute,
 }
 
 const ApiMobileCustomersRouteWithChildren =
@@ -710,6 +802,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   ApiAdminUsersRoute: ApiAdminUsersRouteWithChildren,
+  ApiMobileCommissionsRoute: ApiMobileCommissionsRouteWithChildren,
   ApiMobileCustomersRoute: ApiMobileCustomersRouteWithChildren,
   ApiMobileNotificationsRoute: ApiMobileNotificationsRoute,
   ApiMobilePackagesRoute: ApiMobilePackagesRouteWithChildren,
@@ -724,6 +817,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMobileAuthMeRoute: ApiMobileAuthMeRoute,
   ApiMobilePushRegisterRoute: ApiMobilePushRegisterRoute,
   ApiMobileStatsDashboardRoute: ApiMobileStatsDashboardRoute,
+  ApiMobileStatsHomeRoute: ApiMobileStatsHomeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
