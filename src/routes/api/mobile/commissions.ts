@@ -38,10 +38,12 @@ export const Route = createFileRoute("/api/mobile/commissions")({
             empIds = [emp.id];
           } else if (scope === "team") {
             if (!emp) return apiJson({ data: [], summary: emptySummary(), scope });
-            // Team = employees whose sales_manager or direct manager is this employee, or same branch
-            const { data: team } = await (supabaseAdmin.from("employees") as any)
-              .select("id").or(`manager_id.eq.${emp.id},branch_id.eq.${emp.branch_id ?? "00000000-0000-0000-0000-000000000000"}`);
-            empIds = [emp.id, ...((team ?? []).map((t: any) => t.id))];
+            // Team = employees in the same branch
+            let teamQ: any = (supabaseAdmin.from("employees") as any).select("id");
+            if (emp.branch_id) teamQ = teamQ.eq("branch_id", emp.branch_id);
+            const { data: team } = await teamQ;
+            const ids = new Set<string>([emp.id, ...((team ?? []).map((t: any) => t.id))]);
+            empIds = Array.from(ids);
           }
 
           let q: any = (supabaseAdmin.from("commissions") as any)
