@@ -22,6 +22,7 @@ import { Route as ApiMobileNotificationsRouteImport } from './routes/api/mobile/
 import { Route as ApiMobileCustomersRouteImport } from './routes/api/mobile/customers'
 import { Route as ApiMobileCommissionsRouteImport } from './routes/api/mobile/commissions'
 import { Route as ApiAdminUsersRouteImport } from './routes/api/admin/users'
+import { Route as ApiMobileStatsHomeRouteImport } from './routes/api/mobile/stats.home'
 import { Route as ApiMobileStatsDashboardRouteImport } from './routes/api/mobile/stats.dashboard'
 import { Route as ApiMobilePushRegisterRouteImport } from './routes/api/mobile/push.register'
 import { Route as ApiMobilePaymentsManualRouteImport } from './routes/api/mobile/payments.manual'
@@ -106,6 +107,11 @@ const ApiMobileCommissionsRoute = ApiMobileCommissionsRouteImport.update({
 const ApiAdminUsersRoute = ApiAdminUsersRouteImport.update({
   id: '/api/admin/users',
   path: '/api/admin/users',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMobileStatsHomeRoute = ApiMobileStatsHomeRouteImport.update({
+  id: '/api/mobile/stats/home',
+  path: '/api/mobile/stats/home',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiMobileStatsDashboardRoute = ApiMobileStatsDashboardRouteImport.update({
@@ -238,6 +244,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/payments/manual': typeof ApiMobilePaymentsManualRoute
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
   '/api/mobile/stats/dashboard': typeof ApiMobileStatsDashboardRoute
+  '/api/mobile/stats/home': typeof ApiMobileStatsHomeRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
   '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRouteWithChildren
   '/api/mobile/packages/$id/collect': typeof ApiMobilePackagesIdCollectRoute
@@ -272,6 +279,7 @@ export interface FileRoutesByTo {
   '/api/mobile/payments/manual': typeof ApiMobilePaymentsManualRoute
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
   '/api/mobile/stats/dashboard': typeof ApiMobileStatsDashboardRoute
+  '/api/mobile/stats/home': typeof ApiMobileStatsHomeRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
   '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRouteWithChildren
   '/api/mobile/packages/$id/collect': typeof ApiMobilePackagesIdCollectRoute
@@ -307,6 +315,7 @@ export interface FileRoutesById {
   '/api/mobile/payments/manual': typeof ApiMobilePaymentsManualRoute
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
   '/api/mobile/stats/dashboard': typeof ApiMobileStatsDashboardRoute
+  '/api/mobile/stats/home': typeof ApiMobileStatsHomeRoute
   '/api/admin/users/$id/roles': typeof ApiAdminUsersIdRolesRoute
   '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRouteWithChildren
   '/api/mobile/packages/$id/collect': typeof ApiMobilePackagesIdCollectRoute
@@ -343,6 +352,7 @@ export interface FileRouteTypes {
     | '/api/mobile/payments/manual'
     | '/api/mobile/push/register'
     | '/api/mobile/stats/dashboard'
+    | '/api/mobile/stats/home'
     | '/api/admin/users/$id/roles'
     | '/api/mobile/admin/employees/$id'
     | '/api/mobile/packages/$id/collect'
@@ -377,6 +387,7 @@ export interface FileRouteTypes {
     | '/api/mobile/payments/manual'
     | '/api/mobile/push/register'
     | '/api/mobile/stats/dashboard'
+    | '/api/mobile/stats/home'
     | '/api/admin/users/$id/roles'
     | '/api/mobile/admin/employees/$id'
     | '/api/mobile/packages/$id/collect'
@@ -411,6 +422,7 @@ export interface FileRouteTypes {
     | '/api/mobile/payments/manual'
     | '/api/mobile/push/register'
     | '/api/mobile/stats/dashboard'
+    | '/api/mobile/stats/home'
     | '/api/admin/users/$id/roles'
     | '/api/mobile/admin/employees/$id'
     | '/api/mobile/packages/$id/collect'
@@ -438,6 +450,7 @@ export interface RootRouteChildren {
   ApiMobileAuthMeRoute: typeof ApiMobileAuthMeRoute
   ApiMobilePushRegisterRoute: typeof ApiMobilePushRegisterRoute
   ApiMobileStatsDashboardRoute: typeof ApiMobileStatsDashboardRoute
+  ApiMobileStatsHomeRoute: typeof ApiMobileStatsHomeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -531,6 +544,13 @@ declare module '@tanstack/react-router' {
       path: '/api/admin/users'
       fullPath: '/api/admin/users'
       preLoaderRoute: typeof ApiAdminUsersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/mobile/stats/home': {
+      id: '/api/mobile/stats/home'
+      path: '/api/mobile/stats/home'
+      fullPath: '/api/mobile/stats/home'
+      preLoaderRoute: typeof ApiMobileStatsHomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/mobile/stats/dashboard': {
@@ -797,6 +817,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMobileAuthMeRoute: ApiMobileAuthMeRoute,
   ApiMobilePushRegisterRoute: ApiMobilePushRegisterRoute,
   ApiMobileStatsDashboardRoute: ApiMobileStatsDashboardRoute,
+  ApiMobileStatsHomeRoute: ApiMobileStatsHomeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
