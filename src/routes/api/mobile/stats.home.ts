@@ -60,7 +60,7 @@ export const Route = createFileRoute("/api/mobile/stats/home")({
               countPkg((q) => q.in("status", ["awaiting_payment","registered","received","arrived","verified"])),
               countPkg((q) => q.in("status", ["ready_for_collection","awaiting_pickup","reserved"])),
               countPkg((q) => q.in("status", ["collected","picked_up","cleared"]).gte("collected_at", todayIso)),
-              (supabaseAdmin.from("warehouse_shelves") as any).select("id, code, capacity, occupied").limit(20),
+              (supabaseAdmin.from("warehouse_shelves") as any).select("id, code, section, capacity").limit(20),
             ]);
             return apiJson({
               role: "logistics_manager",
