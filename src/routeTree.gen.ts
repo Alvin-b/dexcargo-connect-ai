@@ -20,6 +20,7 @@ import { Route as ApiMobilePaymentsRouteImport } from './routes/api/mobile/payme
 import { Route as ApiMobilePackagesRouteImport } from './routes/api/mobile/packages'
 import { Route as ApiMobileNotificationsRouteImport } from './routes/api/mobile/notifications'
 import { Route as ApiMobileCustomersRouteImport } from './routes/api/mobile/customers'
+import { Route as ApiMobileCommissionsRouteImport } from './routes/api/mobile/commissions'
 import { Route as ApiAdminUsersRouteImport } from './routes/api/admin/users'
 import { Route as ApiMobileStatsDashboardRouteImport } from './routes/api/mobile/stats.dashboard'
 import { Route as ApiMobilePushRegisterRouteImport } from './routes/api/mobile/push.register'
@@ -93,6 +94,11 @@ const ApiMobileNotificationsRoute = ApiMobileNotificationsRouteImport.update({
 const ApiMobileCustomersRoute = ApiMobileCustomersRouteImport.update({
   id: '/api/mobile/customers',
   path: '/api/mobile/customers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMobileCommissionsRoute = ApiMobileCommissionsRouteImport.update({
+  id: '/api/mobile/commissions',
+  path: '/api/mobile/commissions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAdminUsersRoute = ApiAdminUsersRouteImport.update({
@@ -196,6 +202,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
+  '/api/mobile/commissions': typeof ApiMobileCommissionsRoute
   '/api/mobile/customers': typeof ApiMobileCustomersRouteWithChildren
   '/api/mobile/notifications': typeof ApiMobileNotificationsRoute
   '/api/mobile/packages': typeof ApiMobilePackagesRouteWithChildren
@@ -227,6 +234,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
+  '/api/mobile/commissions': typeof ApiMobileCommissionsRoute
   '/api/mobile/customers': typeof ApiMobileCustomersRouteWithChildren
   '/api/mobile/notifications': typeof ApiMobileNotificationsRoute
   '/api/mobile/packages': typeof ApiMobilePackagesRouteWithChildren
@@ -259,6 +267,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
+  '/api/mobile/commissions': typeof ApiMobileCommissionsRoute
   '/api/mobile/customers': typeof ApiMobileCustomersRouteWithChildren
   '/api/mobile/notifications': typeof ApiMobileNotificationsRoute
   '/api/mobile/packages': typeof ApiMobilePackagesRouteWithChildren
@@ -292,6 +301,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/api/admin/users'
+    | '/api/mobile/commissions'
     | '/api/mobile/customers'
     | '/api/mobile/notifications'
     | '/api/mobile/packages'
@@ -323,6 +333,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/api/admin/users'
+    | '/api/mobile/commissions'
     | '/api/mobile/customers'
     | '/api/mobile/notifications'
     | '/api/mobile/packages'
@@ -354,6 +365,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/api/admin/users'
+    | '/api/mobile/commissions'
     | '/api/mobile/customers'
     | '/api/mobile/notifications'
     | '/api/mobile/packages'
@@ -386,6 +398,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   ApiAdminUsersRoute: typeof ApiAdminUsersRouteWithChildren
+  ApiMobileCommissionsRoute: typeof ApiMobileCommissionsRoute
   ApiMobileCustomersRoute: typeof ApiMobileCustomersRouteWithChildren
   ApiMobileNotificationsRoute: typeof ApiMobileNotificationsRoute
   ApiMobilePackagesRoute: typeof ApiMobilePackagesRouteWithChildren
@@ -479,6 +492,13 @@ declare module '@tanstack/react-router' {
       path: '/api/mobile/customers'
       fullPath: '/api/mobile/customers'
       preLoaderRoute: typeof ApiMobileCustomersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/mobile/commissions': {
+      id: '/api/mobile/commissions'
+      path: '/api/mobile/commissions'
+      fullPath: '/api/mobile/commissions'
+      preLoaderRoute: typeof ApiMobileCommissionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/admin/users': {
@@ -710,6 +730,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   ApiAdminUsersRoute: ApiAdminUsersRouteWithChildren,
+  ApiMobileCommissionsRoute: ApiMobileCommissionsRoute,
   ApiMobileCustomersRoute: ApiMobileCustomersRouteWithChildren,
   ApiMobileNotificationsRoute: ApiMobileNotificationsRoute,
   ApiMobilePackagesRoute: ApiMobilePackagesRouteWithChildren,
@@ -728,12 +749,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
