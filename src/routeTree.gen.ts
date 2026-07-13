@@ -29,6 +29,7 @@ import { Route as ApiMobilePaymentsIdRouteImport } from './routes/api/mobile/pay
 import { Route as ApiMobilePackagesScanRouteImport } from './routes/api/mobile/packages.scan'
 import { Route as ApiMobilePackagesClearedRouteImport } from './routes/api/mobile/packages.cleared'
 import { Route as ApiMobilePackagesIdRouteImport } from './routes/api/mobile/packages.$id'
+import { Route as ApiMobileCustomersVerifyRouteImport } from './routes/api/mobile/customers.verify'
 import { Route as ApiMobileCustomersIdRouteImport } from './routes/api/mobile/customers.$id'
 import { Route as ApiMobileCommissionsIdRouteImport } from './routes/api/mobile/commissions.$id'
 import { Route as ApiMobileAuthMeRouteImport } from './routes/api/mobile/auth.me'
@@ -143,6 +144,12 @@ const ApiMobilePackagesIdRoute = ApiMobilePackagesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => ApiMobilePackagesRoute,
 } as any)
+const ApiMobileCustomersVerifyRoute =
+  ApiMobileCustomersVerifyRouteImport.update({
+    id: '/verify',
+    path: '/verify',
+    getParentRoute: () => ApiMobileCustomersRoute,
+  } as any)
 const ApiMobileCustomersIdRoute = ApiMobileCustomersIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -223,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/commissions/$id': typeof ApiMobileCommissionsIdRoute
   '/api/mobile/customers/$id': typeof ApiMobileCustomersIdRoute
+  '/api/mobile/customers/verify': typeof ApiMobileCustomersVerifyRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
   '/api/mobile/packages/cleared': typeof ApiMobilePackagesClearedRoute
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
@@ -256,6 +264,7 @@ export interface FileRoutesByTo {
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/commissions/$id': typeof ApiMobileCommissionsIdRoute
   '/api/mobile/customers/$id': typeof ApiMobileCustomersIdRoute
+  '/api/mobile/customers/verify': typeof ApiMobileCustomersVerifyRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
   '/api/mobile/packages/cleared': typeof ApiMobilePackagesClearedRoute
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
@@ -290,6 +299,7 @@ export interface FileRoutesById {
   '/api/mobile/auth/me': typeof ApiMobileAuthMeRoute
   '/api/mobile/commissions/$id': typeof ApiMobileCommissionsIdRoute
   '/api/mobile/customers/$id': typeof ApiMobileCustomersIdRoute
+  '/api/mobile/customers/verify': typeof ApiMobileCustomersVerifyRoute
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
   '/api/mobile/packages/cleared': typeof ApiMobilePackagesClearedRoute
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
@@ -325,6 +335,7 @@ export interface FileRouteTypes {
     | '/api/mobile/auth/me'
     | '/api/mobile/commissions/$id'
     | '/api/mobile/customers/$id'
+    | '/api/mobile/customers/verify'
     | '/api/mobile/packages/$id'
     | '/api/mobile/packages/cleared'
     | '/api/mobile/packages/scan'
@@ -358,6 +369,7 @@ export interface FileRouteTypes {
     | '/api/mobile/auth/me'
     | '/api/mobile/commissions/$id'
     | '/api/mobile/customers/$id'
+    | '/api/mobile/customers/verify'
     | '/api/mobile/packages/$id'
     | '/api/mobile/packages/cleared'
     | '/api/mobile/packages/scan'
@@ -391,6 +403,7 @@ export interface FileRouteTypes {
     | '/api/mobile/auth/me'
     | '/api/mobile/commissions/$id'
     | '/api/mobile/customers/$id'
+    | '/api/mobile/customers/verify'
     | '/api/mobile/packages/$id'
     | '/api/mobile/packages/cleared'
     | '/api/mobile/packages/scan'
@@ -569,6 +582,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobilePackagesIdRouteImport
       parentRoute: typeof ApiMobilePackagesRoute
     }
+    '/api/mobile/customers/verify': {
+      id: '/api/mobile/customers/verify'
+      path: '/verify'
+      fullPath: '/api/mobile/customers/verify'
+      preLoaderRoute: typeof ApiMobileCustomersVerifyRouteImport
+      parentRoute: typeof ApiMobileCustomersRoute
+    }
     '/api/mobile/customers/$id': {
       id: '/api/mobile/customers/$id'
       path: '/$id'
@@ -674,10 +694,12 @@ const ApiMobileCommissionsRouteWithChildren =
 
 interface ApiMobileCustomersRouteChildren {
   ApiMobileCustomersIdRoute: typeof ApiMobileCustomersIdRoute
+  ApiMobileCustomersVerifyRoute: typeof ApiMobileCustomersVerifyRoute
 }
 
 const ApiMobileCustomersRouteChildren: ApiMobileCustomersRouteChildren = {
   ApiMobileCustomersIdRoute: ApiMobileCustomersIdRoute,
+  ApiMobileCustomersVerifyRoute: ApiMobileCustomersVerifyRoute,
 }
 
 const ApiMobileCustomersRouteWithChildren =
