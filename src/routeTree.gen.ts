@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OpsRouteImport } from './routes/ops'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPublicDarajaCallbackRouteImport } from './routes/api/public/daraja-callback'
@@ -21,6 +22,7 @@ import { Route as ApiMobilePackagesRouteImport } from './routes/api/mobile/packa
 import { Route as ApiMobileNotificationsRouteImport } from './routes/api/mobile/notifications'
 import { Route as ApiMobileCustomersRouteImport } from './routes/api/mobile/customers'
 import { Route as ApiMobileCommissionsRouteImport } from './routes/api/mobile/commissions'
+import { Route as ApiMobileAppUpdatesRouteImport } from './routes/api/mobile/app-updates'
 import { Route as ApiAdminUsersRouteImport } from './routes/api/admin/users'
 import { Route as ApiMobileStatsHomeRouteImport } from './routes/api/mobile/stats.home'
 import { Route as ApiMobileStatsDashboardRouteImport } from './routes/api/mobile/stats.dashboard'
@@ -43,6 +45,11 @@ import { Route as ApiAdminUsersIdRolesRouteImport } from './routes/api/admin/use
 import { Route as ApiMobileAdminEmployeesIdResetPasswordRouteImport } from './routes/api/mobile/admin/employees.$id.reset-password'
 import { Route as ApiMobileAdminEmployeesIdActivityRouteImport } from './routes/api/mobile/admin/employees.$id.activity'
 
+const OpsRoute = OpsRouteImport.update({
+  id: '/ops',
+  path: '/ops',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -102,6 +109,11 @@ const ApiMobileCustomersRoute = ApiMobileCustomersRouteImport.update({
 const ApiMobileCommissionsRoute = ApiMobileCommissionsRouteImport.update({
   id: '/api/mobile/commissions',
   path: '/api/mobile/commissions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMobileAppUpdatesRoute = ApiMobileAppUpdatesRouteImport.update({
+  id: '/api/mobile/app-updates',
+  path: '/api/mobile/app-updates',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAdminUsersRoute = ApiAdminUsersRouteImport.update({
@@ -220,7 +232,9 @@ const ApiMobileAdminEmployeesIdActivityRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/ops': typeof OpsRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
+  '/api/mobile/app-updates': typeof ApiMobileAppUpdatesRoute
   '/api/mobile/commissions': typeof ApiMobileCommissionsRouteWithChildren
   '/api/mobile/customers': typeof ApiMobileCustomersRouteWithChildren
   '/api/mobile/notifications': typeof ApiMobileNotificationsRoute
@@ -255,7 +269,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/ops': typeof OpsRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
+  '/api/mobile/app-updates': typeof ApiMobileAppUpdatesRoute
   '/api/mobile/commissions': typeof ApiMobileCommissionsRouteWithChildren
   '/api/mobile/customers': typeof ApiMobileCustomersRouteWithChildren
   '/api/mobile/notifications': typeof ApiMobileNotificationsRoute
@@ -291,7 +307,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/ops': typeof OpsRoute
   '/api/admin/users': typeof ApiAdminUsersRouteWithChildren
+  '/api/mobile/app-updates': typeof ApiMobileAppUpdatesRoute
   '/api/mobile/commissions': typeof ApiMobileCommissionsRouteWithChildren
   '/api/mobile/customers': typeof ApiMobileCustomersRouteWithChildren
   '/api/mobile/notifications': typeof ApiMobileNotificationsRoute
@@ -328,7 +346,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/ops'
     | '/api/admin/users'
+    | '/api/mobile/app-updates'
     | '/api/mobile/commissions'
     | '/api/mobile/customers'
     | '/api/mobile/notifications'
@@ -363,7 +383,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/ops'
     | '/api/admin/users'
+    | '/api/mobile/app-updates'
     | '/api/mobile/commissions'
     | '/api/mobile/customers'
     | '/api/mobile/notifications'
@@ -398,7 +420,9 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/auth'
+    | '/ops'
     | '/api/admin/users'
+    | '/api/mobile/app-updates'
     | '/api/mobile/commissions'
     | '/api/mobile/customers'
     | '/api/mobile/notifications'
@@ -434,7 +458,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  OpsRoute: typeof OpsRoute
   ApiAdminUsersRoute: typeof ApiAdminUsersRouteWithChildren
+  ApiMobileAppUpdatesRoute: typeof ApiMobileAppUpdatesRoute
   ApiMobileCommissionsRoute: typeof ApiMobileCommissionsRouteWithChildren
   ApiMobileCustomersRoute: typeof ApiMobileCustomersRouteWithChildren
   ApiMobileNotificationsRoute: typeof ApiMobileNotificationsRoute
@@ -455,6 +481,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/ops': {
+      id: '/ops'
+      path: '/ops'
+      fullPath: '/ops'
+      preLoaderRoute: typeof OpsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -537,6 +570,13 @@ declare module '@tanstack/react-router' {
       path: '/api/mobile/commissions'
       fullPath: '/api/mobile/commissions'
       preLoaderRoute: typeof ApiMobileCommissionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/mobile/app-updates': {
+      id: '/api/mobile/app-updates'
+      path: '/api/mobile/app-updates'
+      fullPath: '/api/mobile/app-updates'
+      preLoaderRoute: typeof ApiMobileAppUpdatesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/admin/users': {
@@ -801,7 +841,9 @@ const ApiMobileAdminEmployeesRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  OpsRoute: OpsRoute,
   ApiAdminUsersRoute: ApiAdminUsersRouteWithChildren,
+  ApiMobileAppUpdatesRoute: ApiMobileAppUpdatesRoute,
   ApiMobileCommissionsRoute: ApiMobileCommissionsRouteWithChildren,
   ApiMobileCustomersRoute: ApiMobileCustomersRouteWithChildren,
   ApiMobileNotificationsRoute: ApiMobileNotificationsRoute,

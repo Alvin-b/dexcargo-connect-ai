@@ -40,7 +40,9 @@ export function preflight() {
 }
 
 function hasStaffRole(roleSet: Set<string>) {
-  return roleSet.has("admin") || roleSet.has("staff") || roleSet.has("china_staff") || roleSet.has("kenya_staff");
+  return ["admin", "staff", "china_staff", "kenya_staff", "sales_rep", "sales_manager", "logistics_manager"].some((role) =>
+    roleSet.has(role),
+  );
 }
 
 async function resolveUserId(request: Request) {
@@ -85,7 +87,13 @@ export async function authenticate(
     .maybeSingle();
   if (profile?.is_active === false) return { ok: false, response: json({ error: "Forbidden: staff account disabled" }, 403) };
 
-  const roleLocation = roleSet.has("kenya_staff") ? "kenya" : roleSet.has("china_staff") ? "china" : null;
+  const roleLocation = roleSet.has("kenya_staff")
+    ? "kenya"
+    : roleSet.has("china_staff")
+      ? "china"
+      : roleSet.has("sales_rep") || roleSet.has("sales_manager") || roleSet.has("logistics_manager")
+        ? "kenya"
+        : null;
   const profileLocation = profile?.staff_location === "kenya" || profile?.staff_location === "china" ? profile.staff_location : null;
   const staffLocation = isAdmin ? "admin" : (roleLocation ?? profileLocation);
   if (opts?.location && !isAdmin && staffLocation !== opts.location) {

@@ -1,0 +1,3105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>DEXCARGO - Logistics & Operations System</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0A0B14;--s1:#10121E;--s2:#14182A;--s3:#1A1F33;--s4:#1E2438;
+  --b1:#252B45;--b2:#2E3550;
+  --blue:#2B4EE8;--blue2:rgba(43,78,232,.18);--blue3:rgba(43,78,232,.08);
+  --orange:#F5A623;--orange2:rgba(245,166,35,.18);--orange3:rgba(245,166,35,.08);
+  --green:#22D07A;--green2:rgba(34,208,122,.15);
+  --red:#FF4757;--red2:rgba(255,71,87,.15);
+  --purple:#9B6DFF;--purple2:rgba(155,109,255,.15);
+  --teal:#00C9A7;--teal2:rgba(0,201,167,.15);
+  --t1:#EEF0FA;--t2:#8892C0;--t3:#404870;--t4:#252B45;
+  --fd:"Space Grotesk",sans-serif;--fb:"Inter",sans-serif;--fm:"JetBrains Mono",monospace;
+  --r:14px;--rs:8px;
+}
+body{background:#070810;font-family:var(--fb);color:var(--t1);display:flex;min-height:100vh;overflow-x:hidden}
+
+/* MAIN PRESENTATION WRAPPER FOR DESKTOP */
+.app-wrapper{display:flex;width:100%;max-width:1440px;margin:0 auto;padding:24px;gap:40px;align-items:center;justify-content:center}
+.info-panel{flex:1;max-width:550px;display:flex;flex-direction:column;gap:20px;color:var(--t2)}
+.info-panel h1{font-family:var(--fd);font-size:42px;font-weight:800;color:var(--t1);line-height:1.1;letter-spacing:-0.03em}
+.info-panel h1 span{background:linear-gradient(135deg, var(--blue), var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.info-panel p{font-size:15px;line-height:1.6}
+.feature-list{display:flex;flex-direction:column;gap:12px;margin:10px 0}
+.feature-item{display:flex;align-items:start;gap:10px;font-size:13.5px}
+.feature-icon{color:var(--orange);font-weight:bold;margin-top:2px}
+.control-hub{background:var(--s1);border:1px solid var(--b1);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.control-title{font-family:var(--fd);font-size:14px;font-weight:700;color:var(--t1);text-transform:uppercase;letter-spacing:0.08em;border-bottom:1px solid var(--b1);padding-bottom:8px}
+.shortcut-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sc-btn{padding:8px 12px;border-radius:8px;border:1px solid var(--b1);background:var(--s2);color:var(--t1);font-family:var(--fd);font-size:12px;font-weight:600;cursor:pointer;text-align:left;transition:all 0.2s;display:flex;align-items:center;gap:6px}
+.sc-btn:hover{background:var(--s3);border-color:var(--orange)}
+.label-selector{display:flex;flex-direction:column;gap:8px;background:var(--s2);padding:12px;border-radius:10px;border:1px solid var(--b1)}
+.label-opt{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:6px;background:var(--s1);border:1px solid transparent;cursor:pointer;font-size:11.5px;transition:0.15s}
+.label-opt:hover{border-color:var(--blue)}
+.label-opt.active{background:var(--blue2);border-color:var(--blue);color:#7A9FFF}
+
+/* PHONE WRAPPER */
+.phone-container{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:10px}
+.oc{width:100%;max-width:390px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.ot{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.12em}
+.rs{display:flex;gap:4px;flex-wrap:wrap;justify-content:center}
+.rb{padding:5px 10px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid var(--b1);color:var(--t3);cursor:pointer;background:var(--s1);font-family:var(--fd);transition:all .15s;display:flex;align-items:center;gap:3px}
+.rb:hover{border-color:var(--t3);color:var(--t2)}
+.rb.on{background:var(--orange2);border-color:rgba(245,166,35,.4);color:var(--orange)}
+
+/* PHONE SHELL */
+.phone{width:380px;height:820px;background:var(--bg);border-radius:40px;overflow:hidden;border:3px solid var(--b1);box-shadow:0 32px 64px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.04);display:flex;flex-direction:column;position:relative}
+.notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:110px;height:24px;background:#05060C;border-radius:0 0 16px 16px;z-index:100;display:flex;align-items:center;justify-content:center}
+.camera-lens{width:8px;height:8px;border-radius:50%;background:#0b0d1a;box-shadow:inset 0 1px 2px rgba(255,255,255,0.2)}
+.sbar{height:36px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;flex-shrink:0;position:relative;z-index:99;background:var(--bg)}
+.st{font-family:var(--fd);font-size:12px;font-weight:600}
+.sicons{display:flex;gap:5px;align-items:center}
+.scr{display:none;flex-direction:column;flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:20px}
+.scr::-webkit-scrollbar{width:0}
+.scr.on{display:flex;animation:fi .2s cubic-bezier(0.16, 1, 0.3, 1)}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* TOP BAR */
+.topbar{padding:10px 18px 4px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.tb-left{display:flex;flex-direction:column}
+.tb-sub{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+.tb-name{font-family:var(--fd);font-size:18px;font-weight:700;color:var(--t1)}
+.tb-role{font-size:10px;color:var(--t2);margin-top:1px;font-weight:500}
+.tb-right{display:flex;align-items:center;gap:7px}
+.av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-weight:700;font-size:11px;flex-shrink:0}
+.av.ad{background:linear-gradient(135deg,#9B6DFF,#6B3FCC);color:#fff}
+.av.lm{background:linear-gradient(135deg,#2B4EE8,#1A2E99);color:#fff}
+.av.sm{background:linear-gradient(135deg,#22D07A,#14954F);color:#000}
+.av.sr{background:linear-gradient(135deg,#F5A623,#CC7A00);color:#000}
+.idb{font-family:var(--fm);font-size:9px;font-weight:600;padding:2px 6px;border-radius:5px}
+.idb.ad{background:var(--purple2);color:var(--purple)}
+.idb.lm{background:var(--blue2);color:#7A9FFF}
+.idb.sm{background:var(--green2);color:var(--green)}
+.idb.sr{background:var(--orange2);color:var(--orange)}
+
+/* COMMISSION HERO */
+.comm-hero{margin:8px 16px;background:linear-gradient(135deg,#1A1F38,#14182A);border:1px solid var(--b1);border-radius:var(--r);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 8px 16px rgba(0,0,0,0.2)}
+.ch-left{}
+.ch-lbl{font-size:10.5px;color:var(--t2);margin-bottom:2px;font-weight:500}
+.ch-amt{font-family:var(--fd);font-size:26px;font-weight:800;line-height:1;color:var(--t1)}
+.ch-change{font-size:10px;margin-top:5px;font-weight:600;display:flex;align-items:center;gap:3px}
+.ch-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px}
+.ch-icon.blue{background:var(--blue2)}
+.ch-icon.green{background:var(--green2)}
+.ch-icon.orange{background:var(--orange2)}
+.ch-icon.purple{background:var(--purple2)}
+
+/* OVERVIEW GRID */
+.ov-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:4px 16px}
+.ov-card{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:10px 12px;display:flex;align-items:center;gap:10px;transition:0.2s}
+.ov-card:hover{border-color:var(--b2)}
+.ov-ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.ov-ico.blue{background:var(--blue2)}
+.ov-ico.green{background:var(--green2)}
+.ov-ico.orange{background:var(--orange2)}
+.ov-ico.purple{background:var(--purple2)}
+.ov-ico.teal{background:var(--teal2)}
+.ov-num{font-family:var(--fd);font-size:18px;font-weight:700;line-height:1;color:var(--t1)}
+.ov-lbl{font-size:10px;color:var(--t2);margin-top:3px;font-weight:500}
+
+/* SECTION */
+.sec{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 6px}
+.sec-t{font-family:var(--fd);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--t2)}
+.sec-l{font-size:11px;color:var(--orange);font-weight:600;cursor:pointer}
+
+/* PACKAGE CARDS */
+.plist{padding:0 16px;display:flex;flex-direction:column;gap:7px;padding-bottom:14px}
+.pcard{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;border-left:3px solid transparent;transition:all 0.15s}
+.pcard:hover{border-color:var(--b2);background:var(--s2)}
+.pcard.air{border-left-color:var(--orange)}
+.pcard.sea{border-left-color:var(--blue)}
+.pcard.done{border-left-color:var(--green)}
+.pcard.wait{border-left-color:var(--purple)}
+.pcard-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.pcard-ico.air{background:var(--orange2)}
+.pcard-ico.sea{background:var(--blue2)}
+.pcard-ico.done{background:var(--green2)}
+.pcard-ico.wait{background:var(--purple2)}
+.pcard-info{flex:1;min-width:0}
+.pcard-id{font-family:var(--fm);font-size:11px;color:var(--t1);font-weight:600;margin-bottom:1px}
+.pcard-name{font-size:10.5px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcard-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0}
+.pcard-amt{font-family:var(--fd);font-size:11px;font-weight:700;color:var(--orange)}
+.pcard-time{font-size:8px;color:var(--t3)}
+
+/* BOTTOM NAV */
+.bnav{height:58px;background:var(--s1);border-top:1px solid var(--b1);display:none;align-items:center;justify-content:space-around;padding:0 2px 2px;flex-shrink:0;position:absolute;bottom:0;left:0;right:0;z-index:98}
+.bnav.active{display:flex}
+.nb{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 2px;border-radius:10px;cursor:pointer;flex:1;min-width:0}
+.nb.on{background:var(--orange2)}
+.nb svg{width:18px;height:18px;flex-shrink:0}
+.nb.on svg{stroke:var(--orange);fill:var(--orange3)}
+.nb:not(.on) svg{stroke:var(--t3)}
+.nb-l{font-size:8px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+.nb.on .nb-l{color:var(--orange)}
+.nb:not(.on) .nb-l{color:var(--t3)}
+
+/* PILLS */
+.pill{font-size:8.5px;font-weight:700;padding:2px 6px;border-radius:20px;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;display:inline-block}
+.pill.blue{background:var(--blue2);color:#7A9FFF}
+.pill.orange{background:var(--orange2);color:var(--orange)}
+.pill.green{background:var(--green2);color:var(--green)}
+.pill.red{background:var(--red2);color:var(--red)}
+.pill.gray{background:rgba(100,120,180,.1);color:var(--t2)}
+.pill.purple{background:var(--purple2);color:var(--purple)}
+.pill.teal{background:var(--teal2);color:var(--teal)}
+.who{font-family:var(--fm);font-size:8.5px;font-weight:600;padding:2px 5px;border-radius:4px;display:inline-block}
+.who.lm{background:var(--blue2);color:#7A9FFF}
+.who.sm{background:var(--green2);color:var(--green)}
+.who.sr{background:var(--orange2);color:var(--orange)}
+.who.ad{background:var(--purple2);color:var(--purple)}
+
+/* FORMS */
+.fld{background:var(--s2);border:1px solid var(--b1);border-radius:var(--rs);padding:9px 11px;transition:0.15s;display:flex;align-items:center}
+.fld:focus-within{border-color:var(--orange)}
+.fll{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;font-weight:700}
+.fld input,.fld select{background:none;border:none;outline:none;color:var(--t1);font-family:var(--fb);font-size:13px;width:100%}
+.fld input::placeholder{color:var(--t3)}
+.fld select option{background:var(--s2);color:var(--t1)}
+.flds{padding:0 16px;display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
+
+/* BUTTONS */
+.btnp{background:linear-gradient(135deg,var(--orange),#CC7A00);color:#000;font-family:var(--fd);font-size:13px;font-weight:700;border:none;border-radius:var(--rs);padding:11px;cursor:pointer;width:100%;display:block;text-align:center;transition:all 0.15s;border:1px solid rgba(245,166,35,0.4)}
+.btnp:active{transform:scale(0.98);opacity:0.9}
+.btnb{background:linear-gradient(135deg,var(--blue),#1A2E88);color:#fff;font-family:var(--fd);font-size:13px;font-weight:700;border:none;border-radius:var(--rs);padding:11px;cursor:pointer;width:100%;display:block;text-align:center;transition:all 0.15s;border:1px solid rgba(43,78,232,0.4)}
+.btnb:active{transform:scale(0.98);opacity:0.9}
+.btng{background:linear-gradient(135deg,var(--green),#14954F);color:#000;font-family:var(--fd);font-size:13px;font-weight:700;border:none;border-radius:var(--rs);padding:11px;cursor:pointer;width:100%;display:block;text-align:center;transition:all 0.15s;border:1px solid rgba(34,208,122,0.4)}
+.btng:active{transform:scale(0.98)}
+.btns{background:var(--s2);color:var(--t2);font-family:var(--fd);font-size:12px;font-weight:600;border:1px solid var(--b1);border-radius:var(--rs);padding:11px;cursor:pointer;width:100%;display:block;text-align:center;transition:0.15s}
+.btns:hover{border-color:var(--b2);color:var(--t1)}
+.divider{height:1px;background:var(--b1);margin:4px 16px}
+.sp{height:12px}.sp2{height:68px}
+
+/* SEARCH & FILTER */
+.search-bar{margin:4px 16px 8px;display:flex;gap:7px;align-items:center}
+.search-input{flex:1;background:var(--s2);border:1px solid var(--b1);border-radius:var(--rs);padding:8px 10px;display:flex;align-items:center;gap:7px}
+.search-input input{background:none;border:none;outline:none;color:var(--t1);font-family:var(--fb);font-size:12px;flex:1}
+.search-input input::placeholder{color:var(--t3)}
+.filter-btn{width:34px;height:34px;background:var(--s2);border:1px solid var(--b1);border-radius:var(--rs);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t3);transition:0.15s}
+.filter-btn:hover{color:var(--t2);border-color:var(--b2)}
+
+/* SCAN SCREEN */
+.scan-vp{margin:8px 16px;background:var(--s2);border:1px solid var(--b1);border-radius:14px;height:210px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.scan-grid{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 29px,rgba(43,78,232,.04) 30px),repeating-linear-gradient(90deg,transparent,transparent 29px,rgba(43,78,232,.04) 30px)}
+.scan-frame{width:180px;height:120px;border-radius:10px;position:relative;z-index:2}
+.scan-frame::before{content:"";position:absolute;top:-2px;left:-2px;width:24px;height:24px;border:3px solid var(--orange);border-right:none;border-bottom:none;border-radius:5px 0 0 0}
+.scan-frame::after{content:"";position:absolute;bottom:-2px;right:-2px;width:24px;height:24px;border:3px solid var(--orange);border-left:none;border-top:none;border-radius:0 0 5px 0}
+.scan-frame-br{position:absolute;top:-2px;right:-2px;width:24px;height:24px;border:3px solid var(--orange);border-left:none;border-bottom:none;border-radius:0 5px 0 0;z-index:2}
+.scan-frame-bl{position:absolute;bottom:-2px;left:-2px;width:24px;height:24px;border:3px solid var(--orange);border-right:none;border-top:none;border-radius:0 0 0 5px;z-index:2}
+.scan-laser{position:absolute;left:8px;right:8px;height:2.5px;background:linear-gradient(90deg,transparent,var(--orange),transparent);box-shadow:0 0 10px var(--orange);animation:lz 2.2s ease-in-out infinite;z-index:3}
+@keyframes lz{0%,100%{top:15%}50%{top:85%}}
+.scan-hint{font-size:10.5px;color:var(--t3);text-align:center;margin-top:6px}
+
+/* OCR PROCESSING */
+.ocr-processing{display:flex;flex-direction:column;align-items:center;padding:24px 16px;gap:14px}
+.ocr-circle{position:relative;width:110px;height:110px}
+.ocr-circle svg{width:110px;height:110px;transform:rotate(-90deg)}
+.ocr-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:22px;font-weight:800}
+.ocr-steps{width:100%;display:flex;flex-direction:column;gap:8px;background:var(--s1);padding:14px;border-radius:12px;border:1px solid var(--b1)}
+.ocr-step{display:flex;align-items:center;gap:10px;font-size:11.5px;color:var(--t3);font-weight:500;transition:all 0.3s}
+.ocr-step.done{color:var(--t1)}
+.ocr-step.active{color:var(--blue)}
+.ocr-dot{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;font-weight:bold}
+.ocr-dot.done{background:var(--green);color:#000}
+.ocr-dot.active{border:2px solid var(--blue);background:transparent;animation:pulse-b 1.2s infinite}
+.ocr-dot.wait{background:var(--b1)}
+@keyframes pulse-b{0%,100%{border-color:var(--blue)}50%{border-color:rgba(43,78,232,.3)}}
+
+/* OCR REVIEW FIELDS */
+.review-field{background:var(--s2);border:1px solid var(--b1);border-radius:var(--rs);padding:8px 10px;margin-bottom:6px}
+.rf-lbl{font-size:9px;color:var(--t3);margin-bottom:2px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em}
+.rf-val{font-size:12.5px;color:var(--t1);font-weight:500}
+.rf-val input{background:none;border:none;outline:none;color:var(--t1);font-family:var(--fb);font-size:12.5px;width:100%}
+
+/* PACKAGE DETAILS */
+.pkg-detail-head{padding:12px 16px;background:var(--s2);border-bottom:1px solid var(--b1)}
+.pkg-tracking{font-family:var(--fm);font-size:18px;font-weight:700;color:var(--t1);margin-bottom:2px}
+.pkg-client{font-size:11px;color:var(--t2);margin-bottom:2px;font-weight:500}
+.pkg-route{font-size:10px;color:var(--t3);font-weight:600}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--b1)}
+.info-row:last-child{border-bottom:none}
+.ir-lbl{font-size:11px;color:var(--t3);font-weight:500}
+.ir-val{font-size:11px;color:var(--t1);font-weight:600}
+
+/* PAYMENT */
+.pay-methods{display:flex;gap:8px;margin:0 16px 8px}
+.pm{flex:1;padding:10px 6px;border-radius:var(--rs);border:1px solid var(--b1);background:var(--s2);text-align:center;cursor:pointer;transition:all 0.15s}
+.pm.on{background:var(--blue2);border-color:rgba(43,78,232,.4)}
+.pm .pmi{font-size:14px;margin-bottom:2px}
+.pm .pml{font-size:9.5px;font-weight:700;color:var(--t3)}
+.pm.on .pml{color:#7A9FFF}
+.mpesa-card{margin:6px 16px;background:linear-gradient(135deg,#0D1B12,#071009);border:1px solid rgba(34,208,122,.2);border-radius:var(--r);padding:14px;text-align:center}
+.mpesa-logo{font-family:var(--fd);font-size:18px;font-weight:800;color:var(--green);margin-bottom:1px}
+.mpesa-sub{font-size:8px;color:rgba(34,208,122,.5);margin-bottom:8px;font-weight:600;letter-spacing:0.04em}
+.mpesa-amt{font-family:var(--fd);font-size:28px;font-weight:800;margin-bottom:1px;color:var(--t1)}
+.mpesa-cur{font-size:10px;color:var(--t2);margin-bottom:10px}
+.spin{animation:sp 1s linear infinite;display:inline-block}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* SUCCESS */
+.success-screen{padding:24px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px}
+.suc-ico{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 8px 20px rgba(0,0,0,0.15)}
+.suc-ico.green{background:var(--green);color:#000}
+.suc-ico.orange{background:var(--orange);color:#000}
+.suc-t{font-family:var(--fd);font-size:18px;font-weight:800;color:var(--t1)}
+.suc-s{font-size:11px;color:var(--t2);line-height:1.5}
+.suc-det{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:12px;width:100%;text-align:left;display:flex;flex-direction:column;gap:6px}
+.sd-r{display:flex;justify-content:space-between}
+.sd-l{font-size:10px;color:var(--t3);font-weight:500}
+.sd-v{font-size:10.5px;font-weight:600;color:var(--t1)}
+
+/* STEP BAR */
+.stepbar{display:flex;align-items:center;padding:8px 16px 4px;gap:0;flex-shrink:0}
+.step-item{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1}
+.sc2{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:10px;font-weight:700}
+.sc2.done{background:var(--orange);color:#000}
+.sc2.active{background:var(--orange2);border:2px solid var(--orange);color:var(--orange)}
+.sc2.inactive{background:var(--s2);border:2px solid var(--b1);color:var(--t3)}
+.sl2{font-size:8px;color:var(--t3);text-align:center;font-weight:700;text-transform:uppercase;letter-spacing:.03em}
+.sl2.active{color:var(--orange)}
+.sconn{flex:1;height:1px;background:var(--b1)}
+.sconn.done{background:var(--orange)}
+
+/* BACK BTN */
+.back-btn{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--t1);cursor:pointer;padding:8px 16px 4px;flex-shrink:0}
+
+/* PAGE HEADER */
+.page-hdr{padding:8px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.page-title{font-family:var(--fd);font-size:15px;font-weight:700;color:var(--t1)}
+
+/* NOTIFY / COPY */
+.notify-bar{display:flex;gap:6px;margin-top:6px;padding:0 16px}
+.notify-btn{flex:1;background:var(--blue2);border:1px solid rgba(43,78,232,.3);border-radius:var(--rs);padding:7px;display:flex;align-items:center;justify-content:center;gap:5px;cursor:pointer;font-size:9.5px;font-weight:700;color:#7A9FFF;font-family:var(--fd);text-transform:uppercase;letter-spacing:0.04em}
+.notify-btn.cn{background:var(--orange2);border-color:rgba(245,166,35,.3);color:var(--orange)}
+.copy-toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--green);color:#000;font-size:11px;font-weight:700;padding:8px 18px;border-radius:20px;font-family:var(--fd);z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,0.3)}
+.copy-toast.show{opacity:1}
+
+/* SIGPAD */
+.sigpad-wrap{margin:0 16px;background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:8px}
+.sigpad{background:#fff;border-radius:var(--rs);height:140px;width:100%;cursor:crosshair;position:relative;overflow:hidden;touch-action:none}
+.sig-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#bbb;pointer-events:none;user-select:none;font-weight:500}
+
+/* TABS */
+.tab-row{display:flex;gap:0;border-bottom:1px solid var(--b1);margin:4px 16px 8px;flex-shrink:0}
+.tr{padding:7px 10px;font-size:11px;font-weight:700;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;flex:1;text-align:center;text-transform:uppercase;letter-spacing:0.02em}
+.tr.on{color:var(--orange);border-bottom-color:var(--orange)}
+
+/* MODAL */
+.modal-overlay{display:none;position:absolute;inset:0;background:rgba(4,5,14,.92);z-index:200;flex-direction:column;justify-content:flex-end}
+.modal-overlay.show{display:flex}
+.modal-sheet{background:var(--s1);border-radius:18px 18px 0 0;border-top:1px solid var(--b2);padding:18px;max-height:88%;overflow-y:auto;position:relative}
+.modal-handle{width:32px;height:3px;background:var(--b2);border-radius:2px;margin:0 auto 12px}
+.modal-title{font-family:var(--fd);font-size:14px;font-weight:700;margin-bottom:12px;color:var(--t1)}
+
+/* READY FOR COLLECTION ITEMS */
+.rfc-item{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:10px 12px;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.rfc-item:hover{border-color:var(--b2)}
+.rfc-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.rfc-color{width:3.5px;height:32px;border-radius:2px;flex-shrink:0}
+.rfc-color.paid{background:var(--orange)}
+.rfc-color.sea{background:var(--blue)}
+.rfc-color.cleared{background:var(--green)}
+.rfc-info{flex:1;min-width:0}
+.rfc-id{font-family:var(--fm);font-size:11px;color:var(--t1);font-weight:600;margin-bottom:1px}
+.rfc-name{font-size:10px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rfc-right{text-align:right}
+.rfc-amt{font-family:var(--fd);font-size:12px;font-weight:700;color:var(--orange)}
+
+/* COMMISSION HISTORY */
+.ch-item{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--b1)}
+.ch-item:last-child{border-bottom:none}
+.ch-color{width:3px;height:30px;border-radius:2px;flex-shrink:0;background:var(--orange)}
+.ch-info{flex:1}
+.ch-id{font-family:var(--fm);font-size:9.5px;color:var(--t2);font-weight:500}
+.ch-amt{font-family:var(--fd);font-size:12.5px;font-weight:700;color:var(--orange)}
+.ch-status{font-size:8px;font-weight:700;padding:2px 6px;border-radius:10px;text-transform:uppercase;letter-spacing:0.02em}
+.ch-status.paid{background:var(--green2);color:var(--green)}
+.ch-status.pend{background:var(--orange2);color:var(--orange)}
+.ch-time{font-size:8.5px;color:var(--t3);margin-top:1px;font-weight:500}
+
+/* KPI STRIP */
+.krow{display:flex;gap:7px;padding:4px 16px;overflow-x:auto;flex-shrink:0;scrollbar-width:none}
+.krow::-webkit-scrollbar{height:0}
+.kc{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:8px 10px;flex-shrink:0;min-width:86px}
+.kl{font-size:8.5px;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;font-weight:700}
+.kv{font-family:var(--fd);font-size:16px;font-weight:700;line-height:1;color:var(--t1)}
+.kch{font-size:8.5px;margin-top:3px;font-weight:600}
+.up{color:var(--green)}.dn{color:var(--red)}
+
+/* ADMIN SYSTEM HEALTH */
+.health-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:0 16px 8px}
+.health-card{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:9px 11px}
+.health-lbl{font-size:9px;color:var(--t3);margin-bottom:3px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em}
+.health-bar{height:4px;background:var(--b1);border-radius:3px;overflow:hidden;margin-bottom:2px}
+.health-fill{height:100%;border-radius:3px}
+.health-fill.good{background:var(--green)}
+.health-fill.warn{background:var(--orange)}
+.health-val{font-size:9.5px;color:var(--t2);font-weight:500}
+
+/* TOP PERFORMER */
+.tp-card{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:9px 11px;display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.tp-av{width:28px;height:28px;border-radius:50%;background:var(--blue2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.tp-info{flex:1}
+.tp-name{font-size:11.5px;font-weight:600;color:var(--t1)}
+.tp-amt{font-size:10.5px;color:var(--orange);font-family:var(--fm);font-weight:600}
+.tp-icon{font-size:16px}
+
+/* SYSTEM HEALTH ALERTS */
+.alrt{margin:2px 16px 6px;background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.2);border-radius:var(--rs);padding:7px 10px;display:flex;align-items:center;gap:7px}
+.alrt span{font-size:9.5px;color:#FFAAB3;line-height:1.4;font-weight:500}
+
+/* MOCK LABELS PREVIEW POPUP */
+.label-preview-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999;align-items:center;justify-content:center;padding:20px}
+.label-preview-content{background:#fff;color:#000;border-radius:12px;max-width:400px;width:100%;padding:16px;box-shadow:0 12px 36px rgba(0,0,0,0.5);display:flex;flex-direction:column;gap:12px}
+.label-preview-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1.5px solid #000;padding-bottom:6px}
+.label-preview-close{cursor:pointer;font-weight:bold;font-size:16px;padding:4px}
+
+/* RESPONSIFY */
+@media(max-width:980px){
+  .app-wrapper{flex-direction:column;padding:16px;gap:20px}
+  .info-panel{max-width:100%;text-align:center;align-items:center}
+  .shortcut-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:420px){
+  body{padding:0}
+  .app-wrapper{padding:0}
+  .info-panel{display:none}
+  .phone-container{width:100%}
+  .phone{width:100vw;height:100vh;border:none;border-radius:0}
+  .notch{display:none}
+  .sbar{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="copy-toast" id="copy-toast">Copied to clipboard!</div>
+
+<div class="app-wrapper">
+  <!-- LEFT PANEL: PRESENTATION & DEMO CONTROLS -->
+  <div class="info-panel">
+    <h1>DEX<span>CARGO</span></h1>
+    <p style="font-weight:600;color:var(--t1);margin-top:-8px;">Logistics & Operations System Demo Sandbox</p>
+    <p>
+      Welcome to the DEXCARGO interactive workflow simulation. This app models role-based operational tools used by shipping agents, logistics managers, sales leads, and administrators in East Africa (Nairobi hubs).
+    </p>
+    
+    <div class="control-hub">
+      <div class="control-title">🔑 Sandbox Role Switcher</div>
+      <div style="font-size:11px;line-height:1.4;margin-bottom:4px;">
+        Switching roles instantly updates the active user context and dashboard view inside the simulated app mockup.
+      </div>
+      <div class="rs">
+        <div class="rb on" data-role="login">🔐 Login Page</div>
+        <div class="rb" data-role="sr">🤝 Sales Rep (John)</div>
+        <div class="rb" data-role="lm">📦 Logistics Mgr (Mary)</div>
+        <div class="rb" data-role="sm">💼 Sales Lead (Peter)</div>
+        <div class="rb" data-role="admin">⚙️ Administrator</div>
+      </div>
+    </div>
+
+    <div class="control-hub">
+      <div class="control-title">📜 Sample Shipping Labels (OCR Sandbox)</div>
+      <div style="font-size:11px;line-height:1.4;">
+        Select one of the physical shipping labels below to simulate uploading/scanning it inside the scanner camera screen.
+      </div>
+      <div class="label-selector">
+        <div class="label-opt active" onclick="selectSampleLabel(1)" id="lopt-1">
+          <div>
+            <strong>Label 1: HKG-NBO (Beatrice Wangui)</strong>
+            <div style="font-size:9.5px;color:var(--t3);margin-top:2px;">Track: 1260707534987 | Air Freight | 1.0 kg</div>
+          </div>
+          <button class="btns" style="padding:4px 8px;width:auto;font-size:10px;" onclick="viewLabelGraphic(1, event)">👁 View</button>
+        </div>
+        <div class="label-opt" onclick="selectSampleLabel(2)" id="lopt-2">
+          <div>
+            <strong>Label 2: CAN-NBO (Charles Ombongi)</strong>
+            <div style="font-size:9.5px;color:var(--t3);margin-top:2px;">Track: 126070655250 | Air Freight | 0.5 kg</div>
+          </div>
+          <button class="btns" style="padding:4px 8px;width:auto;font-size:10px;" onclick="viewLabelGraphic(2, event)">👁 View</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="control-hub" style="margin-top:-5px;">
+      <div class="control-title">⚡ Quick Action Shortcuts</div>
+      <div class="shortcut-grid">
+        <button class="sc-btn" onclick="triggerQuickScan()">📷 Go to Scanner</button>
+        <button class="sc-btn" onclick="resetAppDatabase()">🔄 Reset Sandbox DB</button>
+        <button class="sc-btn" onclick="routeToScreen('s-pkg-list')">📦 View Package List</button>
+        <button class="sc-btn" onclick="routeToScreen('s-commissions')">💰 Commission Reports</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL: PHONE WRAPPER & EMULATOR -->
+  <div class="phone-container">
+    <div class="phone" id="main-phone">
+      <!-- Status bar / Notch -->
+      <div class="notch"><div class="camera-lens"></div></div>
+      <div class="sbar">
+        <span class="st" id="clock-display">09:41</span>
+        <div class="sicons">
+          <!-- Wifi -->
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>
+          <!-- Battery -->
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2"/></svg>
+        </div>
+      </div>
+
+      <!-- ======= SCREEN 1: LOGIN ======= -->
+      <div class="scr on" id="s-login">
+        <div style="flex:1;padding:0 20px;display:flex;flex-direction:column;">
+          <div style="padding:36px 0 16px;display:flex;flex-direction:column;align-items:center;text-align:center;">
+            <div style="width:54px;height:54px;border-radius:14px;background:linear-gradient(135deg,#2B4EE8,#F5A623);display:flex;align-items:center;justify-content:center;margin-bottom:12px;box-shadow:0 8px 24px rgba(43,78,232,0.3)">
+              <svg width="26" height="26" viewBox="0 0 32 32" fill="none"><path d="M6 16 L14 8 L22 16 L14 24Z" fill="#2B4EE8"/><path d="M16 8 L26 16 L16 24 L20 16Z" fill="#F5A623"/></svg>
+            </div>
+            <div style="font-family:var(--fd);font-size:24px;font-weight:800;letter-spacing:-.02em;color:var(--t1);">DEXCARGO</div>
+            <div style="font-size:11px;color:var(--t2);margin-top:3px;font-weight:500;">Logistics & Operations Gateway</div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:12px;margin-top:10px;">
+            <div>
+              <div class="fll">Choose Mock Identity</div>
+              <div class="fld">
+                <select id="login-role-select" onchange="syncLoginRoleSelect(this.value)">
+                  <option value="sr">John Kamau (Sales Representative - SR-002)</option>
+                  <option value="lm">Mary Wanjiku (Logistics Manager - LM-001)</option>
+                  <option value="sm">Peter Mwangi (Sales Lead - SM-001)</option>
+                  <option value="admin">Administrator User (ADM-001)</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <div class="fll">Employee Email / ID</div>
+              <div class="fld"><input id="login-emp-id" value="john@dexcargo.com"></div>
+            </div>
+            <div>
+              <div class="fll">Password</div>
+              <input id="login-password" type="hidden" value="password">
+              <div class="fld" style="display:flex;align-items:center;"><input type="password" value="••••••••" style="flex:1" readonly><span style="font-size:12px;cursor:pointer;color:var(--t3);">👁</span></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:7px;margin:2px 0;">
+              <input type="checkbox" checked style="accent-color:var(--orange);">
+              <span style="font-size:11px;color:var(--t2);font-weight:500;">Keep me signed in</span>
+            </div>
+            <div style="padding-top:4px;"><button class="btnb" onclick="performLogin()" style="padding:13px;font-size:13.5px;">Authenticate Session</button></div>
+          </div>
+          <div style="flex:1;"></div>
+          <div style="text-align:center;font-size:10px;color:var(--t3);padding:10px 0;font-weight:600;font-family:var(--fm)">SYS GATEWAY v2.4.0-NBO</div>
+        </div>
+      </div>
+
+      <!-- ======= SCREEN 2: SALES REP HOME ======= -->
+      <div class="scr" id="s-sr-home">
+        <div class="topbar">
+          <div class="tb-left">
+            <div class="tb-sub">Good Morning,</div>
+            <div class="tb-name" id="sr-user-name">John Kamau 👋</div>
+            <div class="tb-role" style="color:var(--orange)">Sales Representative · SR-002</div>
+          </div>
+          <div class="tb-right"><span class="idb sr">SR-002</span><div class="av sr">JK</div></div>
+        </div>
+        
+        <div class="comm-hero">
+          <div class="ch-left">
+            <div class="ch-lbl">This Month's Commission</div>
+            <div class="ch-amt" id="sr-commission-val">KES 24,680</div>
+            <div class="ch-change up">▲ 18.2% from last month</div>
+          </div>
+          <div class="ch-icon orange">💰</div>
+        </div>
+
+        <div id="sr-notifications-area" style="display:none;margin:8px 16px 0;background:var(--s2);border:1px solid var(--orange);border-radius:10px;padding:10px;">
+          <div style="font-size:10px;color:var(--orange);font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:4px;"><span>🔊</span> SYSTEM BROADCASTS</div>
+          <div id="sr-notifications-list" style="display:flex;flex-direction:column;gap:6px;font-size:11px;color:var(--t1);"></div>
+        </div>
+
+        <div style="padding:4px 16px 6px;display:flex;gap:7px;">
+          <div style="flex:1;background:var(--s2);border:1px solid var(--b1);border-radius:var(--rs);padding:8px 10px;display:flex;align-items:center;gap:7px;cursor:pointer;" onclick="triggerQuickScan()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#404870" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <span style="font-size:11.5px;color:var(--t3);font-weight:500;">Search or scan stickers...</span>
+          </div>
+          <div style="width:34px;height:34px;background:var(--blue);border-radius:var(--rs);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;box-shadow:0 4px 12px rgba(43,78,232,0.25)" onclick="triggerQuickScan()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h.01M14 17h3M17 14v3M17 17h.01"/></svg>
+          </div>
+        </div>
+
+        <div class="sec"><span class="sec-t">My Activity Overview</span></div>
+        <div class="ov-grid">
+          <div class="ov-card" onclick="routeToScreen('s-pkg-list')"><div class="ov-ico orange">📦</div><div><div class="ov-num" id="sr-stat-reg">6</div><div class="ov-lbl">Registered</div></div></div>
+          <div class="ov-card" onclick="routeToScreen('s-pkg-list')"><div class="ov-ico green">💳</div><div><div class="ov-num" id="sr-stat-paid">3</div><div class="ov-lbl">Paid Shipments</div></div></div>
+          <div class="ov-card" onclick="routeToScreen('s-pkg-list')"><div class="ov-ico purple">⏳</div><div><div class="ov-num" id="sr-stat-wait">2</div><div class="ov-lbl">Ready / Uncollected</div></div></div>
+          <div class="ov-card" onclick="routeToScreen('s-pkg-list')"><div class="ov-ico blue">✅</div><div><div class="ov-num" id="sr-stat-done">1</div><div class="ov-lbl">Successfully Delivered</div></div></div>
+        </div>
+
+        <div class="sec"><span class="sec-t">Recent Client Packages</span><span class="sec-l" onclick="routeToScreen('s-pkg-list')">View List</span></div>
+        <div class="plist" id="sr-recent-list">
+          <!-- Populated by dynamic javascript -->
+        </div>
+        <div class="sp2"></div>
+      </div>
+
+      <!-- ======= SCREEN 3: LOGISTICS MGR HOME ======= -->
+      <div class="scr" id="s-lm-home">
+        <div class="topbar">
+          <div class="tb-left">
+            <div class="tb-sub">Warehouse Hub,</div>
+            <div class="tb-name" id="lm-user-name">Mary Wanjiku 👋</div>
+            <div class="tb-role" style="color:#7A9FFF">Logistics Manager · LM-001</div>
+          </div>
+          <div class="tb-right"><span class="idb lm">LM-001</span><div class="av lm">MW</div></div>
+        </div>
+        
+        <div class="comm-hero">
+          <div class="ch-left">
+            <div class="ch-lbl">Operational sorting commission</div>
+            <div class="ch-amt" id="lm-commission-val">KES 36,540</div>
+            <div class="ch-change up">▲ 24% from last month</div>
+          </div>
+          <div class="ch-icon blue">📦</div>
+        </div>
+
+        <div id="lm-notifications-area" style="display:none;margin:8px 16px 0;background:var(--s2);border:1px solid #7A9FFF;border-radius:10px;padding:10px;">
+          <div style="font-size:10px;color:#7A9FFF;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:4px;"><span>🔊</span> SYSTEM BROADCASTS</div>
+          <div id="lm-notifications-list" style="display:flex;flex-direction:column;gap:6px;font-size:11px;color:var(--t1);"></div>
+        </div>
+
+        <div style="padding:4px 16px 6px;display:flex;gap:7px;">
+          <div style="flex:1;background:var(--s2);border:1px solid var(--b1);border-radius:var(--rs);padding:8px 10px;display:flex;align-items:center;gap:7px;cursor:pointer;" onclick="triggerQuickScan()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#404870" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <span style="font-size:11.5px;color:var(--t3);font-weight:500;">Search or scan stickers...</span>
+          </div>
+          <div style="width:34px;height:34px;background:var(--blue);border-radius:var(--rs);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;" onclick="triggerQuickScan()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h.01M14 17h3M17 14v3M17 17h.01"/></svg>
+          </div>
+        </div>
+
+        <div class="sec"><span class="sec-t">Warehouse Flow</span></div>
+        <div class="ov-grid">
+          <div class="ov-card" onclick="routeToScreen('s-pkg-list')"><div class="ov-ico blue">🏢</div><div><div class="ov-num" id="lm-stat-total">35</div><div class="ov-lbl">Total Managed</div></div></div>
+          <div class="ov-card" onclick="routeToScreen('s-pkg-list')"><div class="ov-ico orange">⏳</div><div><div class="ov-num" id="lm-stat-unpaid">18</div><div class="ov-lbl">Unpaid In-bond</div></div></div>
+          <div class="ov-card" onclick="routeToScreen('s-pkg-list')"><div class="ov-ico purple">📋</div><div><div class="ov-num" id="lm-stat-ready">14</div><div class="ov-lbl">Ready for Collection</div></div></div>
+          <div class="ov-card" onclick="routeToScreen('s-pkg-list')"><div class="ov-ico green">✅</div><div><div class="ov-num" id="lm-stat-done">9</div><div class="ov-lbl">Dispatched/Cleared</div></div></div>
+        </div>
+
+        <div class="sec"><span class="sec-t">Warehouse Staff & Tasks</span></div>
+        <div style="padding:0 16px 8px;display:grid;grid-template-columns:1fr 1fr;gap:7px;">
+          <div style="background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:10px 12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:9.5px;color:var(--t3);text-transform:uppercase;letter-spacing:0.04em;font-weight:700;">Active Staff</div>
+              <div style="font-family:var(--fd);font-size:20px;font-weight:800;color:var(--t1);margin-top:2px;">6 Clerks</div>
+            </div>
+            <div style="font-size:18px;">👥</div>
+          </div>
+          <div style="background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:10px 12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:9.5px;color:var(--t3);text-transform:uppercase;letter-spacing:0.04em;font-weight:700;">Pending Sorts</div>
+              <div style="font-family:var(--fd);font-size:20px;font-weight:800;color:var(--orange);margin-top:2px;">7 Cargoes</div>
+            </div>
+            <div style="font-size:18px;">⚡</div>
+          </div>
+        </div>
+
+        <div class="sec"><span class="sec-t">Recent Warehouse Registrations</span><span class="sec-l" onclick="triggerQuickScan()">Scan Cargo</span></div>
+        <div class="plist" id="lm-recent-list">
+          <!-- Populated by dynamic javascript -->
+        </div>
+        <div class="sp2"></div>
+      </div>
+
+      <!-- ======= SCREEN 4: SALES MANAGER HOME ======= -->
+      <div class="scr" id="s-sm-home">
+        <div class="topbar">
+          <div class="tb-left">
+            <div class="tb-sub">Executive Lead,</div>
+            <div class="tb-name">Peter Mwangi 👋</div>
+            <div class="tb-role" style="color:var(--green)">Sales Manager · SM-001</div>
+          </div>
+          <div class="tb-right"><span class="idb sm">SM-001</span><div class="av sm">PM</div></div>
+        </div>
+
+        <div class="comm-hero">
+          <div class="ch-left">
+            <div class="ch-lbl">This Month's Manager override</div>
+            <div class="ch-amt" id="sm-commission-val">KES 58,920</div>
+            <div class="ch-change up">▲ 32.5% vs target</div>
+          </div>
+          <div class="ch-icon green">📈</div>
+        </div>
+
+        <div id="sm-notifications-area" style="display:none;margin:8px 16px 0;background:var(--s2);border:1px solid var(--green);border-radius:10px;padding:10px;">
+          <div style="font-size:10px;color:var(--green);font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:4px;"><span>🔊</span> SYSTEM BROADCASTS</div>
+          <div id="sm-notifications-list" style="display:flex;flex-direction:column;gap:6px;font-size:11px;color:var(--t1);"></div>
+        </div>
+
+        <div class="sec"><span class="sec-t">Team Pipeline Overview</span></div>
+        <div class="ov-grid">
+          <div class="ov-card"><div class="ov-ico orange">🤝</div><div><div class="ov-num">12</div><div class="ov-lbl">Sales Reps</div></div></div>
+          <div class="ov-card" onclick="routeToScreen('s-pkg-list')"><div class="ov-ico blue">📦</div><div><div class="ov-num" id="sm-stat-pkgs">245</div><div class="ov-lbl">Total Team Packages</div></div></div>
+          <div class="ov-card"><div class="ov-ico green">💰</div><div><div class="ov-num" style="font-size:15px;" id="sm-stat-rev">KES 1.2M</div><div class="ov-lbl">Gross Revenue</div></div></div>
+          <div class="ov-card"><div class="ov-ico purple">📊</div><div><div class="ov-num">68.4%</div><div class="ov-lbl">Conversion Rate</div></div></div>
+        </div>
+
+        <div class="sec"><span class="sec-t">Top Performing Representatives</span></div>
+        <div style="padding:0 16px 4px;">
+          <div class="tp-card"><div class="tp-av">👤</div><div class="tp-info"><div class="tp-name">John Kamau (SR-002)</div><div class="tp-amt" id="sm-perf-john">KES 24,680 Earned</div></div><div class="tp-icon">🏆</div></div>
+          <div class="tp-card"><div class="tp-av">👤</div><div class="tp-info"><div class="tp-name">Grace Akinyi (SR-003)</div><div class="tp-amt">KES 19,200 Earned</div></div><div class="tp-icon">🥈</div></div>
+        </div>
+
+        <div class="sec"><span class="sec-t">My Manager Overrides Breakdown</span></div>
+        <div style="margin:0 16px 8px;background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:12px;">
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--b1);align-items:center;">
+            <span style="font-size:11.5px;color:var(--t2);font-weight:500;">Own Accounts (25% GPM Comm)</span>
+            <span style="font-family:var(--fm);font-size:12px;color:var(--green);font-weight:600;">KES 42,800</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--b1);align-items:center;">
+            <span style="font-size:11.5px;color:var(--t2);font-weight:500;">SR-001 (James) Override (5%)</span>
+            <span style="font-family:var(--fm);font-size:12px;color:var(--orange);font-weight:600;">KES 8,640</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;align-items:center;">
+            <span style="font-size:11.5px;color:var(--t2);font-weight:500;">SR-002 (John) Override (5%)</span>
+            <span style="font-family:var(--fm);font-size:12px;color:var(--orange);font-weight:600;" id="sm-override-john">KES 7,480</span>
+          </div>
+        </div>
+        <div class="sp2"></div>
+      </div>
+
+      <!-- ======= SCREEN 5: ADMIN HOME ======= -->
+      <div class="scr" id="s-admin-home">
+        <div class="topbar">
+          <div class="tb-left">
+            <div class="tb-sub">System Root,</div>
+            <div class="tb-name">Admin Console 👋</div>
+            <div class="tb-role" style="color:var(--purple)">Administrator Account</div>
+          </div>
+          <div class="tb-right"><span class="idb ad">ADM-001</span><div class="av ad">AD</div></div>
+        </div>
+
+        <div class="comm-hero">
+          <div class="ch-left">
+            <div class="ch-lbl">Gross Platform Commissions Paid</div>
+            <div class="ch-amt" id="admin-stat-comm">KES 139,340</div>
+            <div style="font-size:10px;color:var(--t3);margin-top:4px;font-weight:600;">★ Admin does not earn personal commission</div>
+          </div>
+          <div class="ch-icon purple">⚙️</div>
+        </div>
+
+        <div class="sec"><span class="sec-t">Enterprise Metrics</span></div>
+        <div class="ov-grid">
+          <div class="ov-card" onclick="routeToScreen('s-pkg-list')"><div class="ov-ico blue">🏢</div><div><div class="ov-num" id="admin-stat-pkgs">1,248</div><div class="ov-lbl">Total Packages</div></div></div>
+          <div class="ov-card"><div class="ov-ico green">💰</div><div><div class="ov-num" style="font-size:14px;" id="admin-stat-rev">KES 8.42M</div><div class="ov-lbl">Gross Revenue</div></div></div>
+          <div class="ov-card"><div class="ov-ico orange">👥</div><div><div class="ov-num">28</div><div class="ov-lbl">Active Employees</div></div></div>
+          <div class="ov-card"><div class="ov-ico purple">🏛️</div><div><div class="ov-num">532</div><div class="ov-lbl">Active Clients</div></div></div>
+        </div>
+
+        <div class="sec"><span class="sec-t">🔊 Dispatch Hub Broadcast</span></div>
+        <div style="margin:0 16px 8px;background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;gap:8px;">
+          <div style="font-size:10px;color:var(--t3);text-transform:uppercase;font-weight:700;">Broadcast Alert Message</div>
+          <div class="fld"><input id="broadcast-msg-input" placeholder="Type notification to employees..."></div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <div style="flex:1;">
+              <select id="broadcast-target-select" style="background:var(--s1);border:1px solid var(--b1);color:var(--t1);font-size:11px;padding:6px;border-radius:6px;width:100%;">
+                <option value="all">All Employees</option>
+                <option value="sr">Sales Representatives</option>
+                <option value="lm">Logistics Managers</option>
+                <option value="sm">Sales Managers</option>
+              </select>
+            </div>
+            <button class="btnp" onclick="submitBroadcastMessage()" style="padding:6px 12px;font-size:11px;width:auto;">Send Alert</button>
+          </div>
+        </div>
+
+        <div class="sec"><span class="sec-t">👥 Employee Directory</span></div>
+        <div style="margin:0 16px 16px;background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;gap:10px;">
+          <div id="admin-employee-list" style="display:flex;flex-direction:column;gap:8px;">
+            <!-- Populated by JS -->
+          </div>
+          
+          <div style="border-top:1px solid var(--b1);padding-top:8px;">
+            <div style="font-size:10px;color:var(--t3);text-transform:uppercase;font-weight:700;margin-bottom:6px;">Register New Employee</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="fld"><input id="emp-reg-name" placeholder="Employee Display Name"></div>
+              <div class="fld"><input id="emp-reg-email" placeholder="Email / ID"></div>
+              <div class="fld"><input id="emp-reg-pass" placeholder="Initial Password" type="password"></div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <div style="flex:1;">
+                  <select id="emp-reg-role" style="background:var(--s1);border:1px solid var(--b1);color:var(--t1);font-size:11px;padding:6px;border-radius:6px;width:100%;">
+                    <option value="sr">Sales Representative</option>
+                    <option value="lm">Logistics Manager</option>
+                    <option value="sm">Sales Manager</option>
+                  </select>
+                </div>
+                <button class="btnb" onclick="registerNewEmployee()" style="padding:6px 12px;font-size:11px;width:auto;background:var(--purple);color:white;border-color:var(--purple);">Add User</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec"><span class="sec-t">Corporate Payroll & Commission Ledger</span></div>
+        <div style="margin:0 16px 8px;background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;gap:4px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--b1);">
+            <span style="font-size:11px;color:var(--t2);display:flex;align-items:center;gap:4px;"><span class="who lm">LM-001</span>Mary Wanjiku</span>
+            <span style="font-family:var(--fm);font-size:11.5px;color:#7A9FFF;font-weight:600;" id="admin-ledger-mary">KES 36,540</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--b1);">
+            <span style="font-size:11px;color:var(--t2);display:flex;align-items:center;gap:4px;"><span class="who sm">SM-001</span>Peter Mwangi</span>
+            <span style="font-family:var(--fm);font-size:11.5px;color:var(--green);font-weight:600;" id="admin-ledger-peter">KES 58,920</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--b1);">
+            <span style="font-size:11px;color:var(--t2);display:flex;align-items:center;gap:4px;"><span class="who sr">SR-002</span>John Kamau</span>
+            <span style="font-family:var(--fm);font-size:11.5px;color:var(--orange);font-weight:600;" id="admin-ledger-john">KES 24,680</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;">
+            <span style="font-size:11px;color:var(--t2);display:flex;align-items:center;gap:4px;"><span class="who sr">SR-003</span>Grace Akinyi</span>
+            <span style="font-family:var(--fm);font-size:11.5px;color:var(--orange);font-weight:600;">KES 19,200</span>
+          </div>
+        </div>
+        <div class="sp2"></div>
+      </div>
+
+      <!-- ======= SCREEN 6: SCAN STICKER ======= -->
+      <div class="scr" id="s-scan">
+        <div class="page-hdr">
+          <div class="back-btn" onclick="routeBack()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span>Back</span>
+          </div>
+          <div class="page-title">Sticker Photo Capture</div>
+          <div style="width:40px;"></div>
+        </div>
+
+        <div class="scan-vp">
+          <div class="scan-grid"></div>
+          <div style="position:relative;z-index:2;width:230px;min-height:145px;background:#F4F6FB;color:#0A0B14;border-radius:10px;padding:12px;box-shadow:0 10px 24px rgba(0,0,0,0.3);display:flex;flex-direction:column;gap:7px;border:2px dashed rgba(245,166,35,0.9);">
+            <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(10,11,20,0.16);padding-bottom:6px;">
+              <div style="font-family:var(--fd);font-size:12px;font-weight:800;">PACKAGE STICKER</div>
+              <div style="font-family:var(--fm);font-size:8px;font-weight:700;color:#2B4EE8;">OCR PHOTO</div>
+            </div>
+            <div style="display:grid;grid-template-columns:70px 1fr;gap:4px 8px;font-size:9px;line-height:1.25;">
+              <span style="font-weight:700;color:#404870;">Tracking</span><span style="font-family:var(--fm);font-weight:800;">1260707534987</span>
+              <span style="font-weight:700;color:#404870;">Consignee</span><span>Beatrice Wangui</span>
+              <span style="font-weight:700;color:#404870;">Route</span><span>HKG to NBO</span>
+              <span style="font-weight:700;color:#404870;">Weight</span><span>1.0 kg / 1 PCS</span>
+            </div>
+            <div style="margin-top:auto;height:18px;border-radius:5px;background:repeating-linear-gradient(90deg,#111 0 2px,transparent 2px 5px,#111 5px 7px,transparent 7px 11px);opacity:0.18;"></div>
+          </div>
+        </div>
+
+        <div style="padding:0 16px;margin:8px 0;display:flex;flex-direction:column;gap:6px;">
+          <div class="scan-hint">Take a clear photo of the full package sticker. OCR will extract the shipment details.</div>
+          
+          <div style="background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px;">
+            <div style="font-size:9.5px;color:var(--orange);font-weight:700;text-transform:uppercase;letter-spacing:0.04em;text-align:center;">Sticker Photo OCR Controls</div>
+            <div style="font-size:10px;color:var(--t2);text-align:center;line-height:1.3;margin-bottom:2px;">
+              Since this runs in a desktop browser, select an active sticker in the left panel, then emulate camera capture:
+            </div>
+            <button class="btnp" onclick="triggerOCRScan(true)" style="font-size:12px;padding:9px;">📷 Capture Sticker Photo & Run OCR</button>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;padding:0 16px;margin:10px 0;">
+          <div style="flex:1;height:1px;background:var(--b1);"></div>
+          <span style="font-size:11px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:0.02em;">or manual registry</span>
+          <div style="flex:1;height:1px;background:var(--b1);"></div>
+        </div>
+
+        <div style="padding:0 16px;display:flex;flex-direction:column;gap:8px;">
+          <div class="fld">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#404870" stroke-width="2.5" style="margin-right:6px;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input id="scan-manual-id" placeholder="Enter tracking no. manually..." style="font-family:var(--fm)">
+          </div>
+          <div style="display:flex;gap:6px;">
+            <button class="btns" onclick="openManualModal()" style="flex:1;padding:10px;">📋 Manual Form</button>
+            <button class="btnb" onclick="doSearchManual()" style="flex:1;padding:10px;">🔍 Find Record</button>
+          </div>
+        </div>
+        <div class="sp2"></div>
+      </div>
+
+      <!-- ======= SCREEN 7: OCR PROCESSING ANIMATION ======= -->
+      <div class="scr" id="s-ocr-proc">
+        <div class="page-hdr">
+          <div style="width:40px;"></div>
+          <div class="page-title">OCR Data Extraction</div>
+          <div style="width:40px;"></div>
+        </div>
+
+        <div class="ocr-processing">
+          <div class="ocr-circle">
+            <svg>
+              <circle cx="55" cy="55" r="48" stroke="#1A1F33" stroke-width="6" fill="transparent" />
+              <circle id="ocr-progress-ring" cx="55" cy="55" r="48" stroke="#2B4EE8" stroke-width="6" fill="transparent" 
+                      stroke-dasharray="301.6" stroke-dashoffset="301.6" style="transition: stroke-dashoffset 0.1s linear;" />
+            </svg>
+            <div class="ocr-pct" id="ocr-percentage-text">0%</div>
+          </div>
+          <div style="font-family:var(--fd);font-size:14px;font-weight:700;color:var(--t1);" id="ocr-major-status">Reading Sticker Photo...</div>
+          
+          <div class="ocr-steps">
+            <div class="ocr-step" id="ostep-1"><span class="ocr-dot active" id="odot-1">1</span><span>Preparing Sticker Photo</span></div>
+            <div class="ocr-step" id="ostep-2"><span class="ocr-dot wait" id="odot-2">2</span><span>Reading Printed Shipment Fields</span></div>
+            <div class="ocr-step" id="ostep-3"><span class="ocr-dot wait" id="odot-3">3</span><span>Validating Extracted Details</span></div>
+            <div class="ocr-step" id="ostep-4"><span class="ocr-dot wait" id="odot-4">4</span><span>Preparing Backend Registration</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= SCREEN 8: OCR REVIEW FORM ======= -->
+      <div class="scr" id="s-ocr-review">
+        <div class="page-hdr">
+          <div class="back-btn" onclick="routeToScreen('s-scan')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span>Retake</span>
+          </div>
+          <div class="page-title">Review Extracted Information</div>
+          <div style="width:40px;"></div>
+        </div>
+
+        <div style="padding:0 16px;display:flex;flex-direction:column;gap:2px;">
+          <div style="background:var(--green2);border:1px solid rgba(34,208,122,0.3);border-radius:10px;padding:8px 12px;font-size:10.5px;color:var(--green);font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+            <span>✔</span> Sticker details extracted successfully. Verify before backend submission.
+          </div>
+
+          <div class="review-field">
+            <div class="rf-lbl">Tracking Number (AFA ID)</div>
+            <div class="rf-val"><input id="rev-id" style="font-family:var(--fm);font-weight:700;color:var(--orange)"></div>
+          </div>
+          <div class="review-field">
+            <div class="rf-lbl">Consignee Name</div>
+            <div class="rf-val"><input id="rev-name"></div>
+          </div>
+          <div class="review-field">
+            <div class="rf-lbl">Consignee Phone</div>
+            <div class="rf-val"><input id="rev-phone"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+            <div class="review-field">
+              <div class="rf-lbl">Origin Hub</div>
+              <div class="rf-val"><input id="rev-origin"></div>
+            </div>
+            <div class="review-field">
+              <div class="rf-lbl">Destination</div>
+              <div class="rf-val"><input id="rev-dest"></div>
+            </div>
+          </div>
+          <div class="review-field">
+            <div class="rf-lbl">Cargo Description</div>
+            <div class="rf-val"><input id="rev-desc"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:6px;">
+            <div class="review-field">
+              <div class="rf-lbl">Mode</div>
+              <select id="rev-mode" style="background:none;border:none;outline:none;color:var(--t1);font-family:var(--fb);font-size:12.5px;width:100%;">
+                <option value="Air Freight">Air Freight</option>
+                <option value="Sea Freight">Sea Freight</option>
+              </select>
+            </div>
+            <div class="review-field">
+              <div class="rf-lbl">Weight (kg)</div>
+              <div class="rf-val"><input id="rev-weight" type="number" step="0.1"></div>
+            </div>
+            <div class="review-field">
+              <div class="rf-lbl">Pieces</div>
+              <div class="rf-val"><input id="rev-pcs" type="number"></div>
+            </div>
+          </div>
+          <div class="review-field">
+            <div class="rf-lbl">Charge Amount (KES)</div>
+            <div class="rf-val"><input id="rev-cost" type="number" style="font-weight:700;color:var(--orange)"></div>
+          </div>
+
+          <div style="margin-top:6px;display:flex;gap:7px;">
+            <button class="btns" onclick="routeToScreen('s-scan')" style="flex:1;">Cancel</button>
+            <button class="btnp" onclick="proceedToPhotoCapture()" style="flex:2;">Next: Take Package Photo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= SCREEN 9: TAKE PACKAGE PHOTO ======= -->
+      <div class="scr" id="s-photo">
+        <div class="page-hdr">
+          <div class="back-btn" onclick="handlePhotoBackClick()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span>Edit Form</span>
+          </div>
+          <div class="page-title">Take Package Photo</div>
+          <div style="width:40px;"></div>
+        </div>
+
+        <div style="padding:0 16px;display:flex;flex-direction:column;gap:8px;">
+          <!-- Camera Preview Area -->
+          <div class="scan-vp" style="height:220px;" id="package-photo-viewfinder">
+            <!-- Simulated box svg graphic -->
+            <div id="sim-box-graphics" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1c2138,#0A0B14);flex-direction:column;gap:12px;">
+              <svg width="80" height="80" viewBox="0 0 64 64" fill="none">
+                <path d="M32 6 L56 16 L56 46 L32 58 L8 46 L8 16 Z" fill="none" stroke="var(--t2)" stroke-width="2.5"/>
+                <path d="M8 16 L32 28 L56 16" stroke="var(--t2)" stroke-width="2.5"/>
+                <path d="M32 28 L32 58" stroke="var(--t2)" stroke-width="2.5"/>
+                <path d="M20 22 L44 32" stroke="var(--orange)" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+              </svg>
+              <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:1px;" id="photo-box-caption">LIVE VIEWPORT: FOCUS ON BOX</div>
+            </div>
+            <!-- Captured static image display -->
+            <div id="captured-box-image" style="display:none;position:absolute;inset:0;background:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22 viewBox=%220 0 300 200%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23252a42%22/><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%237a9fff%22 font-family=%22sans-serif%22 font-size=%2214%22 font-weight=%22bold%22>PHOTO CAPTURED: PKG-BOX-A</text></svg>') center/cover no-repeat;">
+            </div>
+            <div class="scan-frame" style="border:1px dashed rgba(255,255,255,0.15)"></div>
+          </div>
+          
+          <div style="font-size:10.5px;color:var(--t3);text-align:center;line-height:1.4;">
+            Align the package and sticker label clearly in the frame, then press the snap trigger.
+          </div>
+
+          <div style="display:flex;justify-content:center;align-items:center;gap:24px;margin-top:8px;" id="photo-controls-row">
+            <button class="btns" style="border-radius:50%;width:44px;height:44px;padding:0;font-size:16px;" onclick="triggerFlash()">⚡</button>
+            <div style="width:68px;height:68px;border-radius:50%;border:4px solid #fff;background:transparent;padding:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;" onclick="snapPackagePhoto()">
+              <div style="width:100%;height:100%;border-radius:50%;background:#fff;" id="snap-btn-fill"></div>
+            </div>
+            <button class="btns" style="border-radius:50%;width:44px;height:44px;padding:0;font-size:16px;" onclick="retakePackagePhoto()">🔄</button>
+          </div>
+
+          <div style="margin-top:10px;">
+            <button class="btnp" id="photo-proceed-btn" disabled onclick="savePackageToDB()" style="opacity:0.5;cursor:not-allowed;">Register Package to Hub</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= SCREEN 10: PACKAGE REGISTERED SUCCESS ======= -->
+      <div class="scr" id="s-reg-success">
+        <div class="success-screen">
+          <div class="suc-ico green">✔</div>
+          <div class="suc-t">Package Registered Successfully</div>
+          <div class="suc-s">
+            Sticker OCR data has been submitted to the backend and registered in the cargo system. SMS notification dispatched to consignee.
+          </div>
+
+          <div class="suc-det">
+            <div class="sd-r"><span class="sd-l">Tracking No.</span><span class="sd-v" id="sdet-id" style="font-family:var(--fm)">1260707534987</span></div>
+            <div class="sd-r"><span class="sd-l">Consignee</span><span class="sd-v" id="sdet-name">Beatrice Wangui</span></div>
+            <div class="sd-r"><span class="sd-l">Weight / PCS</span><span class="sd-v" id="sdet-weight">1.0 kg / 1 PCS</span></div>
+            <div class="sd-r"><span class="sd-l">Cost Charge</span><span class="sd-v" id="sdet-cost" style="color:var(--orange)">KES 4,200</span></div>
+            <div class="sd-r"><span class="sd-l">Routing</span><span class="sd-v" id="sdet-route">HKG → NBO</span></div>
+          </div>
+
+          <div style="width:100%;display:flex;flex-direction:column;gap:8px;margin-top:12px;">
+            <button class="btnb" id="success-view-details-btn">View Registered Details</button>
+            <button class="btns" onclick="routeToScreen('s-scan')">Register Another Package</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= SCREEN 11: PACKAGE LIST ======= -->
+      <div class="scr" id="s-pkg-list">
+        <div class="page-hdr">
+          <div class="back-btn" onclick="routeToUserHome()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span>Home</span>
+          </div>
+          <div class="page-title">Package Listings</div>
+          <div style="width:40px;"></div>
+        </div>
+
+        <div class="search-bar">
+          <div class="search-input">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#404870" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input placeholder="Search tracking, client name, phone..." id="pkg-list-search" oninput="renderPackageList()">
+          </div>
+          <div class="filter-btn" onclick="simulateBarcodeSearch()" style="display:flex;align-items:center;justify-content:center;" title="Simulate Barcode Scanner">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M12 5v14M8 7v10M16 7v10" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="tab-row">
+          <div class="tr on" onclick="filterPackageList('all', this)">All Unpaid</div>
+          <div class="tr" onclick="filterPackageList('sea', this)">Sea (Unpaid)</div>
+          <div class="tr" onclick="filterPackageList('air', this)">Air (Unpaid)</div>
+          <div class="tr" onclick="filterPackageList('cleared', this)">Cleared</div>
+        </div>
+
+        <div class="plist" id="main-pkg-list-container">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- ======= SCREEN 12: PACKAGE PHOTO VIEWER ======= -->
+      <div class="scr" id="s-photo-viewer">
+        <div class="page-hdr">
+          <div class="back-btn" onclick="routeBack()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span>Close</span>
+          </div>
+          <div class="page-title">Package Photo</div>
+          <div style="width:40px;"></div>
+        </div>
+
+        <div style="padding:12px 16px;display:flex;flex-direction:column;gap:12px;">
+          <div id="viewer-package-photo" style="width:100%;height:300px;border-radius:12px;border:1px solid var(--b1);background:var(--s2);background-position:center;background-size:cover;background-repeat:no-repeat;"></div>
+          <div class="suc-det">
+            <div class="sd-r"><span class="sd-l">Tracking Number</span><span class="sd-v" id="viewer-track" style="font-family:var(--fm)">1260707534987</span></div>
+            <div class="sd-r"><span class="sd-l">Captured</span><span class="sd-v" id="viewer-captured-at">14 Jun 2025, 09:14 AM</span></div>
+            <div class="sd-r"><span class="sd-l">Captured By</span><span class="sd-v" id="viewer-captured-by">LM-001 Jane Kariuki</span></div>
+          </div>
+          <button class="btns" onclick="routeBack()">Close</button>
+        </div>
+      </div>
+
+      <!-- ======= SCREEN 12: PACKAGE DETAILS ======= -->
+      <div class="scr" id="s-pkg-details">
+        <div class="page-hdr" style="border-bottom:1px solid var(--b1)">
+          <div class="back-btn" onclick="routeToScreen('s-pkg-list')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span>Directory</span>
+          </div>
+          <div class="page-title" style="font-family:var(--fm)" id="det-header-id">1260707534987</div>
+          <span class="pill orange" id="det-pill-status">Pending Payment</span>
+        </div>
+
+        <!-- Package Image View -->
+        <div style="background:var(--s2);padding:12px 16px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--b1)">
+          <div style="width:100%;height:130px;border-radius:10px;border:1px solid var(--b1);overflow:hidden;position:relative;cursor:pointer;" id="details-box-visual">
+            <div style="position:absolute;inset:0;background:linear-gradient(135deg,#252b45,#1a1f33);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;">
+              <span style="font-size:24px;">📦</span>
+              <span style="font-size:10px;color:var(--t2);font-family:var(--fm)" id="details-photo-caption">IMAGE REGISTERED</span>
+            </div>
+            <!-- Captured signature overlays can show here if collected -->
+            <div id="details-signature-badge" style="display:none;position:absolute;bottom:8px;right:8px;background:var(--green2);border:1px solid var(--green);border-radius:4px;padding:2px 4px;font-size:8px;color:var(--green);font-weight:700;">SIGNED</div>
+          </div>
+        </div>
+
+        <!-- Meta list -->
+        <div style="padding:4px 16px;">
+          <div class="info-row"><span class="ir-lbl">Client Consignee</span><span class="ir-val" id="det-name">Beatrice Wangui</span></div>
+          <div class="info-row"><span class="ir-lbl">Phone Number</span><span class="ir-val" id="det-phone">+254 712 345 678</span></div>
+          <div class="info-row"><span class="ir-lbl">Route Coordinates</span><span class="ir-val" id="det-route">Guangzhou (CAN) → Nairobi (NBO)</span></div>
+          <div class="info-row"><span class="ir-lbl">Shipping Method</span><span class="ir-val" id="det-mode">Air Freight</span></div>
+          <div class="info-row"><span class="ir-lbl">Weight / PCS</span><span class="ir-val" id="det-weight">1.0 kg / 1 Pieces</span></div>
+          <div class="info-row"><span class="ir-lbl">Description of Goods</span><span class="ir-val" id="det-desc">Women's designer shoes</span></div>
+          <div class="info-row"><span class="ir-lbl">Registry Agent ID</span><span class="ir-val" id="det-agent">SR-002 John Kamau</span></div>
+          <div class="info-row" style="border-bottom:none;"><span class="ir-lbl">Total Charges</span><span class="ir-val" id="det-cost" style="color:var(--orange);font-size:12px;font-weight:700">KES 4,200</span></div>
+        </div>
+
+        <div class="notify-bar" id="det-notify-actions">
+          <div class="notify-btn" onclick="sendMockSMS()"><span style="font-size:12px;">✉</span> Dispatch SMS Alert</div>
+          <div class="notify-btn" onclick="copyArrivalMessage(state.selectedPackageId, 'en', event)"><span style="font-size:12px;">📨</span> Copy Msg (EN)</div>
+          <div class="notify-btn" onclick="copyArrivalMessage(state.selectedPackageId, 'zh', event)"><span style="font-size:12px;">📨</span> Copy Msg (ZH)</div>
+          <div class="notify-btn cn" onclick="copyTrackingToClipboard()"><span style="font-size:12px;">📋</span> Copy Tracking</div>
+        </div>
+
+        <!-- Dynamic Contextual Actions -->
+        <div style="padding:12px 16px;" id="details-actions-container">
+          <!-- Populated by details routing depending on status & role -->
+        </div>
+      </div>
+
+      <!-- ======= SCREEN 13: RECEIVE PAYMENT ======= -->
+      <div class="scr" id="s-payment">
+        <div class="page-hdr">
+          <div class="back-btn" onclick="routeToScreen('s-pkg-details')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span>Details</span>
+          </div>
+          <div class="page-title">Process Shipping Charge</div>
+          <div style="width:40px;"></div>
+        </div>
+
+        <div class="pay-methods">
+          <div class="pm on" id="pm-mpesa" onclick="selectPaymentMethod('mpesa')">
+            <div class="pmi">📱</div>
+            <div class="pml">Safaricom M-Pesa</div>
+          </div>
+          <div class="pm" id="pm-cash" onclick="selectPaymentMethod('cash')">
+            <div class="pmi">💵</div>
+            <div class="pml">Cash Deposit</div>
+          </div>
+        </div>
+
+        <!-- MPESA CARD WRAP -->
+        <div id="payment-mpesa-view">
+          <div class="mpesa-card">
+            <div class="mpesa-logo">M-PESA</div>
+            <div class="mpesa-sub">LIPA NA M-PESA · PAYBILL ONLINE</div>
+            <div class="mpesa-amt" id="pay-mpesa-amt">KES 4,200</div>
+            <div class="mpesa-cur">Charges inclusive of tax</div>
+          </div>
+
+          <div style="padding:0 16px;display:flex;flex-direction:column;gap:10px;">
+            <div>
+              <div class="fll">M-Pesa Customer Phone Number</div>
+              <div class="fld">
+                <input id="pay-customer-phone" placeholder="e.g. 0712345678" type="tel">
+              </div>
+            </div>
+            <button class="btnp" onclick="triggerStkPush()" style="padding:13px;font-size:13.5px;">Dispatch STK Push Prompt</button>
+          </div>
+        </div>
+
+        <!-- CASH VIEW -->
+        <div id="payment-cash-view" style="display:none;padding:0 16px;flex-direction:column;gap:12px;">
+          <div style="background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:14px;text-align:center;">
+            <div style="font-size:11px;color:var(--t2);margin-bottom:4px;">Cash Amount Collected</div>
+            <div style="font-family:var(--fd);font-size:26px;font-weight:800;color:var(--green);" id="pay-cash-amt">KES 4,200</div>
+          </div>
+          <div>
+            <div class="fll">Logistics Clerk / Collector Employee ID</div>
+            <div class="fld"><input id="pay-cash-clerk" value="SR-002" readonly></div>
+          </div>
+          <button class="btnb" onclick="submitCashPayment()" style="padding:13px;font-size:13.5px;">Mark as Paid in Cash</button>
+        </div>
+      </div>
+
+      <!-- ======= SCREEN 14: STK PUSH WAITING OVERLAY ======= -->
+      <div class="scr" id="s-stk-wait">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;gap:16px;">
+          <div class="spin" style="font-size:42px;color:var(--green)">⚡</div>
+          <div style="font-family:var(--fd);font-size:18px;font-weight:800;color:var(--t1);">Awaiting M-Pesa Pin Entry</div>
+          <div style="font-size:12px;color:var(--t2);line-height:1.6;max-width:240px;">
+            An STK push request has been dispatched to Safaricom network for <strong id="stk-number-display">+254712345678</strong>.
+          </div>
+          
+          <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:10px;">
+            Simulation will auto-confirm in <span id="stk-timer" style="color:var(--orange);font-weight:bold;">4</span> seconds...
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= SCREEN 15: PAYMENT SUCCESS ======= -->
+      <div class="scr" id="s-pay-success">
+        <div class="success-screen">
+          <div class="suc-ico green" style="background:var(--green);color:#000;">💳</div>
+          <div class="suc-t">Payment Confirmed</div>
+          <div class="suc-s">
+            Transaction cleared by Safaricom ledger core. Package has been tagged as in-warehouse and ready for collection.
+          </div>
+
+          <div class="suc-det">
+            <div class="sd-r"><span class="sd-l">Transaction Reference</span><span class="sd-v" id="spay-ref" style="font-family:var(--fm);color:var(--green)">QM7X2K4L5P</span></div>
+            <div class="sd-r"><span class="sd-l">Amount Paid</span><span class="sd-v" id="spay-amt">KES 4,200</span></div>
+            <div class="sd-r"><span class="sd-l">Payment Mode</span><span class="sd-v">M-Pesa Express</span></div>
+            <div class="sd-r"><span class="sd-l">Clearance Time</span><span class="sd-v" id="spay-time">Today, 10:34 AM</span></div>
+          </div>
+
+          <div style="width:100%;margin-top:12px;">
+            <button class="btnb" id="pay-success-done-btn">Back to Package details</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= SCREEN 16: VERIFY CUSTOMER ID ======= -->
+      <div class="scr" id="s-verify-cust">
+        <div class="page-hdr">
+          <div class="back-btn" onclick="routeToScreen('s-pkg-details')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span>Package</span>
+          </div>
+          <div class="page-title">Identity Verification</div>
+          <div style="width:40px;"></div>
+        </div>
+
+        <div style="padding:0 16px;display:flex;flex-direction:column;gap:12px;">
+          <div style="background:var(--orange2);border:1px solid rgba(245,166,35,0.3);border-radius:10px;padding:8px 12px;font-size:10.5px;color:var(--orange);font-weight:600;line-height:1.4;">
+            ⚠ COMPLIANCE: Ensure client details match government-issued identification before releasing cargo.
+          </div>
+
+          <div>
+            <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:4px;font-weight:700;">Consignee Registered Name</div>
+            <div style="font-size:14px;color:var(--t1);font-weight:700;background:var(--s1);padding:10px 12px;border-radius:var(--rs);border:1px solid var(--b1);" id="ver-cust-name">Beatrice Wangui</div>
+          </div>
+
+          <div>
+            <div class="fll">National ID Number / Passport</div>
+            <div class="fld">
+              <input id="ver-national-id" placeholder="Enter ID number of collector...">
+            </div>
+          </div>
+
+          <div>
+            <div class="fll">Collector Name (if different from consignee)</div>
+            <div class="fld">
+              <input id="ver-collector-name" placeholder="Leave empty if consignee is harvesting package">
+            </div>
+          </div>
+
+          <div>
+            <div class="fll">Recipient Mobile confirmation</div>
+            <div class="fld">
+              <input id="ver-collector-phone" placeholder="e.g. +254 712 345 678">
+            </div>
+          </div>
+
+          <div style="margin-top:10px;">
+            <button class="btnp" onclick="submitCustomerVerification()">Proceed to Signature Capture</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= SCREEN 17: CAPTURE SIGNATURE ======= -->
+      <div class="scr" id="s-signature">
+        <div class="page-hdr">
+          <div class="back-btn" onclick="routeToScreen('s-verify-cust')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span>Verification</span>
+          </div>
+          <div class="page-title">Consignee Acknowledgment</div>
+          <div style="width:40px;"></div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="padding:0 16px;font-size:11px;color:var(--t2);line-height:1.4;">
+            Ask the client to draw their signature in the area below to confirm package collection.
+          </div>
+
+          <!-- Interactive Signature Canvas -->
+          <div class="sigpad-wrap">
+            <div class="sigpad" id="sigpad-container">
+              <div class="sig-text" id="sigpad-hint-text">Touch & draw signature inside this box</div>
+              <canvas id="signature-canvas" style="width:100%;height:100%;display:block;"></canvas>
+            </div>
+          </div>
+
+          <div style="padding:0 16px;display:flex;gap:7px;">
+            <button class="btns" onclick="clearSignatureCanvas()" style="flex:1;">Clear Pad</button>
+            <button class="btnp" onclick="submitCollectionSignature()" style="flex:2;">Confirm Collection</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= SCREEN 18: COLLECTION COMPLETE SUCCESS ======= -->
+      <div class="scr" id="s-complete-success">
+        <div class="success-screen">
+          <div class="suc-ico green" style="background:var(--green);color:#000">📦</div>
+          <div class="suc-t">Collection Completed</div>
+          <div class="suc-s">
+            Cargo has been registered as hand-delivered. System status updated to ARCHIVED / CLEARED.
+          </div>
+
+          <div class="suc-det">
+            <div class="sd-r"><span class="sd-l">Tracking Code</span><span class="sd-v" id="scomp-id" style="font-family:var(--fm)">1260707534987</span></div>
+            <div class="sd-r"><span class="sd-l">Collected By</span><span class="sd-v" id="scomp-name">Beatrice Wangui</span></div>
+            <div class="sd-r"><span class="sd-l">Identification</span><span class="sd-v" id="scomp-idcard">ID-8729384</span></div>
+            <div class="sd-r"><span class="sd-l">Collected At</span><span class="sd-v" id="scomp-time">Today, 11:02 AM</span></div>
+          </div>
+
+          <div style="width:100%;display:flex;flex-direction:column;gap:8px;margin-top:12px;">
+            <button class="btnb" id="comp-success-done-btn">Back to Directories</button>
+            <button class="btns" onclick="window.print()" style="font-size:11px;">🖨 Print Invoice & Receipt</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= SCREEN 19: MY COMMISSIONS ======= -->
+      <div class="scr" id="s-commissions">
+        <div class="page-hdr">
+          <div class="back-btn" onclick="routeToUserHome()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span>Home</span>
+          </div>
+          <div class="page-title">My Commissions</div>
+          <div style="width:40px;"></div>
+        </div>
+
+        <div class="tab-row" style="margin-bottom:6px;">
+          <div class="tr on" onclick="filterCommissions('month', this)">This Month</div>
+          <div class="tr" onclick="filterCommissions('last', this)">Last Month</div>
+          <div class="tr" onclick="filterCommissions('all', this)">All Time</div>
+        </div>
+
+        <div style="padding:0 16px 8px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+          <div style="background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:8px 6px;text-align:center;">
+            <div style="font-size:8.5px;color:var(--t3);text-transform:uppercase;margin-bottom:2px;font-weight:700;">Total Earned</div>
+            <div style="font-family:var(--fd);font-size:12.5px;font-weight:800;color:var(--t1);" id="comm-stat-earned">KES 24,680</div>
+          </div>
+          <div style="background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:8px 6px;text-align:center;">
+            <div style="font-size:8.5px;color:var(--t3);text-transform:uppercase;margin-bottom:2px;font-weight:700;">Paid Out</div>
+            <div style="font-family:var(--fd);font-size:12.5px;font-weight:800;color:var(--green);" id="comm-stat-paid">KES 12,400</div>
+          </div>
+          <div style="background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:8px 6px;text-align:center;">
+            <div style="font-size:8.5px;color:var(--t3);text-transform:uppercase;margin-bottom:2px;font-weight:700;">Outstanding</div>
+            <div style="font-family:var(--fd);font-size:12.5px;font-weight:800;color:var(--orange);" id="comm-stat-out">KES 12,280</div>
+          </div>
+        </div>
+
+        <div class="sec"><span class="sec-t">Override & Sales Log</span></div>
+        <div style="padding:0 16px 8px;">
+          <div style="background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:10px;">
+            <div style="font-size:10px;color:var(--t2);font-weight:800;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;">Earned Commission Breakdown</div>
+            <div id="commission-breakdown-list" style="display:flex;flex-direction:column;gap:6px;">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+        <div class="plist" style="padding-bottom:20px;" id="commissions-history-list">
+          <!-- Populated by JS -->
+        </div>
+        <div class="sp2"></div>
+      </div>
+
+      <!-- Bottom Nav Bar -->
+      <div class="bnav" id="main-bnav">
+        <div class="nb on" id="nb-dash" onclick="routeToUserHome()">
+          <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+          <div class="nb-l">Dashboard</div>
+        </div>
+        <div class="nb" id="nb-scan" onclick="routeToScreen('s-scan')">
+          <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          <div class="nb-l">Scan sticker</div>
+        </div>
+        <div class="nb" id="nb-list" onclick="routeToScreen('s-pkg-list')">
+          <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          <div class="nb-l">Packages</div>
+        </div>
+        <div class="nb" id="nb-comm" onclick="routeToScreen('s-commissions')">
+          <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <div class="nb-l">Commissions</div>
+        </div>
+      </div>
+
+      <!-- MANUAL ENTRY SHEET MODAL -->
+      <div class="modal-overlay" id="manual-modal">
+        <div class="modal-sheet">
+          <div class="modal-handle"></div>
+          <div class="modal-title">Manual Package Registry</div>
+          <div style="font-size:10px;color:var(--t3);margin-bottom:10px;line-height:1.4;font-weight:500;">
+            Use this protocol only if the barcode tag is physically unreadable or damaged.
+          </div>
+          
+          <div style="display:flex;flex-direction:column;gap:7px;">
+            <div class="review-field"><div class="rf-lbl">Tracking / Reference ID</div><div><input id="mform-id" placeholder="e.g. 1260707534987"></div></div>
+            <div class="review-field"><div class="rf-lbl">Consignee Full Name</div><div><input id="mform-name" placeholder="Client Name"></div></div>
+            <div class="review-field"><div class="rf-lbl">Mobile Number</div><div><input id="mform-phone" placeholder="e.g. 0712345678"></div></div>
+            <div class="review-field"><div class="rf-lbl">Description of Goods</div><div><input id="mform-desc" placeholder="e.g. Electronics, apparel"></div></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+              <div class="review-field"><div class="rf-lbl">Weight (kg)</div><div><input id="mform-weight" placeholder="1.0" type="number" step="0.1"></div></div>
+              <div class="review-field"><div class="rf-lbl">Pieces (PCS)</div><div><input id="mform-pcs" placeholder="1" type="number"></div></div>
+            </div>
+            <div class="review-field">
+              <div class="rf-lbl">Origin & Route Coordinates</div>
+              <select id="mform-route" style="background:none;border:none;outline:none;color:var(--t1);font-family:var(--fb);font-size:13px;width:100%;">
+                <option value="HKG-NBO">Hong Kong (HKG) → Nairobi (NBO) - Air</option>
+                <option value="CAN-NBO">Guangzhou (CAN) → Nairobi (NBO) - Air</option>
+                <option value="SHA-NBO">Shanghai (SHA) → Nairobi (NBO) - Sea</option>
+              </select>
+            </div>
+            <div class="review-field"><div class="rf-lbl">Shipping Cost (KES)</div><div><input id="mform-cost" placeholder="e.g. 4200" type="number" style="color:var(--orange)"></div></div>
+          </div>
+          
+          <div style="display:flex;gap:7px;margin-top:14px;">
+            <div style="flex:1;"><div class="btns" onclick="closeManualModal()">Cancel</div></div>
+            <div style="flex:2;"><button class="btnp" onclick="submitManualRegistryForm()">Register Package</button></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FLOATING MODAL GRAPHIC VIEWPORT FOR DEMO CONTEXT -->
+<div class="label-preview-modal" id="label-image-modal" onclick="closeLabelImageModal()">
+  <div class="label-preview-content" onclick="event.stopPropagation()">
+    <div class="label-preview-header">
+      <strong id="label-modal-title" style="font-family:var(--fd);font-size:14px;">Label View</strong>
+      <span class="label-preview-close" onclick="closeLabelImageModal()">✕</span>
+    </div>
+    <div style="display:flex;justify-content:center;background:#fff;padding:8px;border-radius:6px;border:1px solid #ddd;">
+      <!-- Label 1 Graphic -->
+      <svg id="svg-label-1" width="100%" height="260" viewBox="0 0 320 280" fill="none" style="display:none;background:#fff;">
+        <rect width="320" height="280" fill="#fff"/>
+        <path d="M5 5 L315 5 L315 275 L5 275 Z" stroke="#000" stroke-width="2"/>
+        <text x="15" y="32" font-family="sans-serif" font-size="18" font-weight="900" fill="#000">HKG-NBO</text>
+        <text x="15" y="52" font-family="monospace" font-size="14" font-weight="bold" fill="#000">1260707534987</text>
+        <text x="240" y="32" font-family="sans-serif" font-size="14" font-weight="900" fill="#000">1/1</text>
+        <line x1="15" y1="60" x2="305" y2="60" stroke="#000" stroke-width="1.5" stroke-dasharray="2,2"/>
+        
+        <text x="15" y="80" font-family="sans-serif" font-size="9" fill="#000">Shipper: Carrie</text>
+        <text x="15" y="93" font-family="sans-serif" font-size="9" fill="#000">Consignee: Beatrice-Pheobe Wangui</text>
+        <text x="15" y="106" font-family="sans-serif" font-size="9" fill="#000">Phone: +254 712 345 678</text>
+        <line x1="15" y1="120" x2="305" y2="120" stroke="#000" stroke-width="1.5" stroke-dasharray="2,2"/>
+
+        <text x="15" y="140" font-family="sans-serif" font-size="10" font-weight="bold" fill="#000">Nature of Goods: Women's Shoes</text>
+        <text x="15" y="156" font-family="sans-serif" font-size="10" font-weight="bold" fill="#000">Total Weight: 1.0 kg</text>
+        <text x="15" y="172" font-family="sans-serif" font-size="10" font-weight="bold" fill="#000">PCS: 1</text>
+        <line x1="15" y1="185" x2="305" y2="185" stroke="#000" stroke-width="1.5" stroke-dasharray="2,2"/>
+
+        <!-- FAKE BARCODE -->
+        <g transform="translate(45, 195)">
+          <rect x="0" width="4" height="40" fill="#000"/>
+          <rect x="6" width="2" height="40" fill="#000"/>
+          <rect x="10" width="6" height="40" fill="#000"/>
+          <rect x="18" width="4" height="40" fill="#000"/>
+          <rect x="24" width="2" height="40" fill="#000"/>
+          <rect x="28" width="8" height="40" fill="#000"/>
+          <rect x="38" width="2" height="40" fill="#000"/>
+          <rect x="42" width="4" height="40" fill="#000"/>
+          <rect x="48" width="6" height="40" fill="#000"/>
+          <rect x="56" width="2" height="40" fill="#000"/>
+          <rect x="60" width="8" height="40" fill="#000"/>
+          <rect x="70" width="2" height="40" fill="#000"/>
+          <rect x="74" width="4" height="40" fill="#000"/>
+          <rect x="80" width="6" height="40" fill="#000"/>
+          <rect x="88" width="2" height="40" fill="#000"/>
+          <rect x="92" width="8" height="40" fill="#000"/>
+          <rect x="102" width="4" height="40" fill="#000"/>
+          <rect x="108" width="2" height="40" fill="#000"/>
+          <rect x="112" width="6" height="40" fill="#000"/>
+          <rect x="120" width="2" height="40" fill="#000"/>
+          <rect x="124" width="8" height="40" fill="#000"/>
+          <rect x="134" width="4" height="40" fill="#000"/>
+          <rect x="140" width="2" height="40" fill="#000"/>
+          <rect x="144" width="6" height="40" fill="#000"/>
+          <rect x="152" width="2" height="40" fill="#000"/>
+          <rect x="156" width="8" height="40" fill="#000"/>
+          <rect x="166" width="4" height="40" fill="#000"/>
+          <rect x="172" width="2" height="40" fill="#000"/>
+          <rect x="176" width="6" height="40" fill="#000"/>
+          <rect x="184" width="2" height="40" fill="#000"/>
+          <rect x="188" width="8" height="40" fill="#000"/>
+          <rect x="198" width="4" height="40" fill="#000"/>
+          <rect x="204" width="2" height="40" fill="#000"/>
+          <rect x="208" width="6" height="40" fill="#000"/>
+          <rect x="216" width="2" height="40" fill="#000"/>
+          <rect x="220" width="8" height="40" fill="#000"/>
+        </g>
+        <text x="160" y="250" font-family="monospace" font-size="10" font-weight="bold" fill="#000" text-anchor="middle">AFA SHIPPING EXPRESS</text>
+      </svg>
+
+      <!-- Label 2 Graphic -->
+      <svg id="svg-label-2" width="100%" height="260" viewBox="0 0 320 280" fill="none" style="display:none;background:#fff;">
+        <rect width="320" height="280" fill="#fff"/>
+        <path d="M5 5 L315 5 L315 275 L5 275 Z" stroke="#000" stroke-width="2"/>
+        <text x="15" y="32" font-family="sans-serif" font-size="18" font-weight="900" fill="#000">CAN-NBO</text>
+        <text x="15" y="52" font-family="monospace" font-size="14" font-weight="bold" fill="#000">126070655250</text>
+        <text x="240" y="32" font-family="sans-serif" font-size="14" font-weight="900" fill="#000">1/1</text>
+        <line x1="15" y1="60" x2="305" y2="60" stroke="#000" stroke-width="1.5" stroke-dasharray="2,2"/>
+        
+        <text x="15" y="80" font-family="sans-serif" font-size="9" fill="#000">Shipper: Carrie</text>
+        <text x="15" y="93" font-family="sans-serif" font-size="9" fill="#000">Consignee: Charles Ombongi</text>
+        <text x="15" y="106" font-family="sans-serif" font-size="9" fill="#000">Phone: +254 722 987 654</text>
+        <line x1="15" y1="120" x2="305" y2="120" stroke="#000" stroke-width="1.5" stroke-dasharray="2,2"/>
+
+        <text x="15" y="140" font-family="sans-serif" font-size="10" font-weight="bold" fill="#000">Nature of Goods: Phone Accessories</text>
+        <text x="15" y="156" font-family="sans-serif" font-size="10" font-weight="bold" fill="#000">Total Weight: 0.5 kg</text>
+        <text x="15" y="172" font-family="sans-serif" font-size="10" font-weight="bold" fill="#000">PCS: 1</text>
+        <line x1="15" y1="185" x2="305" y2="185" stroke="#000" stroke-width="1.5" stroke-dasharray="2,2"/>
+
+        <!-- BARCODE -->
+        <g transform="translate(45, 195)">
+          <rect x="0" width="3" height="40" fill="#000"/>
+          <rect x="4" width="4" height="40" fill="#000"/>
+          <rect x="10" width="1" height="40" fill="#000"/>
+          <rect x="13" width="6" height="40" fill="#000"/>
+          <rect x="21" width="2" height="40" fill="#000"/>
+          <rect x="25" width="4" height="40" fill="#000"/>
+          <rect x="31" width="1" height="40" fill="#000"/>
+          <rect x="34" width="8" height="40" fill="#000"/>
+          <rect x="44" width="2" height="40" fill="#000"/>
+          <rect x="48" width="5" height="40" fill="#000"/>
+          <rect x="55" width="2" height="40" fill="#000"/>
+          <rect x="59" width="7" height="40" fill="#000"/>
+          <rect x="68" width="3" height="40" fill="#000"/>
+          <rect x="73" width="4" height="40" fill="#000"/>
+          <rect x="79" width="1" height="40" fill="#000"/>
+          <rect x="82" width="6" height="40" fill="#000"/>
+          <rect x="90" width="2" height="40" fill="#000"/>
+          <rect x="94" width="4" height="40" fill="#000"/>
+          <rect x="100" width="1" height="40" fill="#000"/>
+          <rect x="103" width="8" height="40" fill="#000"/>
+          <rect x="113" width="2" height="40" fill="#000"/>
+          <rect x="117" width="5" height="40" fill="#000"/>
+          <rect x="124" width="2" height="40" fill="#000"/>
+          <rect x="128" width="7" height="40" fill="#000"/>
+          <rect x="137" width="3" height="40" fill="#000"/>
+          <rect x="142" width="4" height="40" fill="#000"/>
+          <rect x="148" width="1" height="40" fill="#000"/>
+          <rect x="151" width="6" height="40" fill="#000"/>
+          <rect x="159" width="2" height="40" fill="#000"/>
+          <rect x="163" width="4" height="40" fill="#000"/>
+          <rect x="169" width="1" height="40" fill="#000"/>
+          <rect x="172" width="8" height="40" fill="#000"/>
+          <rect x="182" width="2" height="40" fill="#000"/>
+          <rect x="186" width="5" height="40" fill="#000"/>
+          <rect x="193" width="2" height="40" fill="#000"/>
+          <rect x="197" width="7" height="40" fill="#000"/>
+          <rect x="206" width="3" height="40" fill="#000"/>
+          <rect x="211" width="4" height="40" fill="#000"/>
+          <rect x="217" width="1" height="40" fill="#000"/>
+          <rect x="220" width="8" height="40" fill="#000"/>
+        </g>
+        <text x="160" y="250" font-family="monospace" font-size="10" font-weight="bold" fill="#000" text-anchor="middle">AFA SHIPPING EXPRESS</text>
+      </svg>
+    </div>
+    <div style="font-size:11px;color:#555;text-align:center;line-height:1.4;">
+      This simulates the printed paper label attached to the shipping cargo boxes originating from ports.
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== APP DATABASE STATE ====================
+let state = {
+  currentRole: 'login', // 'login', 'sr', 'lm', 'sm', 'admin'
+  currentEmployeeId: null,
+  historyStack: [],
+  selectedLabelId: 1, // 1 (Beatrice), 2 (Charles)
+  activeListFilter: 'all',
+  activeListSortAsc: false,
+  activeCommissionFilter: 'month',
+  pendingPackagePhotoCaptured: false,
+  pendingPackagePhotoUrl: '',
+  pendingManualPackage: null,
+  employees: [
+    { id: "SR-002", name: "John Kamau", email: "john@dexcargo.com", password: "password", role: "sr", active: true },
+    { id: "LM-001", name: "Mary Wanjiku", email: "mary@dexcargo.com", password: "password", role: "lm", active: true },
+    { id: "SM-001", name: "Peter Mwangi", email: "peter@dexcargo.com", password: "password", role: "sm", active: true },
+    { id: "ADM-001", name: "Administrator", email: "admin@dexcargo.com", password: "password", role: "admin", active: true }
+  ],
+  notifications: [
+    { id: 1, message: "Welcome to DEXCARGO Logistics Gateway. Secure credentials protocol active.", target: "all", createdAt: "Just now" }
+  ],
+  
+  // Hardcoded sample details representing the physical labels
+  sampleLabels: {
+    1: {
+      id: "1260707534987",
+      consignee: "Beatrice-Pheobe Wangui",
+      phone: "0712345678",
+      origin: "Hong Kong (HKG)",
+      dest: "Nairobi (NBO)",
+      desc: "Women's Designer Shoes",
+      mode: "Air Freight",
+      weight: 1.0,
+      pcs: 1,
+      cost: 4200,
+      salesRep: "SR-002 John Kamau",
+      originCode: "HKG",
+      destCode: "NBO"
+    },
+    2: {
+      id: "126070655250",
+      consignee: "Charles Ombongi",
+      phone: "0722987654",
+      origin: "Guangzhou (CAN)",
+      dest: "Nairobi (NBO)",
+      desc: "Smart Phone Accessories",
+      mode: "Air Freight",
+      weight: 0.5,
+      pcs: 1,
+      cost: 1400,
+      salesRep: "SR-002 John Kamau",
+      originCode: "CAN",
+      destCode: "NBO"
+    }
+  },
+
+  // Central package database
+  packages: [],
+  
+  // Selected package reference for details page
+  selectedPackageId: null,
+  
+  // Payment temp holding
+  paymentTemp: {
+    id: null,
+    method: 'mpesa'
+  },
+  
+  // Verification temp holding
+  verificationTemp: {
+    id: null,
+    nationalId: '',
+    collectorName: '',
+    collectorPhone: ''
+  }
+};
+
+const DEFAULT_PACKAGES = [
+  {
+    id: "1260707534975",
+    consignee: "David Ochieng",
+    phone: "0700112233",
+    origin: "Nairobi (NBO)",
+    dest: "Kigali (KGL)",
+    desc: "Refurbished Laptops",
+    mode: "Air Freight",
+    weight: 2.4,
+    pcs: 2,
+    cost: 5600,
+    salesRep: "SR-002 John Kamau",
+    status: "collected",
+    registeredAt: "2026-07-10 10:24 AM",
+    paidAt: "2026-07-10 11:15 AM",
+    collectedAt: "2026-07-11 02:40 PM",
+    collectorName: "David Ochieng",
+    collectorId: "ID-29402941",
+    collectorPhone: "0700112233",
+    paymentMethod: "M-Pesa",
+    paymentRef: "QM5A8J2K8F"
+  },
+  {
+    id: "1260707534982",
+    consignee: "Mary Wanjiku",
+    phone: "0711223344",
+    origin: "Guangzhou (CAN)",
+    dest: "Nairobi (NBO)",
+    desc: "Salon Equipment & Driers",
+    mode: "Sea Freight",
+    weight: 12.0,
+    pcs: 3,
+    cost: 3800,
+    salesRep: "SR-002 John Kamau",
+    status: "paid",
+    registeredAt: "2026-07-11 09:12 AM",
+    paidAt: "2026-07-11 04:30 PM",
+    paymentMethod: "M-Pesa",
+    paymentRef: "QM6L4B9X2D"
+  },
+  {
+    id: "1260707534988",
+    consignee: "John Doe",
+    phone: "0722334455",
+    origin: "Hong Kong (HKG)",
+    dest: "Nairobi (NBO)",
+    desc: "Audio Monitors",
+    mode: "Air Freight",
+    weight: 5.6,
+    pcs: 1,
+    cost: 4200,
+    salesRep: "Sales Manager Direct",
+    status: "paid",
+    registeredAt: "2026-07-12 08:14 AM",
+    paidAt: "2026-07-12 09:00 AM",
+    paymentMethod: "Cash",
+    paymentRef: "CASH-72648"
+  },
+  {
+    id: "1260707534922",
+    consignee: "Brian Otieno",
+    phone: "0715667788",
+    origin: "Shanghai (SHA)",
+    dest: "Nairobi (NBO)",
+    desc: "Spare Machinery Parts",
+    mode: "Air Freight",
+    weight: 3.2,
+    pcs: 1,
+    cost: 2800,
+    salesRep: "SR-003 Grace Akinyi",
+    status: "registered",
+    registeredAt: "2026-07-12 09:30 AM"
+  }
+];
+
+// ==================== INITIALIZATION ====================
+window.onload = function() {
+  resetAppDatabase(true);
+  initSignaturePad();
+  initClock();
+  
+  // Setup Preview Role switcher buttons
+  document.querySelectorAll('.rb[data-role]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.rb[data-role]').forEach(b => b.classList.remove('on'));
+      this.classList.add('on');
+      let role = this.getAttribute('data-role');
+      switchRole(role);
+    });
+  });
+
+  // Handle URL hash or default
+  routeToScreen('s-login');
+};
+
+function initClock() {
+  function updateClock() {
+    let now = new Date();
+    let hh = String(now.getHours()).padStart(2, '0');
+    let mm = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('clock-display').innerText = hh + ':' + mm;
+  }
+  updateClock();
+  setInterval(updateClock, 30000);
+}
+
+function resetAppDatabase(initial = false) {
+  state.packages = JSON.parse(JSON.stringify(DEFAULT_PACKAGES));
+  recalculateCommissions();
+  
+  if (!initial) {
+    showToast("Database Reset Successfully!");
+    // Sync current UI
+    renderPackageList();
+    renderUserDashboards();
+  }
+}
+
+// ==================== DYNAMIC CALCULATIONS ====================
+function recalculateCommissions() {
+  // Let's compute John Kamau's (SR-002) commission dynamically.
+  // John earns 5% override on his own packages + 2.5% override on paid/cleared packages.
+  // For simplicity:
+  // John earns 10% commission on the shipping cost of packages where salesRep == 'SR-002 John Kamau' AND status != 'registered'
+  let johnTotal = 24680; // base from static screen
+  let dynamicJohn = state.packages
+    .filter(p => p.salesRep.includes("SR-002") && p.status !== "registered")
+    .reduce((sum, p) => sum + (p.cost * 0.1), 0);
+  
+  // If John adds more or registers payments, it increments this base.
+  let johnCom = johnTotal + dynamicJohn;
+  document.getElementById('sr-commission-val').innerText = 'KES ' + johnCom.toLocaleString();
+  document.getElementById('sm-perf-john').innerText = 'KES ' + johnCom.toLocaleString() + ' Earned';
+  document.getElementById('admin-ledger-john').innerText = 'KES ' + johnCom.toLocaleString();
+
+  // Mary Wanjiku sorting commission: flat KES 300 per registered package in platform + base KES 36540
+  let maryTotal = 36540;
+  let dynamicMary = state.packages.length * 300;
+  let maryCom = maryTotal + dynamicMary;
+  document.getElementById('lm-commission-val').innerText = 'KES ' + maryCom.toLocaleString();
+  document.getElementById('admin-ledger-mary').innerText = 'KES ' + maryCom.toLocaleString();
+
+  // Sales Manager (Peter Mwangi) commission:
+  // Peter earns his base KES 58920 + 5% override of all John's commissions + 5% of Mary's sorted commissions
+  let smBase = 58920;
+  let smCom = smBase + (dynamicJohn * 0.5) + (dynamicMary * 0.2);
+  document.getElementById('sm-commission-val').innerText = 'KES ' + Math.round(smCom).toLocaleString();
+  document.getElementById('admin-ledger-peter').innerText = 'KES ' + Math.round(smCom).toLocaleString();
+  document.getElementById('sm-override-john').innerText = 'KES ' + Math.round(7480 + (dynamicJohn * 0.5)).toLocaleString();
+
+  // System Gross Paid Commissions
+  let gross = johnCom + maryCom + smCom + 19200; // grace akinyi static 19200
+  document.getElementById('admin-stat-comm').innerText = 'KES ' + Math.round(gross).toLocaleString();
+
+  // System Overview stats
+  let totalPkgs = 1248 + state.packages.length - DEFAULT_PACKAGES.length;
+  let totalRev = 8.42 + (state.packages.reduce((sum, p) => sum + (p.status !== 'registered' ? p.cost : 0), 0) / 1000000);
+  
+  document.getElementById('admin-stat-pkgs').innerText = totalPkgs.toLocaleString();
+  document.getElementById('admin-stat-rev').innerText = 'KES ' + totalRev.toFixed(2) + 'M';
+  document.getElementById('sm-stat-pkgs').innerText = (245 + state.packages.length - DEFAULT_PACKAGES.length).toLocaleString();
+  document.getElementById('sm-stat-rev').innerText = 'KES ' + (1.2 + (state.packages.reduce((sum, p) => sum + (p.status !== 'registered' ? p.cost : 0), 0) / 1000000)).toFixed(2) + 'M';
+}
+
+// ==================== NAVIGATION / ROUTING ====================
+function routeToScreen(screenId) {
+  // Hide all screens
+  document.querySelectorAll('.scr').forEach(scr => scr.classList.remove('on'));
+  
+  // Show target
+  let target = document.getElementById(screenId);
+  if (target) {
+    target.classList.add('on');
+    // Save to custom history stack
+    if (state.historyStack[state.historyStack.length - 1] !== screenId) {
+      state.historyStack.push(screenId);
+    }
+  }
+
+  // Handle bottom navigation bar highlighting
+  updateBottomNavBarHighlight(screenId);
+  
+  // Custom screen entrance triggers
+  if (screenId === 's-pkg-list') {
+    renderPackageList();
+  } else if (screenId === 's-commissions') {
+    renderCommissionsHistory();
+  }
+}
+
+function routeBack() {
+  if (state.historyStack.length > 1) {
+    state.historyStack.pop(); // Remove current
+    let prev = state.historyStack.pop(); // Get previous
+    routeToScreen(prev);
+  } else {
+    routeToUserHome();
+  }
+}
+
+function routeToUserHome() {
+  if (state.currentRole === 'login') {
+    routeToScreen('s-login');
+  } else if (state.currentRole === 'sr') {
+    routeToScreen('s-sr-home');
+  } else if (state.currentRole === 'lm') {
+    routeToScreen('s-lm-home');
+  } else if (state.currentRole === 'sm') {
+    routeToScreen('s-sm-home');
+  } else if (state.currentRole === 'admin') {
+    routeToScreen('s-admin-home');
+  }
+}
+
+function updateBottomNavBarHighlight(screenId) {
+  let bnav = document.getElementById('main-bnav');
+  if (state.currentRole === 'login') {
+    bnav.classList.remove('active');
+    return;
+  }
+  
+  bnav.classList.add('active');
+  document.querySelectorAll('.bnav .nb').forEach(nb => nb.classList.remove('on'));
+  
+  if (screenId.includes('home')) {
+    document.getElementById('nb-dash').classList.add('on');
+  } else if (screenId === 's-scan' || screenId === 's-ocr-review' || screenId === 's-photo') {
+    document.getElementById('nb-scan').classList.add('on');
+  } else if (screenId === 's-pkg-list' && state.activeListFilter !== 'paid') {
+    document.getElementById('nb-list').classList.add('on');
+  } else if (screenId === 's-pkg-list' && state.activeListFilter === 'paid') {
+    document.getElementById('nb-pickup').classList.add('on');
+  } else if (screenId === 's-commissions') {
+    document.getElementById('nb-comm').classList.add('on');
+  }
+}
+
+// ==================== ROLE SWITCHER ====================
+function switchRole(role) {
+  state.historyStack = []; // Reset stack
+
+  if (role === 'login') {
+    state.currentRole = 'login';
+    state.currentEmployeeId = null;
+    routeToScreen('s-login');
+    return;
+  }
+  
+  let matchedEmp = state.employees.find(e => e.role === role && e.active);
+  if (!matchedEmp) {
+    showToast("No active employee matching this role.");
+    return;
+  }
+  
+  let select = document.getElementById('login-role-select');
+  if (select) {
+    select.value = matchedEmp.id;
+    syncLoginRoleSelect(matchedEmp.id);
+  }
+
+  performLogin();
+}
+
+function syncLoginRoleSelect(value) {
+  let emp = state.employees.find(e => e.id === value) || state.employees.find(e => e.role === value && e.active);
+  if (!emp) return;
+  document.getElementById('login-emp-id').value = emp.email;
+  document.getElementById('login-password').value = emp.password;
+}
+
+function performLogin() {
+  let email = document.getElementById('login-emp-id').value.trim();
+  let pass = document.getElementById('login-password').value;
+  
+  let emp = state.employees.find(e =>
+    (e.email.toLowerCase() === email.toLowerCase() || e.id.toLowerCase() === email.toLowerCase()) &&
+    e.password === pass
+  );
+  
+  // If no direct credentials matched, fallback to selected dropdown employee
+  if (!emp) {
+    let selectVal = document.getElementById('login-role-select').value;
+    emp = state.employees.find(e => e.id === selectVal) || state.employees.find(e => e.role === selectVal && e.active);
+  }
+  
+  if (!emp) {
+    alert("Invalid credentials. Try using your registered email and password.");
+    return;
+  }
+  
+  if (!emp.active) {
+    alert("This employee account has been deactivated by the Administrator.");
+    showToast("Login Blocked: Deactivated Account.");
+    return;
+  }
+  
+  state.currentRole = emp.role;
+  state.currentEmployeeId = emp.id;
+  
+  // Sync the Left Panel switch buttons highlighting
+  document.querySelectorAll('.rb[data-role]').forEach(b => {
+    b.classList.remove('on');
+    if (b.getAttribute('data-role') === emp.role) b.classList.add('on');
+  });
+
+  // Render employee notifications
+  renderNotificationsForUser();
+
+  // Render respective dashboards
+  renderUserDashboards();
+  
+  // Route to screen
+  routeToUserHome();
+  showToast("Logged in as " + emp.name);
+}
+
+function getRoleDisplayName(role) {
+  if (role === 'sr') return 'Sales Representative';
+  if (role === 'lm') return 'Logistics Manager';
+  if (role === 'sm') return 'Sales Lead';
+  if (role === 'admin') return 'Administrator';
+  return 'Guest';
+}
+
+function getCurrentEmployee() {
+  return state.employees.find(e => e.id === state.currentEmployeeId) ||
+    state.employees.find(e => e.role === state.currentRole && e.active) ||
+    null;
+}
+
+function getEmployeeInitials(emp) {
+  if (!emp || !emp.name) return '--';
+  return emp.name.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase();
+}
+
+function updateEmployeeDashboardIdentity() {
+  let emp = getCurrentEmployee();
+  if (!emp) return;
+
+  let map = {
+    sr: { name: 'sr-user-name', role: 'sr-user-role', badge: 'sr-user-badge', avatar: 'sr-user-avatar' },
+    lm: { name: 'lm-user-name', role: 'lm-user-role', badge: 'lm-user-badge', avatar: 'lm-user-avatar' },
+    sm: { name: 'sm-user-name', role: 'sm-user-role', badge: 'sm-user-badge', avatar: 'sm-user-avatar' },
+    admin: { name: 'admin-user-name', role: 'admin-user-role', badge: 'admin-user-badge', avatar: 'admin-user-avatar' }
+  };
+
+  let ids = map[emp.role];
+  if (!ids) return;
+
+  let nameEl = document.getElementById(ids.name);
+  let roleEl = document.getElementById(ids.role);
+  let badgeEl = document.getElementById(ids.badge);
+  let avatarEl = document.getElementById(ids.avatar);
+
+  if (nameEl) nameEl.innerText = emp.role === 'admin' ? 'Admin Console' : emp.name;
+  if (roleEl) roleEl.innerText = `${getRoleDisplayName(emp.role)} · ${emp.id}`;
+  if (badgeEl) badgeEl.innerText = emp.id;
+  if (avatarEl) avatarEl.innerText = getEmployeeInitials(emp);
+}
+
+function updateAdminEmployeeStats() {
+  let activeCount = state.employees.filter(e => e.active).length;
+  let statById = document.getElementById('admin-stat-employees');
+  if (statById) statById.innerText = activeCount;
+
+  let labels = Array.from(document.querySelectorAll('.ov-lbl'));
+  let activeLabel = labels.find(el => el.innerText.trim() === 'Active Employees');
+  if (activeLabel && activeLabel.previousElementSibling) {
+    activeLabel.previousElementSibling.innerText = activeCount;
+  }
+}
+
+// ==================== DASHBOARD RENDERERS ====================
+function renderUserDashboards() {
+  recalculateCommissions();
+  renderNotificationsForUser();
+  updateEmployeeDashboardIdentity();
+  updateAdminEmployeeStats();
+  
+  // Retrieve lists filterable by status
+  let srPkgs = state.packages.filter(p => p.salesRep.includes("SR-002"));
+  let lmPkgs = state.packages; // Warehouse sees all
+  
+  // 1. Sales Representative Dashboard metrics
+  document.getElementById('sr-stat-reg').innerText = srPkgs.filter(p => p.status === 'registered').length;
+  document.getElementById('sr-stat-paid').innerText = srPkgs.filter(p => p.status === 'paid').length;
+  document.getElementById('sr-stat-wait').innerText = srPkgs.filter(p => p.status === 'paid').length; // ready
+  document.getElementById('sr-stat-done').innerText = srPkgs.filter(p => p.status === 'collected').length;
+  
+  // Sales Rep recent activity list
+  let srRecentHtml = '';
+  srPkgs.slice().reverse().forEach(p => {
+    let modeIcon = p.mode === 'Air Freight' ? '✈️' : '🚢';
+    let statusPill = getStatusPill(p.status);
+    let classMode = p.mode === 'Air Freight' ? 'air' : 'sea';
+    if (p.status === 'collected') classMode = 'done';
+    
+    srRecentHtml += `
+      <div class="pcard ${classMode}" onclick="viewPackageDetails('${p.id}')">
+        <div class="pcard-ico ${p.mode === 'Air Freight' ? 'air' : 'sea'}">${modeIcon}</div>
+        <div class="pcard-info">
+          <div class="pcard-id">${p.id}</div>
+          <div class="pcard-name">${p.consignee} · ${p.desc}</div>
+        </div>
+        <div class="pcard-right">
+          <div class="pcard-amt">KES ${p.cost.toLocaleString()}</div>
+          ${statusPill}
+        </div>
+      </div>
+    `;
+  });
+  document.getElementById('sr-recent-list').innerHTML = srRecentHtml || '<div style="font-size:11px;color:var(--t3);text-align:center;padding:12px;">No packages registered.</div>';
+
+  // 2. Logistics Manager Dashboard metrics
+  document.getElementById('lm-stat-total').innerText = lmPkgs.length;
+  document.getElementById('lm-stat-unpaid').innerText = lmPkgs.filter(p => p.status === 'registered').length;
+  document.getElementById('lm-stat-ready').innerText = lmPkgs.filter(p => p.status === 'paid').length;
+  document.getElementById('lm-stat-done').innerText = lmPkgs.filter(p => p.status === 'collected').length;
+
+  // Logistics Manager recent list
+  let lmRecentHtml = '';
+  lmPkgs.slice().reverse().forEach(p => {
+    let modeIcon = p.mode === 'Air Freight' ? '✈️' : '🚢';
+    let statusPill = getStatusPill(p.status);
+    let classMode = p.mode === 'Air Freight' ? 'air' : 'sea';
+    if (p.status === 'collected') classMode = 'done';
+
+    lmRecentHtml += `
+      <div class="pcard ${classMode}" onclick="viewPackageDetails('${p.id}')">
+        <div class="pcard-ico ${p.mode === 'Air Freight' ? 'air' : 'sea'}">${modeIcon}</div>
+        <div class="pcard-info">
+          <div class="pcard-id">${p.id}</div>
+          <div class="pcard-name">${p.consignee} · ${p.weight} kg</div>
+        </div>
+        <div class="pcard-right">
+          <div class="pcard-amt">KES ${p.cost.toLocaleString()}</div>
+          ${statusPill}
+        </div>
+      </div>
+    `;
+  });
+  document.getElementById('lm-recent-list').innerHTML = lmRecentHtml || '<div style="font-size:11px;color:var(--t3);text-align:center;padding:12px;">Warehouse empty.</div>';
+}
+
+function getStatusPill(status) {
+  if (status === 'registered') return '<span class="pill orange">Awaiting Pay</span>';
+  if (status === 'paid') return '<span class="pill green">Ready (Paid)</span>';
+  if (status === 'collected') return '<span class="pill gray">Cleared</span>';
+  return '<span class="pill gray">Unknown</span>';
+}
+
+function getCurrentEmployeeLabel() {
+  let emp = getCurrentEmployee();
+  if (emp) return `${emp.id} ${emp.name}`;
+  return 'System User';
+}
+
+function makePackagePhotoUrl(pkg) {
+  if (pkg.packagePhotoUrl) return pkg.packagePhotoUrl;
+  let modeLabel = (pkg.mode || 'Air Freight').replace(' Freight', '');
+  let svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="320" height="220" viewBox="0 0 320 220">
+      <defs>
+        <linearGradient id="box" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0" stop-color="#6f5b33"/>
+          <stop offset="1" stop-color="#2d2416"/>
+        </linearGradient>
+      </defs>
+      <rect width="320" height="220" fill="#171b2d"/>
+      <rect x="30" y="38" width="260" height="145" rx="14" fill="url(#box)"/>
+      <rect x="54" y="62" width="118" height="86" rx="4" fill="#f4f4ef" stroke="#1a1a1a" stroke-width="2"/>
+      <text x="65" y="84" font-family="monospace" font-size="15" font-weight="800" fill="#111">${pkg.id}</text>
+      <text x="65" y="107" font-family="Arial" font-size="12" font-weight="700" fill="#111">${pkg.consignee}</text>
+      <text x="65" y="126" font-family="Arial" font-size="11" fill="#111">${modeLabel} • ${pkg.weight} kg</text>
+      <rect x="65" y="134" width="82" height="20" fill="#111" opacity=".85"/>
+      <text x="160" y="198" font-family="Arial" font-size="11" fill="#8892C0" text-anchor="middle">Primary package image</text>
+    </svg>`;
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+function renderPackageThumbnail(pkg) {
+  let url = makePackagePhotoUrl(pkg);
+  return `<div onclick="openPackageImageViewer('${pkg.id}', event)" title="Open package photo" style="width:58px;height:48px;border-radius:8px;border:1px solid var(--b1);background:url('${url}') center/cover no-repeat;flex-shrink:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.04);"></div>`;
+}
+
+function openPackageImageViewer(pkgId, event) {
+  if (event) event.stopPropagation();
+  let pkg = state.packages.find(p => p.id === pkgId);
+  if (!pkg) return;
+  document.getElementById('viewer-package-photo').style.backgroundImage = `url('${makePackagePhotoUrl(pkg)}')`;
+  document.getElementById('viewer-track').innerText = pkg.id;
+  document.getElementById('viewer-captured-at').innerText = pkg.packagePhotoCapturedAt || pkg.registeredAt || 'Not captured';
+  document.getElementById('viewer-captured-by').innerText = pkg.packagePhotoCapturedBy || pkg.salesRep || 'System User';
+  routeToScreen('s-photo-viewer');
+}
+
+function copyArrivalMessage(pkgId, lang, event) {
+  if (event) event.stopPropagation();
+  let pkg = state.packages.find(p => p.id === pkgId);
+  if (!pkg) return;
+  let message = "";
+  if (lang === 'zh') {
+    message = `您好 ${pkg.consignee}，您的包裹 ${pkg.id} (追踪号: ${pkg.id}) 已到达我们的肯尼亚仓库。感谢您选择德克斯货运。`;
+  } else {
+    message = `Hello ${pkg.consignee}, your package ${pkg.id} with tracking number ${pkg.id} has arrived at our Kenya warehouse. Thank you for choosing DEX CARGO.`;
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(message).then(() => showToast(`Arrival message (${lang.toUpperCase()}) copied.`));
+  } else {
+    window.prompt(`Copy arrival message (${lang.toUpperCase()}):`, message);
+  }
+}
+
+// ==================== PACKAGES DIRECTORY ====================
+function renderPackageList() {
+  let searchVal = document.getElementById('pkg-list-search').value.toLowerCase();
+  let container = document.getElementById('main-pkg-list-container');
+  
+  let list = state.packages.slice();
+  
+  // Sort order
+  list.sort((a, b) => {
+    let dateA = new Date(a.registeredAt).getTime();
+    let dateB = new Date(b.registeredAt).getTime();
+    return state.activeListSortAsc ? dateA - dateB : dateB - dateA;
+  });
+
+  // Filters
+  if (state.activeListFilter === 'all') {
+    list = list.filter(p => p.status === 'registered');
+  } else if (state.activeListFilter === 'sea') {
+    list = list.filter(p => p.status === 'registered' && p.mode === 'Sea Freight');
+  } else if (state.activeListFilter === 'air') {
+    list = list.filter(p => p.status === 'registered' && p.mode === 'Air Freight');
+  } else if (state.activeListFilter === 'cleared') {
+    list = list.filter(p => p.status === 'paid' || p.status === 'collected');
+  }
+
+  // Searches
+  if (searchVal) {
+    list = list.filter(p => 
+      p.id.toLowerCase().includes(searchVal) || 
+      p.consignee.toLowerCase().includes(searchVal) || 
+      p.phone.toLowerCase().includes(searchVal) ||
+      p.desc.toLowerCase().includes(searchVal)
+    );
+  }
+
+  let html = '';
+  list.forEach(p => {
+    let statusPill = getStatusPill(p.status);
+    let classMode = p.mode === 'Air Freight' ? 'air' : 'sea';
+    if (p.status === 'collected') classMode = 'done';
+
+    html += `
+      <div class="pcard ${classMode}" onclick="viewPackageDetails('${p.id}')">
+        ${renderPackageThumbnail(p)}
+        <div class="pcard-info">
+          <div class="pcard-id">${p.id}</div>
+          <div class="pcard-name">${p.consignee}</div>
+          <div class="pcard-name">${p.mode.replace(' Freight','')} · ${p.weight} kg</div>
+        </div>
+        <div class="pcard-right">
+          <div class="pcard-amt">KES ${p.cost.toLocaleString()}</div>
+          ${statusPill}
+          <div style="display:flex;flex-direction:column;gap:3px;margin-top:4px;">
+            <button onclick="copyArrivalMessage('${p.id}', 'en', event)" style="width:86px;padding:4px 6px;border-radius:6px;border:1px solid var(--blue);background:var(--blue2);color:#7A9FFF;font-family:var(--fd);font-size:9px;font-weight:700;cursor:pointer;">Copy EN</button>
+            <button onclick="copyArrivalMessage('${p.id}', 'zh', event)" style="width:86px;padding:4px 6px;border-radius:6px;border:1px solid var(--orange);background:var(--orange2);color:var(--orange);font-family:var(--fd);font-size:9px;font-weight:700;cursor:pointer;">Copy ZH</button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html || '<div style="font-size:11px;color:var(--t3);text-align:center;padding:40px 10px;">No package records found.</div>';
+}
+
+function filterPackageList(filter, tabEl) {
+  state.activeListFilter = filter;
+  let tabs = tabEl.parentNode.querySelectorAll('div');
+  tabs.forEach(t => t.classList.remove('on'));
+  tabEl.classList.add('on');
+  renderPackageList();
+}
+
+function togglePackageListSortOrder() {
+  state.activeListSortAsc = !state.activeListSortAsc;
+  renderPackageList();
+  showToast(state.activeListSortAsc ? "Sorted oldest first" : "Sorted newest first");
+}
+
+// ==================== SCAN & OCR SIMULATION ====================
+function selectSampleLabel(labelId) {
+  state.selectedLabelId = labelId;
+  document.getElementById('lopt-1').classList.remove('active');
+  document.getElementById('lopt-2').classList.remove('active');
+  document.getElementById('lopt-' + labelId).classList.add('active');
+  showToast(`Active sticker photo target: Label ${labelId}`);
+}
+
+function triggerQuickScan() {
+  routeToScreen('s-scan');
+}
+
+function triggerOCRScan() {
+  let label = state.sampleLabels[state.selectedLabelId];
+  if (!label) return;
+  
+  routeToScreen('s-ocr-proc');
+  
+  // Reset OCR steps in UI
+  document.getElementById('ocr-percentage-text').innerText = '0%';
+  document.getElementById('ocr-progress-ring').style.strokeDashoffset = '301.6';
+  document.getElementById('ocr-major-status').innerText = 'Capturing Sticker Photo...';
+  
+  for (let i = 1; i <= 4; i++) {
+    let dot = document.getElementById('odot-' + i);
+    dot.className = 'ocr-dot wait';
+    dot.innerText = i;
+    document.getElementById('ostep-' + i).className = 'ocr-step';
+  }
+
+  let progress = 0;
+  let ocrInterval = setInterval(() => {
+    progress += 5;
+    if (progress > 100) progress = 100;
+    
+    // Update Percentage
+    document.getElementById('ocr-percentage-text').innerText = progress + '%';
+    
+    // Update Progress Ring
+    let offset = 301.6 - (301.6 * progress / 100);
+    document.getElementById('ocr-progress-ring').style.strokeDashoffset = offset;
+    
+    // Step checks
+    if (progress >= 20) {
+      markOcrStepActive(1);
+    }
+    if (progress >= 45) {
+      markOcrStepDone(1);
+      markOcrStepActive(2);
+    }
+    if (progress >= 70) {
+      markOcrStepDone(2);
+      markOcrStepActive(3);
+    }
+    if (progress >= 90) {
+      markOcrStepDone(3);
+      markOcrStepActive(4);
+      document.getElementById('ocr-major-status').innerText = 'Preparing Backend Payload...';
+    }
+    
+    if (progress >= 100) {
+      clearInterval(ocrInterval);
+      markOcrStepDone(4);
+      
+      // Auto-fill review screen after 400ms delay
+      setTimeout(() => {
+        populateOcrReviewScreen(label);
+      }, 400);
+    }
+  }, 100);
+}
+
+function markOcrStepActive(stepNum) {
+  let dot = document.getElementById('odot-' + stepNum);
+  if (!dot.classList.contains('done')) {
+    dot.className = 'ocr-dot active';
+    document.getElementById('ostep-' + stepNum).className = 'ocr-step active';
+  }
+}
+
+// Fixed variable name typo: dot-stepNum to odot-stepNum
+function markOcrStepDone(stepNum) {
+  let dot = document.getElementById('odot-' + stepNum);
+  dot.className = 'ocr-dot done';
+  dot.innerText = '✔';
+  document.getElementById('ostep-' + stepNum).className = 'ocr-step done';
+}
+
+function populateOcrReviewScreen(label) {
+  document.getElementById('rev-id').value = label.id;
+  document.getElementById('rev-name').value = label.consignee;
+  document.getElementById('rev-phone').value = label.phone;
+  document.getElementById('rev-origin').value = label.origin;
+  document.getElementById('rev-dest').value = label.dest;
+  document.getElementById('rev-desc').value = label.desc;
+  document.getElementById('rev-mode').value = label.mode;
+  document.getElementById('rev-weight').value = label.weight;
+  document.getElementById('rev-pcs').value = label.pcs;
+  document.getElementById('rev-cost').value = label.cost;
+
+  routeToScreen('s-ocr-review');
+}
+
+function proceedToPhotoCapture() {
+  // Setup simulated box capture screen
+  state.pendingPackagePhotoCaptured = false;
+  state.pendingPackagePhotoUrl = '';
+  document.getElementById('sim-box-graphics').style.display = 'flex';
+  document.getElementById('captured-box-image').style.display = 'none';
+  document.getElementById('captured-box-image').style.backgroundImage = '';
+  document.getElementById('photo-proceed-btn').disabled = true;
+  document.getElementById('photo-proceed-btn').style.opacity = '0.5';
+  document.getElementById('photo-proceed-btn').style.cursor = 'not-allowed';
+  
+  routeToScreen('s-photo');
+}
+
+function snapPackagePhoto() {
+  // Flash effect
+  let vf = document.getElementById('package-photo-viewfinder');
+  vf.style.opacity = '0';
+  setTimeout(() => {
+    vf.style.opacity = '1';
+    let previewPkg = {
+      id: document.getElementById('rev-id').value || 'PENDING',
+      consignee: document.getElementById('rev-name').value || 'Customer',
+      mode: document.getElementById('rev-mode').value || 'Air Freight',
+      weight: parseFloat(document.getElementById('rev-weight').value) || 1.0
+    };
+    state.pendingPackagePhotoCaptured = true;
+    state.pendingPackagePhotoUrl = makePackagePhotoUrl(previewPkg);
+    
+    // Show static box image
+    document.getElementById('sim-box-graphics').style.display = 'none';
+    document.getElementById('captured-box-image').style.backgroundImage = `url('${state.pendingPackagePhotoUrl}')`;
+    document.getElementById('captured-box-image').style.display = 'block';
+    
+    // Enable Proceed Button
+    let btn = document.getElementById('photo-proceed-btn');
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+    showToast("Photo captured successfully!");
+  }, 150);
+}
+
+function retakePackagePhoto() {
+  proceedToPhotoCapture();
+  showToast("Camera reset.");
+}
+
+function triggerFlash() {
+  showToast("Flash Toggled");
+}
+
+function savePackageToDB() {
+  if (!state.pendingPackagePhotoCaptured) {
+    showToast("Please capture the package photo first.");
+    proceedToPhotoCapture();
+    return;
+  }
+
+  let pkg;
+  if (state.pendingManualPackage) {
+    // Manual package flow
+    pkg = state.pendingManualPackage;
+    pkg.packagePhotoUrl = state.pendingPackagePhotoUrl;
+    pkg.packagePhotoCapturedAt = getNowTimestamp();
+    pkg.packagePhotoCapturedBy = getCurrentEmployeeLabel();
+    state.pendingManualPackage = null; // Clear temp holding
+  } else {
+    // OCR package flow
+    pkg = {
+      id: document.getElementById('rev-id').value,
+      consignee: document.getElementById('rev-name').value,
+      phone: document.getElementById('rev-phone').value,
+      origin: document.getElementById('rev-origin').value,
+      dest: document.getElementById('rev-dest').value,
+      desc: document.getElementById('rev-desc').value,
+      mode: document.getElementById('rev-mode').value,
+      weight: parseFloat(document.getElementById('rev-weight').value) || 1.0,
+      pcs: parseInt(document.getElementById('rev-pcs').value) || 1,
+      cost: parseInt(document.getElementById('rev-cost').value) || 2000,
+      salesRep: state.currentRole === 'sr' ? getCurrentEmployeeLabel() : 'Sales Manager Direct',
+      status: 'registered',
+      registeredAt: getNowTimestamp(),
+      packagePhotoUrl: state.pendingPackagePhotoUrl,
+      packagePhotoCapturedAt: getNowTimestamp(),
+      packagePhotoCapturedBy: getCurrentEmployeeLabel()
+    };
+  }
+
+  // Check duplicates
+  state.packages = state.packages.filter(p => p.id !== pkg.id);
+  state.packages.push(pkg);
+  
+  // Update Success Details
+  document.getElementById('sdet-id').innerText = pkg.id;
+  document.getElementById('sdet-name').innerText = pkg.consignee;
+  document.getElementById('sdet-weight').innerText = pkg.weight + ' kg / ' + pkg.pcs + ' PCS';
+  document.getElementById('sdet-cost').innerText = 'KES ' + pkg.cost.toLocaleString();
+  document.getElementById('sdet-route').innerText = pkg.origin + ' → ' + pkg.dest;
+
+  document.getElementById('success-view-details-btn').onclick = function() {
+    viewPackageDetails(pkg.id);
+  };
+
+  recalculateCommissions();
+  renderUserDashboards();
+  routeToScreen('s-reg-success');
+  showToast("Backend registration complete.");
+}
+
+function doSearchManual() {
+  let searchId = document.getElementById('scan-manual-id').value.trim();
+  if (!searchId) {
+    showToast("Please enter a tracking code.");
+    return;
+  }
+  
+  let pkg = state.packages.find(p => p.id === searchId);
+  if (pkg) {
+    viewPackageDetails(pkg.id);
+  } else {
+    showToast("Package ID not found. Initializing manual form...");
+    openManualModal(searchId);
+  }
+}
+
+// ==================== MANUAL MODAL SHEET ====================
+function openManualModal(prefillId = '') {
+  document.getElementById('mform-id').value = prefillId || Math.floor(1000000000000 + Math.random() * 9000000000000);
+  document.getElementById('mform-name').value = '';
+  document.getElementById('mform-phone').value = '';
+  document.getElementById('mform-desc').value = '';
+  document.getElementById('mform-weight').value = '';
+  document.getElementById('mform-pcs').value = '1';
+  document.getElementById('mform-cost').value = '';
+  
+  document.getElementById('manual-modal').classList.add('show');
+}
+
+function closeManualModal() {
+  document.getElementById('manual-modal').classList.remove('show');
+}
+
+function submitManualRegistryForm() {
+  let trackingId = document.getElementById('mform-id').value.trim();
+  let consigneeName = document.getElementById('mform-name').value.trim();
+  let phoneNum = document.getElementById('mform-phone').value.trim();
+  let description = document.getElementById('mform-desc').value.trim();
+  let weightVal = parseFloat(document.getElementById('mform-weight').value) || 1.0;
+  let pcsVal = parseInt(document.getElementById('mform-pcs').value) || 1;
+  let routeVal = document.getElementById('mform-route').value;
+  let costVal = parseInt(document.getElementById('mform-cost').value) || 3000;
+
+  if (!consigneeName || !phoneNum || !description) {
+    alert("Please fill in Consignee Name, Phone, and Goods Description.");
+    return;
+  }
+
+  let routeCoords = routeVal.split('-');
+  let pkg = {
+    id: trackingId,
+    consignee: consigneeName,
+    phone: phoneNum,
+    origin: routeCoords[0] === 'HKG' ? 'Hong Kong (HKG)' : routeCoords[0] === 'CAN' ? 'Guangzhou (CAN)' : 'Shanghai (SHA)',
+    dest: 'Nairobi (NBO)',
+    desc: description,
+    mode: routeVal.includes('Sea') ? 'Sea Freight' : 'Air Freight',
+    weight: weightVal,
+    pcs: pcsVal,
+    cost: costVal,
+    salesRep: state.currentRole === 'sr' ? getCurrentEmployeeLabel() : 'Sales Manager Direct',
+    status: 'registered',
+    registeredAt: getNowTimestamp()
+  };
+
+  // Enforce photo attachment: close modal and take user to photo viewport screen
+  state.pendingManualPackage = pkg;
+  closeManualModal();
+  proceedToPhotoCapture();
+  showToast("Form details saved. Now capture package photo.");
+}
+
+function handlePhotoBackClick() {
+  if (state.pendingManualPackage) {
+    // Open the manual modal back with the active ID
+    openManualModal(state.pendingManualPackage.id);
+  } else {
+    routeToScreen('s-ocr-review');
+  }
+}
+
+function simulateBarcodeSearch() {
+  // Find a registered (unpaid) package from list
+  let unpaid = state.packages.find(p => p.status === 'registered');
+  let targetId = unpaid ? unpaid.id : '1260707534982';
+  
+  showToast("Scanning Barcode Sticker...");
+  setTimeout(() => {
+    document.getElementById('pkg-list-search').value = targetId;
+    renderPackageList();
+    showToast(`Search Auto-Filled: ${targetId}`);
+  }, 600);
+}
+
+// ==================== PACKAGE DETAILS ACTIONS ====================
+function viewPackageDetails(pkgId) {
+  let pkg = state.packages.find(p => p.id === pkgId);
+  if (!pkg) return;
+  
+  state.selectedPackageId = pkgId;
+  
+  // Fill details fields
+  document.getElementById('det-header-id').innerText = pkg.id;
+  document.getElementById('det-name').innerText = pkg.consignee;
+  document.getElementById('det-phone').innerText = pkg.phone;
+  document.getElementById('det-route').innerText = pkg.origin + ' → ' + pkg.dest;
+  document.getElementById('det-mode').innerText = pkg.mode;
+  document.getElementById('det-weight').innerText = pkg.weight + ' kg / ' + pkg.pcs + ' PCS';
+  document.getElementById('det-desc').innerText = pkg.desc;
+  document.getElementById('det-agent').innerText = pkg.salesRep;
+  document.getElementById('det-cost').innerText = 'KES ' + pkg.cost.toLocaleString();
+  document.getElementById('details-box-visual').onclick = function() {
+    openPackageImageViewer(pkg.id);
+  };
+  document.getElementById('details-box-visual').innerHTML = `
+    <div style="position:absolute;inset:0;background:url('${makePackagePhotoUrl(pkg)}') center/cover no-repeat;"></div>
+    <div style="position:absolute;left:8px;top:8px;background:rgba(7,8,16,0.72);border:1px solid var(--b1);border-radius:6px;padding:4px 7px;font-size:9px;color:var(--t1);font-weight:700;">Package Photo</div>
+    <div style="position:absolute;right:8px;bottom:8px;background:rgba(7,8,16,0.72);border:1px solid var(--b1);border-radius:6px;padding:4px 7px;font-size:8.5px;color:var(--t2);font-family:var(--fm);">${pkg.packagePhotoCapturedAt || pkg.registeredAt || ''}</div>
+    <div id="details-signature-badge" style="display:none;position:absolute;bottom:8px;right:8px;background:var(--green2);border:1px solid var(--green);border-radius:4px;padding:2px 4px;font-size:8px;color:var(--green);font-weight:700;">SIGNED</div>
+  `;
+  
+  // Status pill
+  let statusPill = document.getElementById('det-pill-status');
+  statusPill.className = 'pill';
+  if (pkg.status === 'registered') {
+    statusPill.classList.add('orange');
+    statusPill.innerText = 'Pending Payment';
+  } else if (pkg.status === 'paid') {
+    statusPill.classList.add('green');
+    statusPill.innerText = 'Paid & Ready';
+  } else if (pkg.status === 'collected') {
+    statusPill.classList.add('gray');
+    statusPill.innerText = 'Cleared / Done';
+  }
+
+  // Signature overlay badge
+  let sigBadge = document.getElementById('details-signature-badge');
+  if (pkg.status === 'collected') {
+    sigBadge.style.display = 'block';
+  } else {
+    sigBadge.style.display = 'none';
+  }
+
+  // Set actions depending on status & user role
+  let actContainer = document.getElementById('details-actions-container');
+  let actionHtml = '';
+
+  if (pkg.status === 'registered') {
+    // Sales Rep or Logistics Manager can receive payment
+    if (state.currentRole === 'sr' || state.currentRole === 'lm' || state.currentRole === 'admin' || state.currentRole === 'sm') {
+      actionHtml = `<button class="btnp" onclick="openPaymentGateway('${pkg.id}')">💳 Collect KES ${pkg.cost.toLocaleString()} Payment</button>`;
+    } else {
+      actionHtml = `<div style="font-size:11px;color:var(--t3);text-align:center;">Awaiting cashier clearance.</div>`;
+    }
+  } else if (pkg.status === 'paid') {
+    // Logistics Manager or SR can dispatch collection
+    if (state.currentRole === 'lm' || state.currentRole === 'sr' || state.currentRole === 'admin') {
+      actionHtml = `<button class="btng" onclick="openCustomerVerification('${pkg.id}')">📦 Complete Handover Collection</button>`;
+    } else {
+      actionHtml = `<div style="font-size:11px;color:var(--green);text-align:center;font-weight:600;">Paid. Awaiting warehouse collection.</div>`;
+    }
+  } else if (pkg.status === 'collected') {
+    actionHtml = `
+      <div style="background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:10px;font-size:11px;display:flex;flex-direction:column;gap:5px;">
+        <div style="display:flex;justify-content:space-between;color:var(--t2);"><span>Collector</span><strong style="color:var(--t1);">${pkg.collectorName}</strong></div>
+        <div style="display:flex;justify-content:space-between;color:var(--t2);"><span>Identification</span><strong style="color:var(--t1);">${pkg.collectorId}</strong></div>
+        <div style="display:flex;justify-content:space-between;color:var(--t2);"><span>Delivered At</span><strong style="color:var(--t1);">${pkg.collectedAt}</strong></div>
+      </div>
+      <button class="btns" style="margin-top:8px;" onclick="window.print()">🖨 Re-print Gatepass Receipt</button>
+    `;
+  }
+
+  actContainer.innerHTML = actionHtml;
+  routeToScreen('s-pkg-details');
+}
+
+function sendMockSMS() {
+  let pkg = state.packages.find(p => p.id === state.selectedPackageId);
+  if (pkg) {
+    showToast(`SMS Dispatch: "Habari, Cargo ${pkg.id} is ready at NBO warehouse. Bal: KES ${pkg.status=='registered' ? pkg.cost : 0}."`);
+  }
+}
+
+function copyTrackingToClipboard() {
+  let copyText = document.getElementById('det-header-id').innerText;
+  navigator.clipboard.writeText(copyText).then(() => {
+    let toast = document.getElementById('copy-toast');
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2000);
+  });
+}
+
+// ==================== PAYMENT GATEWAY ====================
+function openPaymentGateway(pkgId) {
+  let pkg = state.packages.find(p => p.id === pkgId);
+  if (!pkg) return;
+  
+  state.paymentTemp.id = pkgId;
+  document.getElementById('pay-mpesa-amt').innerText = 'KES ' + pkg.cost.toLocaleString();
+  document.getElementById('pay-cash-amt').innerText = 'KES ' + pkg.cost.toLocaleString();
+  document.getElementById('pay-customer-phone').value = pkg.phone;
+  
+  selectPaymentMethod('mpesa');
+  routeToScreen('s-payment');
+}
+
+function selectPaymentMethod(method) {
+  state.paymentTemp.method = method;
+  document.getElementById('pm-mpesa').classList.remove('on');
+  document.getElementById('pm-cash').classList.remove('on');
+  
+  if (method === 'mpesa') {
+    document.getElementById('pm-mpesa').classList.add('on');
+    document.getElementById('payment-mpesa-view').style.display = 'flex';
+    document.getElementById('payment-cash-view').style.display = 'none';
+  } else {
+    document.getElementById('pm-cash').classList.add('on');
+    document.getElementById('payment-mpesa-view').style.display = 'none';
+    document.getElementById('payment-cash-view').style.display = 'flex';
+  }
+}
+
+function triggerStkPush() {
+  let phone = document.getElementById('pay-customer-phone').value.trim();
+  if (!phone) {
+    alert("Please supply target M-Pesa phone number.");
+    return;
+  }
+  
+  document.getElementById('stk-number-display').innerText = phone;
+  routeToScreen('s-stk-wait');
+  
+  let secs = 4;
+  document.getElementById('stk-timer').innerText = secs;
+  
+  let countdown = setInterval(() => {
+    secs--;
+    document.getElementById('stk-timer').innerText = secs;
+    if (secs <= 0) {
+      clearInterval(countdown);
+      completePayment('M-Pesa');
+    }
+  }, 1000);
+}
+
+function submitCashPayment() {
+  completePayment('Cash');
+}
+
+function completePayment(methodName) {
+  let pkg = state.packages.find(p => p.id === state.paymentTemp.id);
+  if (!pkg) return;
+  
+  pkg.status = 'paid';
+  pkg.paidAt = getNowTimestamp();
+  pkg.paymentMethod = methodName;
+  pkg.paymentRef = methodName === 'Cash' ? 'CSH-' + Math.floor(10000 + Math.random() * 90000) : 'QM' + Math.floor(10000000 + Math.random() * 90000000);
+  
+  // Render Success screen fields
+  document.getElementById('spay-ref').innerText = pkg.paymentRef;
+  document.getElementById('spay-ref').style.color = methodName === 'Cash' ? 'var(--orange)' : 'var(--green)';
+  document.getElementById('spay-amt').innerText = 'KES ' + pkg.cost.toLocaleString();
+  document.getElementById('spay-time').innerText = pkg.paidAt;
+  
+  document.getElementById('pay-success-done-btn').onclick = function() {
+    viewPackageDetails(pkg.id);
+  };
+
+  recalculateCommissions();
+  renderUserDashboards();
+  routeToScreen('s-pay-success');
+  showToast("Transaction logged.");
+}
+
+// ==================== CUSTOMER RELEASE / SIGNATURE ====================
+function openCustomerVerification(pkgId) {
+  let pkg = state.packages.find(p => p.id === pkgId);
+  if (!pkg) return;
+  
+  state.verificationTemp.id = pkgId;
+  document.getElementById('ver-cust-name').innerText = pkg.consignee;
+  document.getElementById('ver-national-id').value = '';
+  document.getElementById('ver-collector-name').value = '';
+  document.getElementById('ver-collector-phone').value = pkg.phone;
+  
+  routeToScreen('s-verify-cust');
+}
+
+function submitCustomerVerification() {
+  let idCard = document.getElementById('ver-national-id').value.trim();
+  if (!idCard) {
+    alert("Compliance requirement: Input valid Identification Card details.");
+    return;
+  }
+  
+  state.verificationTemp.nationalId = idCard;
+  state.verificationTemp.collectorName = document.getElementById('ver-collector-name').value.trim() || document.getElementById('ver-cust-name').innerText;
+  state.verificationTemp.collectorPhone = document.getElementById('ver-collector-phone').value.trim();
+  
+  // Open signature canvas view
+  routeToScreen('s-signature');
+  setTimeout(() => {
+    resizeSignatureCanvas();
+  }, 100);
+}
+
+// HTML5 Canvas Drawing functions
+let canvas, ctx, drawing = false;
+
+function initSignaturePad() {
+  canvas = document.getElementById('signature-canvas');
+  ctx = canvas.getContext('2d');
+  
+  // Track Mouse events
+  canvas.addEventListener('mousedown', startDraw);
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', stopDraw);
+  canvas.addEventListener('mouseleave', stopDraw);
+  
+  // Track Touch events
+  canvas.addEventListener('touchstart', (e) => {
+    let t = e.touches[0];
+    let rect = canvas.getBoundingClientRect();
+    ctx.beginPath();
+    ctx.moveTo(t.clientX - rect.left, t.clientY - rect.top);
+    drawing = true;
+    document.getElementById('sigpad-hint-text').style.display = 'none';
+    e.preventDefault();
+  });
+  canvas.addEventListener('touchmove', (e) => {
+    if (!drawing) return;
+    let t = e.touches[0];
+    let rect = canvas.getBoundingClientRect();
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#000';
+    ctx.lineTo(t.clientX - rect.left, t.clientY - rect.top);
+    ctx.stroke();
+    e.preventDefault();
+  });
+  canvas.addEventListener('touchend', stopDraw);
+}
+
+function resizeSignatureCanvas() {
+  let wrap = document.getElementById('sigpad-container');
+  canvas.width = wrap.clientWidth;
+  canvas.height = wrap.clientHeight;
+  clearSignatureCanvas();
+}
+
+function startDraw(e) {
+  drawing = true;
+  let rect = canvas.getBoundingClientRect();
+  ctx.beginPath();
+  ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+  document.getElementById('sigpad-hint-text').style.display = 'none';
+}
+
+function draw(e) {
+  if (!drawing) return;
+  let rect = canvas.getBoundingClientRect();
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = '#070810';
+  ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+  ctx.stroke();
+}
+
+function stopDraw() {
+  drawing = false;
+}
+
+function clearSignatureCanvas() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  document.getElementById('sigpad-hint-text').style.display = 'flex';
+}
+
+function submitCollectionSignature() {
+  let pkg = state.packages.find(p => p.id === state.verificationTemp.id);
+  if (!pkg) return;
+  
+  pkg.status = 'collected';
+  pkg.collectedAt = getNowTimestamp();
+  pkg.collectorName = state.verificationTemp.collectorName;
+  pkg.collectorId = state.verificationTemp.nationalId;
+  pkg.collectorPhone = state.verificationTemp.collectorPhone;
+  
+  // Fill complete success panel
+  document.getElementById('scomp-id').innerText = pkg.id;
+  document.getElementById('scomp-name').innerText = pkg.collectorName;
+  document.getElementById('scomp-idcard').innerText = pkg.collectorId;
+  document.getElementById('scomp-time').innerText = pkg.collectedAt;
+  
+  document.getElementById('comp-success-done-btn').onclick = function() {
+    routeToScreen('s-pkg-list');
+  };
+
+  recalculateCommissions();
+  renderUserDashboards();
+  routeToScreen('s-complete-success');
+  showToast("Cargo Cleared.");
+}
+
+// ==================== OVERRIDE LEDGER / COMMISSION LOGS ====================
+function renderCommissionsHistory() {
+  let container = document.getElementById('commissions-history-list');
+  let list = state.packages.filter(p => p.status !== 'registered');
+  
+  // Display based on filters
+  let html = '';
+  list.forEach(p => {
+    let commVal = p.cost * 0.1; // John's 10% override rate representation
+    html += `
+      <div class="ch-item">
+        <div class="ch-color"></div>
+        <div class="ch-info">
+          <div class="ch-id">${p.id}</div>
+          <div class="ch-time">Registered ${p.registeredAt}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="ch-amt">+ KES ${commVal.toLocaleString()}</div>
+          <span class="ch-status paid">Audited</span>
+        </div>
+      </div>
+    `;
+  });
+  
+  container.innerHTML = html || '<div style="font-size:11px;color:var(--t3);text-align:center;padding:24px;">No commission logged.</div>';
+}
+
+function filterCommissions(filter, tabEl) {
+  state.activeCommissionFilter = filter;
+  let tabs = tabEl.parentNode.querySelectorAll('div');
+  tabs.forEach(t => t.classList.remove('on'));
+  tabEl.classList.add('on');
+  
+  // Recalculate values slightly for simulated time filters
+  let earnedVal = document.getElementById('comm-stat-earned');
+  let paidVal = document.getElementById('comm-stat-paid');
+  let outVal = document.getElementById('comm-stat-out');
+  
+  if (filter === 'month') {
+    earnedVal.innerText = 'KES 24,680';
+    paidVal.innerText = 'KES 12,400';
+    outVal.innerText = 'KES 12,280';
+  } else if (filter === 'last') {
+    earnedVal.innerText = 'KES 20,870';
+    paidVal.innerText = 'KES 20,870';
+    outVal.innerText = 'KES 0';
+  } else {
+    earnedVal.innerText = 'KES 82,450';
+    paidVal.innerText = 'KES 70,170';
+    outVal.innerText = 'KES 12,280';
+  }
+}
+
+// ==================== POPUP DEMO LABELS PREVIEW ====================
+function viewLabelGraphic(id, event) {
+  event.stopPropagation(); // Avoid selecting label
+  
+  document.getElementById('svg-label-1').style.display = 'none';
+  document.getElementById('svg-label-2').style.display = 'none';
+  
+  if (id === 1) {
+    document.getElementById('label-modal-title').innerText = "Label 1: HKG-NBO (Beatrice)";
+    document.getElementById('svg-label-1').style.display = 'block';
+  } else {
+    document.getElementById('label-modal-title').innerText = "Label 2: CAN-NBO (Charles)";
+    document.getElementById('svg-label-2').style.display = 'block';
+  }
+  
+  document.getElementById('label-image-modal').style.display = 'flex';
+}
+
+function closeLabelImageModal() {
+  document.getElementById('label-image-modal').style.display = 'none';
+}
+
+// ==================== HELPERS ====================
+function showToast(message) {
+  let toast = document.getElementById('copy-toast');
+  toast.innerText = message;
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2500);
+}
+
+function getNowTimestamp() {
+  let now = new Date();
+  let months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  let month = months[now.getMonth()];
+  let date = now.getDate();
+  let year = now.getFullYear();
+  let hours = now.getHours();
+  let minutes = String(now.getMinutes()).padStart(2, '0');
+  let ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // 12 instead of 0
+  
+  return `${year}-${String(now.getMonth()+1).padStart(2,'0')}-${String(date).padStart(2,'0')} ${String(hours).padStart(2,'0')}:${minutes} ${ampm}`;
+}
+
+// Helper to quickly scan chosen label from sidebar
+function triggerQuickScan() {
+  routeToScreen('s-scan');
+}
+
+// ==================== EMPLOYEE & BROADCAST HUB FUNCTIONS ====================
+function renderLoginRoleSelect() {
+  let select = document.getElementById('login-role-select');
+  if (!select) return;
+  
+  let html = "";
+  state.employees.forEach(emp => {
+    let roleText = emp.role === 'sr' ? 'Sales Representative' :
+                   emp.role === 'lm' ? 'Logistics Manager' :
+                   emp.role === 'sm' ? 'Sales Lead' : 'Administrator';
+    let statusText = emp.active ? "" : " (DEACTIVATED)";
+    html += `<option value="${emp.id}">${emp.name} (${roleText} - ${emp.id})${statusText}</option>`;
+  });
+  select.innerHTML = html;
+}
+
+function renderAdminEmployeeList() {
+  let listEl = document.getElementById('admin-employee-list');
+  if (!listEl) return;
+  
+  let html = "";
+  state.employees.forEach(emp => {
+    let roleText = emp.role === 'sr' ? 'Sales Rep' :
+                   emp.role === 'lm' ? 'Logistics Mgr' :
+                   emp.role === 'sm' ? 'Sales Manager' : 'Admin';
+    let btnText = emp.active ? "Deactivate" : "Activate";
+    let btnClass = emp.active ? "btnp" : "btnb";
+    let statusPill = emp.active ? 
+      `<span class="pill green">Active</span>` : 
+      `<span class="pill red">Inactive</span>`;
+      
+    // Disallow deactivating the main admin for system safety
+    let disableAction = emp.id === 'ADM-001' ? 'disabled style="opacity:0.4;cursor:not-allowed;"' : '';
+    
+    html += `
+      <div style="background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:8px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;">
+        <div style="min-width:0;flex:1;">
+          <div style="font-size:12px;font-weight:700;color:var(--t1);">${emp.name} <span style="font-family:var(--fm);font-size:9.5px;color:var(--t3);">${emp.id}</span></div>
+          <div style="font-size:10px;color:var(--t2);margin-top:2px;">${roleText} · ${emp.email}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          ${statusPill}
+          <button class="${btnClass}" onclick="toggleEmployeeActiveState('${emp.id}')" ${disableAction} style="padding:4px 8px;font-size:10.5px;width:auto;margin:0;">${btnText}</button>
+        </div>
+      </div>
+    `;
+  });
+  listEl.innerHTML = html;
+  updateAdminEmployeeStats();
+}
+
+function toggleEmployeeActiveState(empId) {
+  let emp = state.employees.find(e => e.id === empId);
+  if (!emp) return;
+  emp.active = !emp.active;
+  renderAdminEmployeeList();
+  renderLoginRoleSelect();
+  renderUserDashboards();
+  showToast(`${emp.name} active state toggled.`);
+}
+
+function registerNewEmployee() {
+  let name = document.getElementById('emp-reg-name').value.trim();
+  let email = document.getElementById('emp-reg-email').value.trim();
+  let pass = document.getElementById('emp-reg-pass').value.trim();
+  let role = document.getElementById('emp-reg-role').value;
+  
+  if (!name || !email || !pass) {
+    alert("Please fill in Display Name, Email, and Password.");
+    return;
+  }
+  
+  // Check duplicate email
+  if (state.employees.some(e => e.email.toLowerCase() === email.toLowerCase())) {
+    alert("An employee with this email/ID is already registered.");
+    return;
+  }
+  
+  let newId = role.toUpperCase() + "-" + Math.floor(100 + Math.random() * 900);
+  let newEmp = {
+    id: newId,
+    name: name,
+    email: email,
+    password: pass,
+    role: role,
+    active: true
+  };
+  
+  state.employees.push(newEmp);
+  
+  // Clear inputs
+  document.getElementById('emp-reg-name').value = '';
+  document.getElementById('emp-reg-email').value = '';
+  document.getElementById('emp-reg-pass').value = '';
+  
+  renderAdminEmployeeList();
+  renderLoginRoleSelect();
+  syncLoginRoleSelect(newId);
+  let select = document.getElementById('login-role-select');
+  if (select) select.value = newId;
+  showToast(`Registered employee: ${name} (${newId})`);
+}
+
+function submitBroadcastMessage() {
+  let msg = document.getElementById('broadcast-msg-input').value.trim();
+  let target = document.getElementById('broadcast-target-select').value;
+  
+  if (!msg) {
+    alert("Please type a notification message first.");
+    return;
+  }
+  
+  let newNotif = {
+    id: Date.now(),
+    message: msg,
+    target: target,
+    createdAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  };
+  
+  state.notifications.unshift(newNotif); // Add to top
+  document.getElementById('broadcast-msg-input').value = '';
+  renderNotificationsForUser();
+  
+  showToast("Alert broadcast dispatched!");
+}
+
+function renderNotificationsForUser() {
+  let role = state.currentRole;
+  let matches = state.notifications.filter(n => n.target === 'all' || n.target === role);
+  
+  let areaId = role === 'sr' ? 'sr-notifications-area' :
+               role === 'lm' ? 'lm-notifications-area' :
+               role === 'sm' ? 'sm-notifications-area' : null;
+               
+  let listId = role === 'sr' ? 'sr-notifications-list' :
+               role === 'lm' ? 'lm-notifications-list' :
+               role === 'sm' ? 'sm-notifications-list' : null;
+               
+  if (!areaId || !listId) return;
+  
+  let areaEl = document.getElementById(areaId);
+  let listEl = document.getElementById(listId);
+  
+  if (!areaEl || !listEl) return;
+  
+  if (matches.length === 0) {
+    areaEl.style.display = 'none';
+  } else {
+    areaEl.style.display = 'block';
+    listEl.innerHTML = matches.map(n => `
+      <div style="padding:6px;border-bottom:1px solid var(--b1);line-height:1.3;text-align:left;">
+        <div>${n.message}</div>
+        <div style="font-size:8.5px;color:var(--t3);margin-top:2px;">${n.createdAt}</div>
+      </div>
+    `).join('');
+  }
+}
+
+// Bootstrap initialization
+renderLoginRoleSelect();
+renderAdminEmployeeList();
+syncLoginRoleSelect('SR-002'); // Pre-fill first option
+
+</script>
+</body>
+</html>

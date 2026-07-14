@@ -37,8 +37,8 @@ export const Route = createFileRoute("/api/mobile/admin/employees")({
           if (!body?.full_name) return badRequest("full_name required");
           if (!body?.email) return badRequest("email required");
           if (!body?.password || String(body.password).length < 8) return badRequest("password required (min 8 chars)");
-          const role = String(body.role ?? "staff") as "admin" | "staff" | "kenya_staff" | "china_staff";
-          if (!["admin","staff","kenya_staff","china_staff"].includes(role)) return badRequest("invalid role");
+          const role = String(body.role ?? "staff") as "admin" | "staff" | "kenya_staff" | "china_staff" | "sales_rep" | "sales_manager" | "logistics_manager";
+          if (!["admin","staff","kenya_staff","china_staff","sales_rep","sales_manager","logistics_manager"].includes(role)) return badRequest("invalid role");
 
           // 1) create auth user
           const { data: created, error: createErr } = await supabaseAdmin.auth.admin.createUser({
