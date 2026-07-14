@@ -663,6 +663,60 @@ export type Database = {
           },
         ]
       }
+      mobile_app_releases: {
+        Row: {
+          channel: string
+          checksum_sha256: string | null
+          created_at: string
+          created_by: string | null
+          download_url: string
+          id: string
+          mandatory: boolean
+          min_supported_version_code: number
+          platform: string
+          published: boolean
+          published_at: string | null
+          release_notes: string | null
+          updated_at: string
+          version_code: number
+          version_name: string
+        }
+        Insert: {
+          channel?: string
+          checksum_sha256?: string | null
+          created_at?: string
+          created_by?: string | null
+          download_url: string
+          id?: string
+          mandatory?: boolean
+          min_supported_version_code?: number
+          platform: string
+          published?: boolean
+          published_at?: string | null
+          release_notes?: string | null
+          updated_at?: string
+          version_code: number
+          version_name: string
+        }
+        Update: {
+          channel?: string
+          checksum_sha256?: string | null
+          created_at?: string
+          created_by?: string | null
+          download_url?: string
+          id?: string
+          mandatory?: boolean
+          min_supported_version_code?: number
+          platform?: string
+          published?: boolean
+          published_at?: string | null
+          release_notes?: string | null
+          updated_at?: string
+          version_code?: number
+          version_name?: string
+        }
+        Relationships: []
+      }
       notification_reads: {
         Row: {
           notification_id: string
@@ -1030,6 +1084,124 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      payment_notification_allocations: {
+        Row: {
+          allocated_amount: number | null
+          allocated_currency: string | null
+          created_at: string
+          id: string
+          linked_at: string
+          linked_by: string
+          linked_by_employee_id: string | null
+          notes: string | null
+          package_id: string
+          payment_notification_id: string
+          tracking_number: string
+        }
+        Insert: {
+          allocated_amount?: number | null
+          allocated_currency?: string | null
+          created_at?: string
+          id?: string
+          linked_at?: string
+          linked_by: string
+          linked_by_employee_id?: string | null
+          notes?: string | null
+          package_id: string
+          payment_notification_id: string
+          tracking_number: string
+        }
+        Update: {
+          allocated_amount?: number | null
+          allocated_currency?: string | null
+          created_at?: string
+          id?: string
+          linked_at?: string
+          linked_by?: string
+          linked_by_employee_id?: string | null
+          notes?: string | null
+          package_id?: string
+          payment_notification_id?: string
+          tracking_number?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_notification_allocations_linked_by_employee_id_fkey"
+            columns: ["linked_by_employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_notification_allocations_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "packages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_notification_allocations_payment_notification_id_fkey"
+            columns: ["payment_notification_id"]
+            isOneToOne: false
+            referencedRelation: "payment_notifications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_notifications: {
+        Row: {
+          created_at: string
+          evidence_type: Database["public"]["Enums"]["payment_evidence_type"]
+          id: string
+          image_url: string | null
+          linked_at: string | null
+          linked_by: string | null
+          note: string | null
+          notification_number: string
+          reported_amount: number | null
+          reported_currency: string | null
+          status: Database["public"]["Enums"]["payment_notification_status"]
+          text_content: string | null
+          updated_at: string
+          uploaded_at: string
+          uploaded_by: string
+        }
+        Insert: {
+          created_at?: string
+          evidence_type: Database["public"]["Enums"]["payment_evidence_type"]
+          id?: string
+          image_url?: string | null
+          linked_at?: string | null
+          linked_by?: string | null
+          note?: string | null
+          notification_number: string
+          reported_amount?: number | null
+          reported_currency?: string | null
+          status?: Database["public"]["Enums"]["payment_notification_status"]
+          text_content?: string | null
+          updated_at?: string
+          uploaded_at?: string
+          uploaded_by: string
+        }
+        Update: {
+          created_at?: string
+          evidence_type?: Database["public"]["Enums"]["payment_evidence_type"]
+          id?: string
+          image_url?: string | null
+          linked_at?: string | null
+          linked_by?: string | null
+          note?: string | null
+          notification_number?: string
+          reported_amount?: number | null
+          reported_currency?: string | null
+          status?: Database["public"]["Enums"]["payment_notification_status"]
+          text_content?: string | null
+          updated_at?: string
+          uploaded_at?: string
+          uploaded_by?: string
+        }
+        Relationships: []
       }
       payments: {
         Row: {
@@ -1685,6 +1857,8 @@ export type Database = {
         | "cleared"
       pay_method: "mpesa_stk" | "mpesa_manual" | "cash" | "bank"
       pay_status: "pending" | "paid" | "failed" | "refunded" | "cancelled"
+      payment_evidence_type: "image" | "text"
+      payment_notification_status: "pending" | "linked"
       payment_status: "pending" | "success" | "failed" | "cancelled"
       pkg_status:
         | "received"
@@ -1875,6 +2049,8 @@ export const Constants = {
       ],
       pay_method: ["mpesa_stk", "mpesa_manual", "cash", "bank"],
       pay_status: ["pending", "paid", "failed", "refunded", "cancelled"],
+      payment_evidence_type: ["image", "text"],
+      payment_notification_status: ["pending", "linked"],
       payment_status: ["pending", "success", "failed", "cancelled"],
       pkg_status: [
         "received",
