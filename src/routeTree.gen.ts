@@ -40,6 +40,7 @@ import { Route as ApiMobileCommissionsIdRouteImport } from './routes/api/mobile/
 import { Route as ApiMobileAuthMeRouteImport } from './routes/api/mobile/auth.me'
 import { Route as ApiMobileAdminEmployeesRouteImport } from './routes/api/mobile/admin/employees'
 import { Route as ApiMobileAdminAuditRouteImport } from './routes/api/mobile/admin/audit'
+import { Route as ApiMobilePaymentNotificationsIdLinkRouteImport } from './routes/api/mobile/payment-notifications.$id.link'
 import { Route as ApiMobilePackagesIdTransitionRouteImport } from './routes/api/mobile/packages.$id.transition'
 import { Route as ApiMobilePackagesIdCollectRouteImport } from './routes/api/mobile/packages.$id.collect'
 import { Route as ApiMobileAdminEmployeesIdRouteImport } from './routes/api/mobile/admin/employees.$id'
@@ -207,6 +208,12 @@ const ApiMobileAdminAuditRoute = ApiMobileAdminAuditRouteImport.update({
   path: '/api/mobile/admin/audit',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiMobilePaymentNotificationsIdLinkRoute =
+  ApiMobilePaymentNotificationsIdLinkRouteImport.update({
+    id: '/link',
+    path: '/link',
+    getParentRoute: () => ApiMobilePaymentNotificationsIdRoute,
+  } as any)
 const ApiMobilePackagesIdTransitionRoute =
   ApiMobilePackagesIdTransitionRouteImport.update({
     id: '/transition',
@@ -269,7 +276,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
   '/api/mobile/packages/cleared': typeof ApiMobilePackagesClearedRoute
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
-  '/api/mobile/payment-notifications/$id': typeof ApiMobilePaymentNotificationsIdRoute
+  '/api/mobile/payment-notifications/$id': typeof ApiMobilePaymentNotificationsIdRouteWithChildren
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
   '/api/mobile/payments/manual': typeof ApiMobilePaymentsManualRoute
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
@@ -279,6 +286,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRouteWithChildren
   '/api/mobile/packages/$id/collect': typeof ApiMobilePackagesIdCollectRoute
   '/api/mobile/packages/$id/transition': typeof ApiMobilePackagesIdTransitionRoute
+  '/api/mobile/payment-notifications/$id/link': typeof ApiMobilePaymentNotificationsIdLinkRoute
   '/api/mobile/admin/employees/$id/activity': typeof ApiMobileAdminEmployeesIdActivityRoute
   '/api/mobile/admin/employees/$id/reset-password': typeof ApiMobileAdminEmployeesIdResetPasswordRoute
 }
@@ -308,7 +316,7 @@ export interface FileRoutesByTo {
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
   '/api/mobile/packages/cleared': typeof ApiMobilePackagesClearedRoute
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
-  '/api/mobile/payment-notifications/$id': typeof ApiMobilePaymentNotificationsIdRoute
+  '/api/mobile/payment-notifications/$id': typeof ApiMobilePaymentNotificationsIdRouteWithChildren
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
   '/api/mobile/payments/manual': typeof ApiMobilePaymentsManualRoute
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
@@ -318,6 +326,7 @@ export interface FileRoutesByTo {
   '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRouteWithChildren
   '/api/mobile/packages/$id/collect': typeof ApiMobilePackagesIdCollectRoute
   '/api/mobile/packages/$id/transition': typeof ApiMobilePackagesIdTransitionRoute
+  '/api/mobile/payment-notifications/$id/link': typeof ApiMobilePaymentNotificationsIdLinkRoute
   '/api/mobile/admin/employees/$id/activity': typeof ApiMobileAdminEmployeesIdActivityRoute
   '/api/mobile/admin/employees/$id/reset-password': typeof ApiMobileAdminEmployeesIdResetPasswordRoute
 }
@@ -348,7 +357,7 @@ export interface FileRoutesById {
   '/api/mobile/packages/$id': typeof ApiMobilePackagesIdRouteWithChildren
   '/api/mobile/packages/cleared': typeof ApiMobilePackagesClearedRoute
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
-  '/api/mobile/payment-notifications/$id': typeof ApiMobilePaymentNotificationsIdRoute
+  '/api/mobile/payment-notifications/$id': typeof ApiMobilePaymentNotificationsIdRouteWithChildren
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
   '/api/mobile/payments/manual': typeof ApiMobilePaymentsManualRoute
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
@@ -358,6 +367,7 @@ export interface FileRoutesById {
   '/api/mobile/admin/employees/$id': typeof ApiMobileAdminEmployeesIdRouteWithChildren
   '/api/mobile/packages/$id/collect': typeof ApiMobilePackagesIdCollectRoute
   '/api/mobile/packages/$id/transition': typeof ApiMobilePackagesIdTransitionRoute
+  '/api/mobile/payment-notifications/$id/link': typeof ApiMobilePaymentNotificationsIdLinkRoute
   '/api/mobile/admin/employees/$id/activity': typeof ApiMobileAdminEmployeesIdActivityRoute
   '/api/mobile/admin/employees/$id/reset-password': typeof ApiMobileAdminEmployeesIdResetPasswordRoute
 }
@@ -399,6 +409,7 @@ export interface FileRouteTypes {
     | '/api/mobile/admin/employees/$id'
     | '/api/mobile/packages/$id/collect'
     | '/api/mobile/packages/$id/transition'
+    | '/api/mobile/payment-notifications/$id/link'
     | '/api/mobile/admin/employees/$id/activity'
     | '/api/mobile/admin/employees/$id/reset-password'
   fileRoutesByTo: FileRoutesByTo
@@ -438,6 +449,7 @@ export interface FileRouteTypes {
     | '/api/mobile/admin/employees/$id'
     | '/api/mobile/packages/$id/collect'
     | '/api/mobile/packages/$id/transition'
+    | '/api/mobile/payment-notifications/$id/link'
     | '/api/mobile/admin/employees/$id/activity'
     | '/api/mobile/admin/employees/$id/reset-password'
   id:
@@ -477,6 +489,7 @@ export interface FileRouteTypes {
     | '/api/mobile/admin/employees/$id'
     | '/api/mobile/packages/$id/collect'
     | '/api/mobile/packages/$id/transition'
+    | '/api/mobile/payment-notifications/$id/link'
     | '/api/mobile/admin/employees/$id/activity'
     | '/api/mobile/admin/employees/$id/reset-password'
   fileRoutesById: FileRoutesById
@@ -725,6 +738,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMobileAdminAuditRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/mobile/payment-notifications/$id/link': {
+      id: '/api/mobile/payment-notifications/$id/link'
+      path: '/link'
+      fullPath: '/api/mobile/payment-notifications/$id/link'
+      preLoaderRoute: typeof ApiMobilePaymentNotificationsIdLinkRouteImport
+      parentRoute: typeof ApiMobilePaymentNotificationsIdRoute
+    }
     '/api/mobile/packages/$id/transition': {
       id: '/api/mobile/packages/$id/transition'
       path: '/transition'
@@ -834,13 +854,29 @@ const ApiMobilePackagesRouteChildren: ApiMobilePackagesRouteChildren = {
 const ApiMobilePackagesRouteWithChildren =
   ApiMobilePackagesRoute._addFileChildren(ApiMobilePackagesRouteChildren)
 
+interface ApiMobilePaymentNotificationsIdRouteChildren {
+  ApiMobilePaymentNotificationsIdLinkRoute: typeof ApiMobilePaymentNotificationsIdLinkRoute
+}
+
+const ApiMobilePaymentNotificationsIdRouteChildren: ApiMobilePaymentNotificationsIdRouteChildren =
+  {
+    ApiMobilePaymentNotificationsIdLinkRoute:
+      ApiMobilePaymentNotificationsIdLinkRoute,
+  }
+
+const ApiMobilePaymentNotificationsIdRouteWithChildren =
+  ApiMobilePaymentNotificationsIdRoute._addFileChildren(
+    ApiMobilePaymentNotificationsIdRouteChildren,
+  )
+
 interface ApiMobilePaymentNotificationsRouteChildren {
-  ApiMobilePaymentNotificationsIdRoute: typeof ApiMobilePaymentNotificationsIdRoute
+  ApiMobilePaymentNotificationsIdRoute: typeof ApiMobilePaymentNotificationsIdRouteWithChildren
 }
 
 const ApiMobilePaymentNotificationsRouteChildren: ApiMobilePaymentNotificationsRouteChildren =
   {
-    ApiMobilePaymentNotificationsIdRoute: ApiMobilePaymentNotificationsIdRoute,
+    ApiMobilePaymentNotificationsIdRoute:
+      ApiMobilePaymentNotificationsIdRouteWithChildren,
   }
 
 const ApiMobilePaymentNotificationsRouteWithChildren =
