@@ -30,6 +30,7 @@ import { Route as ApiMobileStatsDashboardRouteImport } from './routes/api/mobile
 import { Route as ApiMobilePushRegisterRouteImport } from './routes/api/mobile/push.register'
 import { Route as ApiMobilePaymentsManualRouteImport } from './routes/api/mobile/payments.manual'
 import { Route as ApiMobilePaymentsIdRouteImport } from './routes/api/mobile/payments.$id'
+import { Route as ApiMobilePaymentNotificationsAuditRouteImport } from './routes/api/mobile/payment-notifications.audit'
 import { Route as ApiMobilePaymentNotificationsIdRouteImport } from './routes/api/mobile/payment-notifications.$id'
 import { Route as ApiMobilePackagesScanRouteImport } from './routes/api/mobile/packages.scan'
 import { Route as ApiMobilePackagesClearedRouteImport } from './routes/api/mobile/packages.cleared'
@@ -155,6 +156,12 @@ const ApiMobilePaymentsIdRoute = ApiMobilePaymentsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => ApiMobilePaymentsRoute,
 } as any)
+const ApiMobilePaymentNotificationsAuditRoute =
+  ApiMobilePaymentNotificationsAuditRouteImport.update({
+    id: '/audit',
+    path: '/audit',
+    getParentRoute: () => ApiMobilePaymentNotificationsRoute,
+  } as any)
 const ApiMobilePaymentNotificationsIdRoute =
   ApiMobilePaymentNotificationsIdRouteImport.update({
     id: '/$id',
@@ -277,6 +284,7 @@ export interface FileRoutesByFullPath {
   '/api/mobile/packages/cleared': typeof ApiMobilePackagesClearedRoute
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
   '/api/mobile/payment-notifications/$id': typeof ApiMobilePaymentNotificationsIdRouteWithChildren
+  '/api/mobile/payment-notifications/audit': typeof ApiMobilePaymentNotificationsAuditRoute
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
   '/api/mobile/payments/manual': typeof ApiMobilePaymentsManualRoute
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
@@ -317,6 +325,7 @@ export interface FileRoutesByTo {
   '/api/mobile/packages/cleared': typeof ApiMobilePackagesClearedRoute
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
   '/api/mobile/payment-notifications/$id': typeof ApiMobilePaymentNotificationsIdRouteWithChildren
+  '/api/mobile/payment-notifications/audit': typeof ApiMobilePaymentNotificationsAuditRoute
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
   '/api/mobile/payments/manual': typeof ApiMobilePaymentsManualRoute
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
@@ -358,6 +367,7 @@ export interface FileRoutesById {
   '/api/mobile/packages/cleared': typeof ApiMobilePackagesClearedRoute
   '/api/mobile/packages/scan': typeof ApiMobilePackagesScanRoute
   '/api/mobile/payment-notifications/$id': typeof ApiMobilePaymentNotificationsIdRouteWithChildren
+  '/api/mobile/payment-notifications/audit': typeof ApiMobilePaymentNotificationsAuditRoute
   '/api/mobile/payments/$id': typeof ApiMobilePaymentsIdRoute
   '/api/mobile/payments/manual': typeof ApiMobilePaymentsManualRoute
   '/api/mobile/push/register': typeof ApiMobilePushRegisterRoute
@@ -400,6 +410,7 @@ export interface FileRouteTypes {
     | '/api/mobile/packages/cleared'
     | '/api/mobile/packages/scan'
     | '/api/mobile/payment-notifications/$id'
+    | '/api/mobile/payment-notifications/audit'
     | '/api/mobile/payments/$id'
     | '/api/mobile/payments/manual'
     | '/api/mobile/push/register'
@@ -440,6 +451,7 @@ export interface FileRouteTypes {
     | '/api/mobile/packages/cleared'
     | '/api/mobile/packages/scan'
     | '/api/mobile/payment-notifications/$id'
+    | '/api/mobile/payment-notifications/audit'
     | '/api/mobile/payments/$id'
     | '/api/mobile/payments/manual'
     | '/api/mobile/push/register'
@@ -480,6 +492,7 @@ export interface FileRouteTypes {
     | '/api/mobile/packages/cleared'
     | '/api/mobile/packages/scan'
     | '/api/mobile/payment-notifications/$id'
+    | '/api/mobile/payment-notifications/audit'
     | '/api/mobile/payments/$id'
     | '/api/mobile/payments/manual'
     | '/api/mobile/push/register'
@@ -667,6 +680,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/mobile/payments/$id'
       preLoaderRoute: typeof ApiMobilePaymentsIdRouteImport
       parentRoute: typeof ApiMobilePaymentsRoute
+    }
+    '/api/mobile/payment-notifications/audit': {
+      id: '/api/mobile/payment-notifications/audit'
+      path: '/audit'
+      fullPath: '/api/mobile/payment-notifications/audit'
+      preLoaderRoute: typeof ApiMobilePaymentNotificationsAuditRouteImport
+      parentRoute: typeof ApiMobilePaymentNotificationsRoute
     }
     '/api/mobile/payment-notifications/$id': {
       id: '/api/mobile/payment-notifications/$id'
@@ -871,12 +891,15 @@ const ApiMobilePaymentNotificationsIdRouteWithChildren =
 
 interface ApiMobilePaymentNotificationsRouteChildren {
   ApiMobilePaymentNotificationsIdRoute: typeof ApiMobilePaymentNotificationsIdRouteWithChildren
+  ApiMobilePaymentNotificationsAuditRoute: typeof ApiMobilePaymentNotificationsAuditRoute
 }
 
 const ApiMobilePaymentNotificationsRouteChildren: ApiMobilePaymentNotificationsRouteChildren =
   {
     ApiMobilePaymentNotificationsIdRoute:
       ApiMobilePaymentNotificationsIdRouteWithChildren,
+    ApiMobilePaymentNotificationsAuditRoute:
+      ApiMobilePaymentNotificationsAuditRoute,
   }
 
 const ApiMobilePaymentNotificationsRouteWithChildren =
