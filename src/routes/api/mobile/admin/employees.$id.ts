@@ -33,7 +33,7 @@ export const Route = createFileRoute("/api/mobile/admin/employees/$id")({
             if (body[k] !== undefined) patch[k] = body[k];
           }
           if (patch.status && !["active","suspended"].includes(patch.status)) return badRequest("invalid status");
-          if (patch.role && !["admin","staff","kenya_staff","china_staff"].includes(patch.role)) return badRequest("invalid role");
+          if (patch.role && !["admin","sales_manager","logistics_manager","sales_rep"].includes(patch.role)) return badRequest("invalid role");
           if (patch.status === "suspended") { patch.deactivated_by = auth.userId; patch.deactivated_at = new Date().toISOString(); }
           if (patch.status === "active") { patch.deactivated_by = null; patch.deactivated_at = null; }
 
