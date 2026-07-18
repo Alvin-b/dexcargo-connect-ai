@@ -1305,7 +1305,6 @@ export type Database = {
           is_active: boolean | null
           language_preference: string | null
           phone: string | null
-          staff_location: string | null
           updated_at: string
         }
         Insert: {
@@ -1315,7 +1314,6 @@ export type Database = {
           is_active?: boolean | null
           language_preference?: string | null
           phone?: string | null
-          staff_location?: string | null
           updated_at?: string
         }
         Update: {
@@ -1325,7 +1323,6 @@ export type Database = {
           is_active?: boolean | null
           language_preference?: string | null
           phone?: string | null
-          staff_location?: string | null
           updated_at?: string
         }
         Relationships: []
