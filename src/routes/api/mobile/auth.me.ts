@@ -21,9 +21,11 @@ function permissionsFor(auth: Extract<Awaited<ReturnType<typeof authenticate>>, 
     ];
   }
 
-  if (auth.staffLocation === "kenya" || roles.includes("kenya_staff")) {
+  if (roles.includes("logistics_manager")) {
     return [
       "packages:read",
+      "packages:write",
+      "packages:receive",
       "packages:arrive",
       "packages:clear",
       "packages:deliver",
@@ -33,14 +35,22 @@ function permissionsFor(auth: Extract<Awaited<ReturnType<typeof authenticate>>, 
     ];
   }
 
+  if (roles.includes("sales_manager")) {
+    return [
+      "packages:read",
+      "packages:write",
+      "payments:manage",
+      "alerts:read",
+      "analytics:read",
+    ];
+  }
+
+  // sales_rep default
   return [
     "packages:read",
     "packages:write",
     "packages:receive",
-    "packages:load",
-    "batches:manage",
     "alerts:read",
-    "analytics:read",
   ];
 }
 
@@ -53,7 +63,7 @@ export const Route = createFileRoute("/api/mobile/auth/me")({
           const auth = await authenticate(request);
           if (!auth.ok) return auth.response;
           const { data: profile } = await (supabaseAdmin.from("profiles") as any)
-            .select("id, display_name, phone, language_preference, staff_location, is_active")
+            .select("id, display_name, phone, language_preference, is_active")
             .eq("id", auth.userId)
             .maybeSingle();
           const { data: roles } = await supabaseAdmin
@@ -65,7 +75,6 @@ export const Route = createFileRoute("/api/mobile/auth/me")({
             profile,
             roles: (roles ?? []).map((r) => r.role),
             is_admin: auth.isAdmin,
-            staff_location: auth.staffLocation,
             preferred_language: profile?.language_preference ?? "en",
             permissions: permissionsFor(auth, (roles ?? []).map((r) => r.role)),
           });
