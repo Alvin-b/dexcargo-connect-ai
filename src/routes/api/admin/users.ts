@@ -20,7 +20,7 @@ export const Route = createFileRoute("/api/admin/users")({
             .select("user_id, role")
             .in("user_id", ids);
           const { data: profiles } = await (supabaseAdmin.from("profiles") as any)
-            .select("id, display_name, phone, language_preference, staff_location, is_active")
+            .select("id, display_name, phone, language_preference, is_active")
             .in("id", ids);
           const roleMap = new Map<string, string[]>();
           (roles ?? []).forEach((r: any) => {
