@@ -59,19 +59,20 @@ export async function sendPushToUsers(userIds: string[], payload: PushPayload) {
   return { sent, failed };
 }
 
-// Fan out to all staff in a given location (or all staff if "all").
-export async function sendPushToAudience(audience: "china" | "kenya" | "all", payload: PushPayload) {
-  let q = supabaseAdmin.from("profiles").select("id, staff_location");
-  if (audience !== "all") q = q.eq("staff_location", audience);
-  const { data: profiles } = await q;
-  if (!profiles?.length) return { sent: 0, failed: 0 };
-  // Only push to those that actually hold a staff role.
-  const ids = profiles.map((p: any) => p.id);
+// Fan out to all staff, optionally scoped to a specific role.
+export async function sendPushToAudience(
+  audience: "all" | "admin" | "sales_manager" | "logistics_manager" | "sales_rep",
+  payload: PushPayload,
+) {
+  const roles =
+    audience === "all"
+      ? (["admin", "sales_manager", "logistics_manager", "sales_rep"] as const)
+      : ([audience] as const);
   const { data: staffRoles } = await supabaseAdmin
     .from("user_roles")
     .select("user_id")
-    .in("user_id", ids)
-    .in("role", ["admin", "staff", "china_staff", "kenya_staff"] as any);
+    .in("role", roles as any);
   const staffIds = Array.from(new Set((staffRoles ?? []).map((r: any) => r.user_id)));
+  if (staffIds.length === 0) return { sent: 0, failed: 0 };
   return sendPushToUsers(staffIds, payload);
 }
