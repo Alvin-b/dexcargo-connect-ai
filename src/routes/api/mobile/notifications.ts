@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { authenticate, apiJson, preflight, readJson, badRequest, serverError } from "@/server/api-auth";
 
-// GET  /api/mobile/notifications?audience=china&unread=1
+// GET  /api/mobile/notifications?audience=sales_rep&unread=1
 // POST /api/mobile/notifications/mark-read  { ids: [uuid, ...] }  (use ?action=mark-read)
 export const Route = createFileRoute("/api/mobile/notifications")({
   server: {
@@ -13,7 +13,7 @@ export const Route = createFileRoute("/api/mobile/notifications")({
           const auth = await authenticate(request);
           if (!auth.ok) return auth.response;
           const url = new URL(request.url);
-          const audience = url.searchParams.get("audience"); // china|kenya|all
+          const audience = url.searchParams.get("audience"); // all|admin|sales_manager|logistics_manager|sales_rep
           const unread = url.searchParams.get("unread") === "1";
           const limit = Math.min(Number(url.searchParams.get("limit") ?? 100), 200);
 
@@ -47,7 +47,7 @@ export const Route = createFileRoute("/api/mobile/notifications")({
             const message = String(body.message ?? body.body ?? "").trim();
             const audience = String(body.audience ?? "all").trim();
             if (!message) return badRequest("message required");
-            if (!["all", "china", "kenya", "sales_rep", "sales_manager", "logistics_manager", "staff"].includes(audience)) {
+            if (!["all", "admin", "sales_rep", "sales_manager", "logistics_manager"].includes(audience)) {
               return badRequest("invalid audience");
             }
             const { data, error } = await (supabaseAdmin.from("notifications") as any)
