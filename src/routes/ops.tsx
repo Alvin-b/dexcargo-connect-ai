@@ -15,7 +15,7 @@ import { Bell, Box, Camera, LogOut, Megaphone, RefreshCw, ScanLine, Shield, User
 
 type Me = {
   user_id: string;
-  profile?: { display_name?: string | null; staff_location?: string | null };
+  profile?: { display_name?: string | null };
   roles: string[];
   is_admin: boolean;
   permissions: string[];
@@ -80,11 +80,9 @@ function roleLabel(role: string) {
 
 function audienceFor(me: Me | null) {
   if (!me) return "all";
-  if (me.roles.includes("china_staff")) return "china";
   if (me.roles.includes("sales_rep")) return "sales_rep";
   if (me.roles.includes("sales_manager")) return "sales_manager";
   if (me.roles.includes("logistics_manager")) return "logistics_manager";
-  if (me.roles.includes("kenya_staff")) return "kenya";
   return "all";
 }
 
