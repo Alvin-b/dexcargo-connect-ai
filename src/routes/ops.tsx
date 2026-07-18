@@ -407,8 +407,6 @@ export function OpsApp() {
                   <option value="sales_rep">Sales Representative</option>
                   <option value="sales_manager">Sales Manager</option>
                   <option value="logistics_manager">Logistics Manager</option>
-                  <option value="kenya_staff">Kenya Staff</option>
-                  <option value="china_staff">China Staff</option>
                   <option value="admin">Administrator</option>
                 </select>
                 <Button disabled={busy}>Register employee</Button>
@@ -421,8 +419,7 @@ export function OpsApp() {
                     <option value="sales_rep">Sales representatives</option>
                     <option value="sales_manager">Sales managers</option>
                     <option value="logistics_manager">Logistics managers</option>
-                    <option value="kenya">Kenya team</option>
-                    <option value="china">China team</option>
+                    <option value="admin">Administrators</option>
                   </select>
                   <Button variant="secondary"><Megaphone className="mr-2 h-4 w-4" />Broadcast</Button>
                 </div>
